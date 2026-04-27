@@ -1,9 +1,15 @@
 import { NextResponse } from "next/server";
-import * as XLSX from "xlsx";
 import { requireAdmin } from "@/lib/auth-guard";
 import { createClient } from "@/lib/supabase/server";
 import { CSV_HEADERS, memberToRow } from "@/lib/csv";
 import type { MemberWithRelations } from "@/lib/schemas";
+
+function csvEscape(v: string | null | undefined): string {
+  if (v === null || v === undefined) return "";
+  const s = String(v);
+  if (/[",\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
 
 export async function GET(req: Request) {
   const guard = await requireAdmin();
@@ -36,10 +42,7 @@ export async function GET(req: Request) {
     })
   ];
 
-  const ws = XLSX.utils.aoa_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Members");
-  const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" }) as ArrayBuffer;
+  const csv = "﻿" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
 
   // Audit the export
   await supabase.from("audit_log").insert({
@@ -51,10 +54,10 @@ export async function GET(req: Request) {
     diff: { rows: (data || []).length, chapter, division }
   } as any);
 
-  return new NextResponse(buf, {
+  return new NextResponse(csv, {
     headers: {
-      "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "content-disposition": `attachment; filename="sweap-members-${new Date().toISOString().slice(0,10)}.xlsx"`
+      "content-type": "text/csv; charset=utf-8",
+      "content-disposition": `attachment; filename="sweap-members-${new Date().toISOString().slice(0,10)}.csv"`
     }
   });
 }

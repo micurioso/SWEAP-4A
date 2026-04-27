@@ -17,7 +17,7 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
     .order("full_name", { ascending: true })
     .range(from, to);
 
-  if (searchParams.q) query = query.ilike("full_name", `%${searchParams.q}%`);
+  if (searchParams.q) query = query.ilike("employee_number", `%${searchParams.q}%`);
   if (searchParams.chapter) query = query.eq("chapter_base", searchParams.chapter);
   if (searchParams.division) query = query.eq("division", searchParams.division);
   if (searchParams.status) query = query.eq("status_of_employment", searchParams.status);
@@ -40,7 +40,7 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
       </div>
 
       <form className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-white p-3 text-sm">
-        <input name="q" defaultValue={searchParams.q || ""} placeholder="Name contains…" className="flex-1 min-w-[180px] rounded-md border border-slate-300 px-3 py-1.5" />
+        <input name="q" defaultValue={searchParams.q || ""} placeholder="Employee No.…" className="flex-1 min-w-[180px] rounded-md border border-slate-300 px-3 py-1.5" />
         <input name="chapter" defaultValue={searchParams.chapter || ""} placeholder="Chapter (e.g. Cavite)" className="rounded-md border border-slate-300 px-3 py-1.5" />
         <input name="division" defaultValue={searchParams.division || ""} placeholder="Division" className="rounded-md border border-slate-300 px-3 py-1.5" />
         <input name="status" defaultValue={searchParams.status || ""} placeholder="Employment status" className="rounded-md border border-slate-300 px-3 py-1.5" />

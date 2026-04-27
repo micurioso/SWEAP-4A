@@ -14,8 +14,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         name={profile.full_name || profile.username || profile.email}
         username={profile.username || profile.email.split("@")[0]}
       />
-      <div className="flex min-h-screen flex-1 flex-col lg:pl-64">
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 lg:px-8">{children}</main>
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col lg:pl-64">
+        <main className="w-full min-w-0 flex-1 px-4 py-6 lg:px-8">{children}</main>
         <footer className="border-t border-slate-200 bg-white py-3 text-center text-xs text-slate-400">
           DSWD FO IV-A · SWEAP CALABARZON · Member Database
         </footer>

@@ -11,9 +11,62 @@
   --ring: 221 83% 53%;
 }
 
+html.dark {
+  --background: 222 47% 9%;
+  --foreground: 210 40% 96%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --border: 217 33% 22%;
+}
+
 html, body { height: 100%; }
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
+
+/* Dark-mode remap of common surface/text/border utilities so existing
+   components don't need per-class dark: variants. */
+html.dark .bg-white { background-color: hsl(222 47% 12%) !important; }
+html.dark .bg-slate-50 { background-color: hsl(222 47% 9%) !important; }
+html.dark .bg-slate-50\/50 { background-color: hsl(222 47% 11%) !important; }
+html.dark .bg-slate-100 { background-color: hsl(217 33% 17%) !important; }
+
+html.dark .text-slate-800,
+html.dark .text-slate-900,
+html.dark .text-slate-700 { color: hsl(210 40% 96%) !important; }
+html.dark .text-slate-600 { color: hsl(215 20% 80%) !important; }
+html.dark .text-slate-500 { color: hsl(215 20% 70%) !important; }
+html.dark .text-slate-400 { color: hsl(215 20% 60%) !important; }
+html.dark .text-slate-300 { color: hsl(215 20% 45%) !important; }
+
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-300 { border-color: hsl(217 33% 22%) !important; }
+
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: hsl(217 33% 22%) !important; }
+
+html.dark .hover\:bg-slate-100:hover { background-color: hsl(217 33% 20%) !important; }
+html.dark .hover\:bg-slate-50:hover { background-color: hsl(217 33% 15%) !important; }
+html.dark .hover\:text-slate-900:hover { color: hsl(210 40% 96%) !important; }
+
+/* Subtle tinted callouts */
+html.dark .bg-emerald-50 { background-color: hsl(160 50% 14%) !important; }
+html.dark .bg-amber-50 { background-color: hsl(38 60% 14%) !important; }
+html.dark .bg-red-50 { background-color: hsl(0 60% 14%) !important; }
+html.dark .text-emerald-700, html.dark .text-emerald-800 { color: hsl(150 60% 70%) !important; }
+html.dark .text-amber-700, html.dark .text-amber-800 { color: hsl(38 90% 70%) !important; }
+html.dark .text-red-700 { color: hsl(0 80% 75%) !important; }
+
+/* Form inputs */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: hsl(222 47% 14%);
+  color: hsl(210 40% 96%);
+  border-color: hsl(217 33% 25%);
+}
+
+/* Brand accent stays vivid in dark mode */
+html.dark .text-brand-700 { color: hsl(221 83% 70%) !important; }

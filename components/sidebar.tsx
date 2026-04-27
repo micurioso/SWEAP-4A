@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/theme-toggle";
 
 type Item = { href: string; label: string; icon: React.ComponentType<{ className?: string }>; admin?: boolean };
 
@@ -69,7 +70,10 @@ export default function Sidebar({
     <>
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
-        <Link href="/dashboard" className="font-bold text-brand-700">SWEAP CALABARZON</Link>
+        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-brand-700">
+          <img src="/sweap-logo.png" alt="SWEAP" className="h-8 w-8 rounded-full object-contain" />
+          <span>SWEAP CALABARZON</span>
+        </Link>
         <button
           onClick={() => setOpen(true)}
           aria-label="Open menu"
@@ -97,9 +101,12 @@ export default function Sidebar({
         )}
       >
         <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-          <div>
-            <div className="text-base font-bold text-brand-700">SWEAP</div>
-            <div className="text-[10px] uppercase tracking-wider text-slate-400">CALABARZON</div>
+          <div className="flex items-center gap-3">
+            <img src="/sweap-logo.png" alt="SWEAP" className="h-10 w-10 rounded-full object-contain" />
+            <div>
+              <div className="text-base font-bold text-brand-700">SWEAP</div>
+              <div className="text-[10px] uppercase tracking-wider text-slate-400">CALABARZON</div>
+            </div>
           </div>
           <button
             onClick={() => setOpen(false)}
@@ -119,6 +126,10 @@ export default function Sidebar({
             <div className="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-500">
               {role}
             </div>
+          </div>
+          <div className="mb-1 flex items-center justify-between px-3 py-1">
+            <span className="text-xs text-slate-500">Theme</span>
+            <ThemeToggle />
           </div>
           <button
             onClick={signOut}

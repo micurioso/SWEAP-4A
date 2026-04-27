@@ -9,7 +9,9 @@ out
 .vercel
 .turbo
 .tsbuildinfo
+*.tsbuildinfo
 next-env.d.ts
+.claude/
 
 # Real member data — never commit (contains PII)
 data.csv

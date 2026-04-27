@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Papa from "papaparse";
-import { rowToMember } from "@/lib/csv";
+import { rowToMember, CSV_HEADERS } from "@/lib/csv";
 import type { MemberWithRelations } from "@/lib/schemas";
 
 type Result = { inserted: number; updated: number; errors: { employee_number: string; message: string }[] };
@@ -39,6 +39,18 @@ export default function ImportPage() {
     });
   }
 
+  function downloadTemplate() {
+    const escape = (v: string) => /[",\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+    const csv = "﻿" + CSV_HEADERS.map(escape).join(",") + "\r\n";
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sweap-import-template.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   async function commit() {
     if (!parsed) return;
     setBusy(true);
@@ -59,10 +71,17 @@ export default function ImportPage() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-xl font-semibold text-slate-800">Import Members</h1>
-      <p className="text-sm text-slate-500">
-        Upload a CSV exported from the SWEAP enrollment Google Form. Existing employees (matched by Employee Number) will be updated; new ones will be created.
-      </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-800">Import Members</h1>
+          <p className="text-sm text-slate-500">
+            Upload a CSV exported from the SWEAP enrollment Google Form. Existing employees (matched by Employee Number) will be updated; new ones will be created.
+          </p>
+        </div>
+        <button onClick={downloadTemplate} className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">
+          Download template
+        </button>
+      </div>
 
       <div className="rounded-xl border-2 border-dashed border-slate-300 bg-white p-8 text-center">
         <input id="file" type="file" accept=".csv" className="hidden" onChange={onFile} />
