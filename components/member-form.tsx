@@ -28,6 +28,7 @@ export default function MemberForm({ initial, mode }: Props) {
     (initial?.dependents || []).filter(d => d.name && d.name.trim()).length
   );
   const [dependentCount, setDependentCount] = useState<number>(initialDependentCount);
+  const [employeeStatus, setEmployeeStatus] = useState<"active" | "separated" | "deceased">("active");
 
   function setField<K extends keyof MemberWithRelations>(k: K, v: MemberWithRelations[K]) {
     setM(prev => ({ ...prev, [k]: v }));
@@ -102,19 +103,30 @@ export default function MemberForm({ initial, mode }: Props) {
     if (mode !== "edit" || !m.employee_number) return;
     try {
       const raw = window.localStorage.getItem(`dependent-status:${m.employee_number}`);
-      if (!raw) return;
-      const map = JSON.parse(raw) as Record<string, "active" | "deceased">;
-      setM(prev => ({
-        ...prev,
-        dependents: prev.dependents.map(d => {
-          const v = map[d.slot];
-          if (!v) return d;
-          return { ...d, status: v === "deceased" ? "Deceased" : "Active" };
-        })
-      }));
+      if (raw) {
+        const map = JSON.parse(raw) as Record<string, "active" | "deceased">;
+        setM(prev => ({
+          ...prev,
+          dependents: prev.dependents.map(d => {
+            const v = map[d.slot];
+            if (!v) return d;
+            return { ...d, status: v === "deceased" ? "Deceased" : "Active" };
+          })
+        }));
+      }
+      const es = window.localStorage.getItem(`employee-status:${m.employee_number}`);
+      if (es === "active" || es === "separated" || es === "deceased") setEmployeeStatus(es);
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function updateEmployeeStatus(next: "active" | "separated" | "deceased") {
+    setEmployeeStatus(next);
+    if (!m.employee_number) return;
+    try {
+      window.localStorage.setItem(`employee-status:${m.employee_number}`, next);
+    } catch {}
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -184,6 +196,13 @@ export default function MemberForm({ initial, mode }: Props) {
           </label>
           <label className="text-sm">IP Affiliation
             <input className={inputCls} value={m.ip_affiliation || ""} onChange={e => setField("ip_affiliation", e.target.value)} />
+          </label>
+          <label className="text-sm">Employee Status
+            <select className={inputCls} value={employeeStatus} onChange={e => updateEmployeeStatus(e.target.value as "active" | "separated" | "deceased")}>
+              <option value="active">Active</option>
+              <option value="separated">Separated</option>
+              <option value="deceased">Deceased</option>
+            </select>
           </label>
           <label className="text-sm md:col-span-2">Permanent Address
             <input className={inputCls} value={m.permanent_address || ""} onChange={e => setField("permanent_address", e.target.value)} />

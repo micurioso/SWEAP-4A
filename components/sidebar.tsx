@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -9,6 +9,9 @@ import {
   Download,
   UserCog,
   ScrollText,
+  FileText,
+  ChevronDown,
+  ChevronRight,
   Menu,
   X,
   LogOut
@@ -19,50 +22,104 @@ import ThemeToggle from "@/components/theme-toggle";
 
 type Item = { href: string; label: string; icon: React.ComponentType<{ className?: string }>; admin?: boolean };
 
-const ITEMS: Item[] = [
-  { href: "/dashboard",    label: "Dashboard", icon: LayoutDashboard },
-  { href: "/members",      label: "Members",   icon: Users },
+const TOP_ITEMS: Item[] = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/members",   label: "Members",   icon: Users }
+];
+
+const BOTTOM_ITEMS: Item[] = [
   { href: "/import",       label: "Import",    icon: Upload,    admin: true },
   { href: "/export",       label: "Export",    icon: Download,  admin: true },
   { href: "/admin/users",  label: "Users",     icon: UserCog,   admin: true },
+  { href: "/admin/forms",  label: "Manage Forms", icon: FileText, admin: true },
   { href: "/admin/audit",  label: "Audit log", icon: ScrollText, admin: true }
 ];
+
+type Form = { id: string; name: string };
 
 export default function Sidebar({
   role, name, username
 }: { role: "admin" | "viewer"; name: string; username: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [formsOpen, setFormsOpen] = useState(false);
+  const [forms, setForms] = useState<Form[]>([]);
   const isAdmin = role === "admin";
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/forms")
+      .then((r) => (r.ok ? r.json() : { forms: [] }))
+      .then((j) => {
+        if (!cancelled) setForms(j.forms || []);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function signOut() {
     await createClient().auth.signOut();
     window.location.href = "/login";
   }
 
-  const visible = ITEMS.filter(i => !i.admin || isAdmin);
+  const visibleTop = TOP_ITEMS.filter((i) => !i.admin || isAdmin);
+  const visibleBottom = BOTTOM_ITEMS.filter((i) => !i.admin || isAdmin);
+
+  function renderLink({ href, label, icon: Icon }: Item) {
+    const active = pathname === href || pathname.startsWith(href + "/");
+    return (
+      <Link
+        key={href}
+        href={href}
+        onClick={() => setOpen(false)}
+        className={cn(
+          "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition",
+          active
+            ? "bg-brand-600 text-white shadow-sm"
+            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+        )}
+      >
+        <Icon className="h-4 w-4" />
+        {label}
+      </Link>
+    );
+  }
 
   const NavList = (
     <nav className="flex flex-col gap-1">
-      {visible.map(({ href, label, icon: Icon }) => {
-        const active = pathname === href || pathname.startsWith(href + "/");
-        return (
-          <Link
-            key={href}
-            href={href}
-            onClick={() => setOpen(false)}
-            className={cn(
-              "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition",
-              active
-                ? "bg-brand-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            )}
-          >
-            <Icon className="h-4 w-4" />
-            {label}
-          </Link>
-        );
-      })}
+      {visibleTop.map(renderLink)}
+
+      <button
+        type="button"
+        onClick={() => setFormsOpen((v) => !v)}
+        className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+      >
+        <FileText className="h-4 w-4" />
+        <span className="flex-1 text-left">SWEAP Forms</span>
+        {formsOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+      </button>
+      {formsOpen && (
+        <div className="ml-7 flex flex-col gap-1 border-l border-slate-200 pl-2">
+          {forms.length === 0 ? (
+            <span className="px-2 py-1 text-xs text-slate-400">No forms yet</span>
+          ) : (
+            forms.map((f) => (
+              <a
+                key={f.id}
+                href={`/api/forms/${f.id}/download`}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-2 py-1 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              >
+                {f.name}
+              </a>
+            ))
+          )}
+        </div>
+      )}
+
+      {visibleBottom.map(renderLink)}
     </nav>
   );
 
