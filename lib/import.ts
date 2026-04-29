@@ -1,27 +1,49 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { MemberWithRelations } from "./schemas";
 
+export type ImportMode = "skip-existing" | "overwrite";
+
 export type ImportResult = {
   inserted: number;
   updated: number;
+  skipped: number;
   errors: { employee_number: string; message: string }[];
 };
 
 export async function importMembers(
   supabase: SupabaseClient,
-  rows: MemberWithRelations[]
+  rows: MemberWithRelations[],
+  mode: ImportMode = "skip-existing"
 ): Promise<ImportResult> {
-  const result: ImportResult = { inserted: 0, updated: 0, errors: [] };
+  const result: ImportResult = { inserted: 0, updated: 0, skipped: 0, errors: [] };
 
-  // Determine which employee_numbers already exist for inserted vs updated counts.
-  const empNos = rows.map(r => r.employee_number);
+  // Drop in-CSV duplicates (keep first occurrence). Defense in depth — the UI
+  // also dedupes before posting.
+  const seen = new Set<string>();
+  const deduped: MemberWithRelations[] = [];
+  for (const r of rows) {
+    if (seen.has(r.employee_number)) {
+      result.skipped++;
+      continue;
+    }
+    seen.add(r.employee_number);
+    deduped.push(r);
+  }
+
+  const empNos = deduped.map(r => r.employee_number);
   const { data: existing } = await supabase
     .from("sweap_members")
     .select("employee_number")
     .in("employee_number", empNos);
   const existingSet = new Set((existing || []).map((r: any) => r.employee_number));
 
-  for (const m of rows) {
+  for (const m of deduped) {
+    const isExisting = existingSet.has(m.employee_number);
+    if (isExisting && mode === "skip-existing") {
+      result.skipped++;
+      continue;
+    }
+
     const { dependents, claimants, ...member } = m;
     const { error: upsertErr } = await supabase
       .from("sweap_members")
@@ -30,7 +52,6 @@ export async function importMembers(
       result.errors.push({ employee_number: m.employee_number, message: upsertErr.message });
       continue;
     }
-    // Replace child rows
     await supabase.from("member_dependents").delete().eq("employee_number", m.employee_number);
     await supabase.from("member_claimants").delete().eq("employee_number", m.employee_number);
     if (dependents.length) {
@@ -45,7 +66,7 @@ export async function importMembers(
       );
       if (error) result.errors.push({ employee_number: m.employee_number, message: `claimants: ${error.message}` });
     }
-    if (existingSet.has(m.employee_number)) result.updated++;
+    if (isExisting) result.updated++;
     else result.inserted++;
   }
   return result;

@@ -7,7 +7,8 @@ import { memberWithRelationsSchema } from "@/lib/schemas";
 import { importMembers } from "@/lib/import";
 
 const bodySchema = z.object({
-  rows: z.array(memberWithRelationsSchema)
+  rows: z.array(memberWithRelationsSchema),
+  mode: z.enum(["skip-existing", "overwrite"]).optional()
 });
 
 export async function POST(req: Request) {
@@ -22,7 +23,7 @@ export async function POST(req: Request) {
 
   // Use service-role client to bypass per-row RLS overhead, but admin status is already verified.
   const supabase = createAdminClient();
-  const result = await importMembers(supabase as any, parsed.data.rows);
+  const result = await importMembers(supabase as any, parsed.data.rows, parsed.data.mode || "skip-existing");
 
   // Audit the import as a single row
   const userClient = createClient();
@@ -32,7 +33,13 @@ export async function POST(req: Request) {
     action: "import",
     target_table: "sweap_members",
     target_id: null,
-    diff: { inserted: result.inserted, updated: result.updated, errors: result.errors.length }
+    diff: {
+      mode: parsed.data.mode || "skip-existing",
+      inserted: result.inserted,
+      updated: result.updated,
+      skipped: result.skipped,
+      errors: result.errors.length
+    }
   } as any);
 
   return NextResponse.json(result);

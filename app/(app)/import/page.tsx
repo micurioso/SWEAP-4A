@@ -1,16 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Papa from "papaparse";
 import { rowToMember, CSV_HEADERS } from "@/lib/csv";
+import { createClient } from "@/lib/supabase/client";
 import type { MemberWithRelations } from "@/lib/schemas";
 
-type Result = { inserted: number; updated: number; errors: { employee_number: string; message: string }[] };
+type Result = { inserted: number; updated: number; skipped: number; errors: { employee_number: string; message: string }[] };
 
 export default function ImportPage() {
   const [parsed, setParsed] = useState<MemberWithRelations[] | null>(null);
+  const [duplicateInCsv, setDuplicateInCsv] = useState<string[]>([]);
+  const [existingInDb, setExistingInDb] = useState<Set<string>>(new Set());
   const [skipped, setSkipped] = useState<number>(0);
   const [filename, setFilename] = useState<string>("");
   const [busy, setBusy] = useState(false);
+  const [overwrite, setOverwrite] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,24 +24,44 @@ export default function ImportPage() {
     setFilename(file.name);
     setResult(null);
     setError(null);
+    setExistingInDb(new Set());
     Papa.parse<string[]>(file, {
       skipEmptyLines: true,
       complete: ({ data }) => {
-        // Skip the header row
         const rows = data.slice(1);
+        const seen = new Set<string>();
+        const dupes: string[] = [];
         const parsedMembers: MemberWithRelations[] = [];
         let skippedCount = 0;
         for (const row of rows) {
           const m = rowToMember(row as string[]);
-          if (m) parsedMembers.push(m);
-          else skippedCount++;
+          if (!m) { skippedCount++; continue; }
+          if (seen.has(m.employee_number)) { dupes.push(m.employee_number); continue; }
+          seen.add(m.employee_number);
+          parsedMembers.push(m);
         }
         setParsed(parsedMembers);
+        setDuplicateInCsv(dupes);
         setSkipped(skippedCount);
       },
       error: (err) => setError(err.message)
     });
   }
+
+  useEffect(() => {
+    if (!parsed || parsed.length === 0) { setExistingInDb(new Set()); return; }
+    let cancelled = false;
+    (async () => {
+      const supabase = createClient();
+      const empNos = parsed.map(r => r.employee_number);
+      const { data } = await supabase
+        .from("sweap_members")
+        .select("employee_number")
+        .in("employee_number", empNos);
+      if (!cancelled) setExistingInDb(new Set((data || []).map((r: any) => r.employee_number)));
+    })();
+    return () => { cancelled = true; };
+  }, [parsed]);
 
   function downloadTemplate() {
     const escape = (v: string) => /[",\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
@@ -58,7 +82,7 @@ export default function ImportPage() {
     const res = await fetch("/api/import", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ rows: parsed })
+      body: JSON.stringify({ rows: parsed, mode: overwrite ? "overwrite" : "skip-existing" })
     });
     const data = await res.json();
     setBusy(false);
@@ -69,13 +93,16 @@ export default function ImportPage() {
     setResult(data);
   }
 
+  const willInsert = parsed ? parsed.filter(r => !existingInDb.has(r.employee_number)).length : 0;
+  const willUpdate = parsed ? parsed.filter(r => existingInDb.has(r.employee_number)).length : 0;
+
   return (
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold text-slate-800">Import Members</h1>
           <p className="text-sm text-slate-500">
-            Upload a CSV exported from the SWEAP enrollment Google Form. Rows in the CSV overwrite existing records matched by Employee Number; new Employee Numbers are inserted. Members already in the system whose Employee Number is not in the CSV are left untouched.
+            Upload a CSV exported from the SWEAP enrollment Google Form. By default, rows whose Employee Number already exists are skipped — check &ldquo;Overwrite existing records&rdquo; if you want to update them. Rows with duplicate Employee Numbers within the CSV are always deduplicated (first occurrence wins).
           </p>
         </div>
         <button onClick={downloadTemplate} className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">
@@ -93,32 +120,72 @@ export default function ImportPage() {
 
       {parsed && (
         <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-sm font-semibold text-slate-700">Dry-run preview</div>
-              <div className="text-xs text-slate-500">{parsed.length} valid rows · {skipped} skipped (missing employee number or name)</div>
+              <div className="text-xs text-slate-500">
+                {parsed.length} unique rows · {skipped} skipped (missing employee number or name)
+                {duplicateInCsv.length > 0 && <> · {duplicateInCsv.length} in-CSV duplicate{duplicateInCsv.length === 1 ? "" : "s"} dropped</>}
+              </div>
+              <div className="mt-1 text-xs text-slate-500">
+                Will insert <span className="font-semibold text-emerald-700">{willInsert}</span> new ·{" "}
+                {overwrite
+                  ? <>will overwrite <span className="font-semibold text-amber-700">{willUpdate}</span> existing</>
+                  : <>will skip <span className="font-semibold text-slate-700">{willUpdate}</span> existing</>}
+              </div>
             </div>
-            <button onClick={commit} disabled={busy || parsed.length === 0}
-              className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
-              {busy ? "Importing…" : `Commit ${parsed.length} rows`}
-            </button>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-xs text-slate-600">
+                <input type="checkbox" checked={overwrite} onChange={e => setOverwrite(e.target.checked)} />
+                Overwrite existing records
+              </label>
+              <button onClick={commit} disabled={busy || parsed.length === 0}
+                className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
+                {busy ? "Importing…" : `Commit ${parsed.length} rows`}
+              </button>
+            </div>
           </div>
+
+          {duplicateInCsv.length > 0 && (
+            <details className="mb-3 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+              <summary className="cursor-pointer">In-CSV duplicates ({duplicateInCsv.length})</summary>
+              <div className="mt-2 font-mono">{duplicateInCsv.join(", ")}</div>
+            </details>
+          )}
+
           <div className="max-h-72 overflow-auto rounded-md border border-slate-100">
             <table className="w-full text-xs">
               <thead className="bg-slate-50 text-left text-slate-500">
-                <tr><th className="px-3 py-1.5">Emp #</th><th className="px-3 py-1.5">Name</th><th className="px-3 py-1.5">Chapter</th><th className="px-3 py-1.5">Division</th><th className="px-3 py-1.5">Dependents</th><th className="px-3 py-1.5">Claimants</th></tr>
+                <tr>
+                  <th className="px-3 py-1.5">Status</th>
+                  <th className="px-3 py-1.5">Emp #</th>
+                  <th className="px-3 py-1.5">Name</th>
+                  <th className="px-3 py-1.5">Chapter</th>
+                  <th className="px-3 py-1.5">Division</th>
+                  <th className="px-3 py-1.5">Dependents</th>
+                  <th className="px-3 py-1.5">Claimants</th>
+                </tr>
               </thead>
               <tbody>
-                {parsed.slice(0, 100).map(m => (
-                  <tr key={m.employee_number} className="border-t border-slate-100">
-                    <td className="px-3 py-1.5 font-mono">{m.employee_number}</td>
-                    <td className="px-3 py-1.5">{m.full_name}</td>
-                    <td className="px-3 py-1.5">{m.chapter_base}</td>
-                    <td className="px-3 py-1.5">{m.division}</td>
-                    <td className="px-3 py-1.5">{m.dependents.length}</td>
-                    <td className="px-3 py-1.5">{m.claimants.length}</td>
-                  </tr>
-                ))}
+                {parsed.slice(0, 100).map(m => {
+                  const exists = existingInDb.has(m.employee_number);
+                  const tag = !exists
+                    ? <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-emerald-700">New</span>
+                    : overwrite
+                      ? <span className="rounded bg-amber-100 px-1.5 py-0.5 text-amber-700">Overwrite</span>
+                      : <span className="rounded bg-slate-200 px-1.5 py-0.5 text-slate-600">Skip</span>;
+                  return (
+                    <tr key={m.employee_number} className="border-t border-slate-100">
+                      <td className="px-3 py-1.5">{tag}</td>
+                      <td className="px-3 py-1.5 font-mono">{m.employee_number}</td>
+                      <td className="px-3 py-1.5">{m.full_name}</td>
+                      <td className="px-3 py-1.5">{m.chapter_base}</td>
+                      <td className="px-3 py-1.5">{m.division}</td>
+                      <td className="px-3 py-1.5">{m.dependents.length}</td>
+                      <td className="px-3 py-1.5">{m.claimants.length}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -134,6 +201,7 @@ export default function ImportPage() {
           <ul className="mt-2 text-emerald-700">
             <li>Inserted: {result.inserted}</li>
             <li>Updated: {result.updated}</li>
+            <li>Skipped (duplicates): {result.skipped}</li>
             <li>Errors: {result.errors.length}</li>
           </ul>
           {result.errors.length > 0 && (

@@ -77,10 +77,27 @@ The same function powers both the live import API and the seed script. The audit
 ### Audit
 Every `INSERT/UPDATE/DELETE` on `sweap_members` fires a `SECURITY DEFINER` trigger that writes to `audit_log` with the actor and a JSONB diff. Imports and exports also write a single audit row from the API route. `audit_log` is read-only to admins via RLS; clients cannot forge entries.
 
+### SWEAP Forms (PDF library)
+Admins upload PDFs at `/admin/forms`; all authenticated users see them in the sidebar's "SWEAP Forms" dropdown and click a name to download.
+
+- Files live in the **private** Supabase Storage bucket `sweap-forms` (created by `0003_sweap_forms.sql`). The bucket is non-public — direct URLs won't work; downloads must go through the API.
+- `app/api/admin/forms/route.ts` (POST) accepts multipart `name` + PDF `file`, uploads via the **service-role** client, and inserts a row in `sweap_forms`. Admin-gated.
+- `app/api/forms/[id]/download/route.ts` streams the bytes back with `Content-Disposition: attachment` so the browser downloads instead of navigating. Available to any signed-in user; uses the service-role client server-side to read the private bucket.
+- `app/api/forms/route.ts` returns `{id, name}` for the sidebar; the sidebar fetches it client-side on mount.
+
+### Client-only UI state in localStorage
+A few non-canonical, per-record UI flags are stored **only** in the browser's `localStorage`, not the DB:
+
+- `employee-status:<employee_number>` → `"active" | "separated" | "deceased"`. Read in `app/(app)/members/[employeeNumber]/profile-view.tsx` and `components/member-form.tsx`. When `deceased`, the profile view applies `pointer-events-none opacity-60 grayscale` to the detail grid and hides the Edit link.
+- `dependent-status:<employee_number>` → `Record<slot, "active" | "deceased">`. Read in `dependents-table.tsx`; the edit form syncs the dependent `status` field to/from this map and re-keys it when slots are deleted.
+
+These flags are **per-device, per-browser**. If a future task needs them shared across devices, add real columns + a migration rather than extending the localStorage scheme.
+
 ### Routing
 - `app/(app)/**` — authenticated app shell with sidebar (`components/sidebar.tsx`); the layout fetches the session + profile via `getSessionAndProfile()` and redirects to `/login` if missing.
 - `app/login/**` — the page is a server-component Suspense wrapper; the actual form is in `login-form.tsx` because `useSearchParams()` requires a Suspense boundary in Next.js 14 strict static-prerender.
-- `app/api/**` — JSON route handlers, all admin-gated except `/api/auth/resolve-username`.
+- `app/api/**` — JSON route handlers, admin-gated except `/api/auth/resolve-username`, `/api/forms` (list), and `/api/forms/[id]/download` (any signed-in user).
+- `/admin/forms` is auto-protected by the existing `/admin/*` middleware rule; no new entry needed.
 
 ## Migrations
 
@@ -88,6 +105,7 @@ Every `INSERT/UPDATE/DELETE` on `sweap_members` fires a `SECURITY DEFINER` trigg
 
 - `0001_init.sql` — schema, enums, indexes, RLS, `is_admin()`, profile + audit triggers
 - `0002_add_username.sql` — adds the `username` column and back-fills it from existing emails
+- `0003_sweap_forms.sql` — `sweap_forms` table + private `sweap-forms` storage bucket with RLS (authenticated read, admin write) for the PDF form library
 
 When introducing schema changes, write a new numbered file; do not edit prior ones in place.
 

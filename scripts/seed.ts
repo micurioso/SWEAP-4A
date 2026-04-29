@@ -34,7 +34,7 @@ async function main() {
   }
   console.log(`Parsed ${members.length} members (skipped ${skipped}). Importing…`);
 
-  const result = await importMembers(supabase as any, members);
+  const result = await importMembers(supabase as any, members, "overwrite");
   console.log("Done:", result);
 }
 

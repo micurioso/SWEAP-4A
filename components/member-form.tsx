@@ -29,6 +29,8 @@ export default function MemberForm({ initial, mode }: Props) {
   );
   const [dependentCount, setDependentCount] = useState<number>(initialDependentCount);
   const [employeeStatus, setEmployeeStatus] = useState<"active" | "separated" | "deceased">("active");
+  const [empNoTaken, setEmpNoTaken] = useState(false);
+  const [checkingEmpNo, setCheckingEmpNo] = useState(false);
 
   function setField<K extends keyof MemberWithRelations>(k: K, v: MemberWithRelations[K]) {
     setM(prev => ({ ...prev, [k]: v }));
@@ -120,6 +122,20 @@ export default function MemberForm({ initial, mode }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function checkEmployeeNumber() {
+    if (mode !== "create") return;
+    const v = m.employee_number.trim();
+    if (!v) { setEmpNoTaken(false); return; }
+    setCheckingEmpNo(true);
+    const { data } = await createClient()
+      .from("sweap_members")
+      .select("employee_number")
+      .eq("employee_number", v)
+      .maybeSingle();
+    setEmpNoTaken(!!data);
+    setCheckingEmpNo(false);
+  }
+
   function updateEmployeeStatus(next: "active" | "separated" | "deceased") {
     setEmployeeStatus(next);
     if (!m.employee_number) return;
@@ -138,8 +154,26 @@ export default function MemberForm({ initial, mode }: Props) {
     const cleanClas = claimants.filter(c => c.name && c.name.trim());
 
     if (mode === "create") {
+      const { data: existing } = await supabase
+        .from("sweap_members")
+        .select("employee_number")
+        .eq("employee_number", member.employee_number)
+        .maybeSingle();
+      if (existing) {
+        setEmpNoTaken(true);
+        setError(`Employee number "${member.employee_number}" already exists.`);
+        setSaving(false);
+        return;
+      }
       const { error } = await supabase.from("sweap_members").insert(member);
-      if (error) { setError(error.message); setSaving(false); return; }
+      if (error) {
+        const friendly = (error as any).code === "23505"
+          ? `Employee number "${member.employee_number}" already exists.`
+          : error.message;
+        setError(friendly);
+        setSaving(false);
+        return;
+      }
     } else {
       const { error } = await supabase.from("sweap_members").update(member).eq("employee_number", member.employee_number);
       if (error) { setError(error.message); setSaving(false); return; }
@@ -167,8 +201,19 @@ export default function MemberForm({ initial, mode }: Props) {
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Personal</h2>
         <div className="grid gap-3 md:grid-cols-2">
           <label className="text-sm">Employee Number *
-            <input className={inputCls} value={m.employee_number} disabled={mode === "edit"} required
-              onChange={e => setField("employee_number", e.target.value)} />
+            <input
+              className={`${inputCls} ${empNoTaken ? "border-red-400 focus:border-red-500 focus:ring-red-500" : ""}`}
+              value={m.employee_number}
+              disabled={mode === "edit"}
+              required
+              onChange={e => { setField("employee_number", e.target.value); if (empNoTaken) setEmpNoTaken(false); }}
+              onBlur={checkEmployeeNumber}
+            />
+            {mode === "create" && (
+              <span className={`mt-1 block text-xs ${empNoTaken ? "text-red-600" : "text-slate-400"}`}>
+                {checkingEmpNo ? "Checking…" : empNoTaken ? "This employee number is already taken." : "Must be unique."}
+              </span>
+            )}
           </label>
           <label className="text-sm">Full Name *
             <input className={inputCls} value={m.full_name} required onChange={e => setField("full_name", e.target.value)} />
@@ -315,7 +360,7 @@ export default function MemberForm({ initial, mode }: Props) {
 
       <div className="flex justify-end gap-3">
         <button type="button" onClick={() => router.back()} className="rounded-md border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100">Cancel</button>
-        <button type="submit" disabled={saving} className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
+        <button type="submit" disabled={saving || (mode === "create" && empNoTaken)} className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
           {saving ? "Saving…" : mode === "create" ? "Create member" : "Save changes"}
         </button>
       </div>
