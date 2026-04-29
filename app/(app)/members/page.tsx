@@ -36,7 +36,7 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
         )}
       </div>
 
-      <form className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-sm">
+      <form className="ml-auto flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-sm md:w-1/2">
         <input name="q" defaultValue={searchParams.q || ""} placeholder="Employee No.…" className="flex-1 rounded-md border border-slate-300 px-3 py-1.5" />
         <button className="rounded-md bg-slate-800 px-4 py-1.5 text-white">Search</button>
       </form>

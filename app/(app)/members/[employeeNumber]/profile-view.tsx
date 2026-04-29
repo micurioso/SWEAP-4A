@@ -45,10 +45,6 @@ function Field({ label, value, right }: { label: string; value: React.ReactNode;
   );
 }
 
-function YN(b?: boolean | null) {
-  return b === null || b === undefined ? "—" : b ? "Yes" : "No";
-}
-
 function formatBirthdate(s?: string | null): { display: string; age: number | null } {
   if (!s) return { display: "", age: null };
   const d = new Date(s);
@@ -167,6 +163,12 @@ export default function ProfileView({
             <Field label="Position" value={member.position} />
             <Field label="Status of Employment" value={member.status_of_employment} />
           </dl>
+          <h3 className="mt-5 mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Emergency Contact</h3>
+          <dl className="divide-y divide-slate-100">
+            <Field label="Name" value={member.emergency_contact_name} />
+            <Field label="Number" value={member.emergency_contact_number} />
+            <Field label="Relationship" value={member.emergency_contact_relationship} />
+          </dl>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
@@ -190,16 +192,6 @@ export default function ProfileView({
           </ol>
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Emergency Contact & Consent</h2>
-          <dl className="divide-y divide-slate-100">
-            <Field label="Contact Name" value={member.emergency_contact_name} />
-            <Field label="Contact Number" value={member.emergency_contact_number} />
-            <Field label="Relationship" value={member.emergency_contact_relationship} />
-            <Field label="Consent Signed" value={YN(member.consent_signed)} />
-          </dl>
-          {member.consent_text && <p className="mt-3 text-xs text-slate-500">{member.consent_text}</p>}
-        </section>
       </div>
     </div>
   );

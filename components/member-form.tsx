@@ -229,6 +229,18 @@ export default function MemberForm({ initial, mode }: Props) {
             <input className={inputCls} value={m.status_of_employment || ""} onChange={e => setField("status_of_employment", e.target.value)} />
           </label>
         </div>
+        <h3 className="mb-3 mt-5 text-sm font-semibold uppercase tracking-wide text-slate-500">Emergency Contact</h3>
+        <div className="grid gap-3 md:grid-cols-3">
+          <label className="text-sm">Name
+            <input className={inputCls} value={m.emergency_contact_name || ""} onChange={e => setField("emergency_contact_name", e.target.value)} />
+          </label>
+          <label className="text-sm">Number
+            <input className={inputCls} value={m.emergency_contact_number || ""} onChange={e => setField("emergency_contact_number", e.target.value)} />
+          </label>
+          <label className="text-sm">Relationship
+            <input className={inputCls} value={m.emergency_contact_relationship || ""} onChange={e => setField("emergency_contact_relationship", e.target.value)} />
+          </label>
+        </div>
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
@@ -299,25 +311,6 @@ export default function MemberForm({ initial, mode }: Props) {
             + Add claimant
           </button>
         )}
-      </section>
-
-      <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Emergency Contact & Consent</h2>
-        <div className="grid gap-3 md:grid-cols-3">
-          <label className="text-sm">Name
-            <input className={inputCls} value={m.emergency_contact_name || ""} onChange={e => setField("emergency_contact_name", e.target.value)} />
-          </label>
-          <label className="text-sm">Number
-            <input className={inputCls} value={m.emergency_contact_number || ""} onChange={e => setField("emergency_contact_number", e.target.value)} />
-          </label>
-          <label className="text-sm">Relationship
-            <input className={inputCls} value={m.emergency_contact_relationship || ""} onChange={e => setField("emergency_contact_relationship", e.target.value)} />
-          </label>
-          <label className="text-sm flex items-center gap-2 md:col-span-3">
-            <input type="checkbox" checked={!!m.consent_signed} onChange={e => setField("consent_signed", e.target.checked)} />
-            Consent Notice signed
-          </label>
-        </div>
       </section>
 
       <div className="flex justify-end gap-3">
