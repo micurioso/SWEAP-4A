@@ -62,13 +62,16 @@ export default function LoginForm() {
       `}</style>
       <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
       <div className="relative mb-6 w-full text-center slide-from-left">
-        <span className="inline-block text-3xl md:text-5xl font-extrabold tracking-widest text-brand-700 drop-shadow-md">
+        <span
+          className="inline-block text-3xl md:text-5xl font-extrabold tracking-widest drop-shadow-md"
+          style={{ color: "#0000CD", WebkitTextStroke: "2px #FFFF00", paintOrder: "stroke fill" }}
+        >
           PARA SA KAWANI
         </span>
       </div>
       <div className="relative w-full max-w-md rounded-xl border border-white/60 bg-white/90 p-8 shadow-xl backdrop-blur">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-brand-700">SWEAP CALABARZON</h1>
+          <h1 className="text-2xl font-bold" style={{ color: "#0000CD" }}>SWEAP CALABARZON</h1>
           <p className="mt-1 text-sm text-slate-500">DSWD FO IV-A · Member Database</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -100,7 +103,10 @@ export default function LoginForm() {
         </p>
       </div>
       <div className="relative mt-6 w-full text-center slide-from-right">
-        <span className="inline-block text-3xl md:text-5xl font-extrabold tracking-widest text-brand-700 drop-shadow-md">
+        <span
+          className="inline-block text-3xl md:text-5xl font-extrabold tracking-widest drop-shadow-md"
+          style={{ color: "#0000CD", WebkitTextStroke: "2px #FFFF00", paintOrder: "stroke fill" }}
+        >
           PARA SA BAYAN!
         </span>
       </div>
