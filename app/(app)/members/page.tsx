@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient, getSessionAndProfile } from "@/lib/supabase/server";
 
-export default async function MembersListPage({ searchParams }: { searchParams: { q?: string; chapter?: string; division?: string; status?: string; page?: string } }) {
+export default async function MembersListPage({ searchParams }: { searchParams: { q?: string; page?: string } }) {
   const supabase = createClient();
   const { profile } = await getSessionAndProfile();
   const isAdmin = profile?.role === "admin";
@@ -18,9 +18,6 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
     .range(from, to);
 
   if (searchParams.q) query = query.ilike("employee_number", `%${searchParams.q}%`);
-  if (searchParams.chapter) query = query.eq("chapter_base", searchParams.chapter);
-  if (searchParams.division) query = query.eq("division", searchParams.division);
-  if (searchParams.status) query = query.eq("status_of_employment", searchParams.status);
 
   const { data, count, error } = await query;
   const totalPages = Math.max(1, Math.ceil((count || 0) / pageSize));
@@ -39,12 +36,9 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
         )}
       </div>
 
-      <form className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-white p-3 text-sm">
-        <input name="q" defaultValue={searchParams.q || ""} placeholder="Employee No.…" className="flex-1 min-w-[180px] rounded-md border border-slate-300 px-3 py-1.5" />
-        <input name="chapter" defaultValue={searchParams.chapter || ""} placeholder="Chapter (e.g. Cavite)" className="rounded-md border border-slate-300 px-3 py-1.5" />
-        <input name="division" defaultValue={searchParams.division || ""} placeholder="Division" className="rounded-md border border-slate-300 px-3 py-1.5" />
-        <input name="status" defaultValue={searchParams.status || ""} placeholder="Employment status" className="rounded-md border border-slate-300 px-3 py-1.5" />
-        <button className="rounded-md bg-slate-800 px-3 py-1.5 text-white">Filter</button>
+      <form className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-sm">
+        <input name="q" defaultValue={searchParams.q || ""} placeholder="Employee No.…" className="flex-1 rounded-md border border-slate-300 px-3 py-1.5" />
+        <button className="rounded-md bg-slate-800 px-4 py-1.5 text-white">Search</button>
       </form>
 
       {error && <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error.message}</div>}

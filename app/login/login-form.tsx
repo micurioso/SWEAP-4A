@@ -45,10 +45,27 @@ export default function LoginForm() {
 
   return (
     <div
-      className="flex min-h-screen items-center justify-center p-4 bg-cover bg-center"
+      className="flex min-h-screen flex-col items-center justify-center overflow-x-hidden p-4 bg-cover bg-center"
       style={{ backgroundImage: "url('/bg.jpg')" }}
     >
+      <style>{`
+        @keyframes slide-in-left {
+          0% { transform: translateX(-100vw); opacity: 0; }
+          100% { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slide-in-right {
+          0% { transform: translateX(100vw); opacity: 0; }
+          100% { transform: translateX(0); opacity: 1; }
+        }
+        .slide-from-left { animation: slide-in-left 1.4s ease-out forwards; }
+        .slide-from-right { animation: slide-in-right 1.4s ease-out forwards; }
+      `}</style>
       <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
+      <div className="relative mb-6 w-full text-center slide-from-left">
+        <span className="inline-block text-3xl md:text-5xl font-extrabold tracking-widest text-brand-700 drop-shadow-md">
+          PARA SA KAWANI
+        </span>
+      </div>
       <div className="relative w-full max-w-md rounded-xl border border-white/60 bg-white/90 p-8 shadow-xl backdrop-blur">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-brand-700">SWEAP CALABARZON</h1>
@@ -81,6 +98,11 @@ export default function LoginForm() {
         <p className="mt-6 text-center text-xs text-slate-400">
           Accounts are managed by SWEAP administrators. Contact your admin for access.
         </p>
+      </div>
+      <div className="relative mt-6 w-full text-center slide-from-right">
+        <span className="inline-block text-3xl md:text-5xl font-extrabold tracking-widest text-brand-700 drop-shadow-md">
+          PARA SA BAYAN!
+        </span>
       </div>
     </div>
   );

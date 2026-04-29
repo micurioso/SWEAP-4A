@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
 import { createClient } from "@/lib/supabase/server";
-import { CSV_HEADERS, memberToRow } from "@/lib/csv";
+import { EXPORT_HEADERS, memberToExportRow } from "@/lib/csv";
 import type { MemberWithRelations } from "@/lib/schemas";
 
 function csvEscape(v: string | null | undefined): string {
@@ -31,14 +31,14 @@ export async function GET(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const rows: (string | null)[][] = [
-    [...CSV_HEADERS],
+    [...EXPORT_HEADERS],
     ...(data || []).map((m: any) => {
       const member: MemberWithRelations = {
         ...m,
         dependents: (m.dependents || []).sort((a: any, b: any) => a.slot - b.slot),
         claimants:  (m.claimants  || []).sort((a: any, b: any) => a.slot - b.slot)
       };
-      return memberToRow(member);
+      return memberToExportRow(member);
     })
   ];
 

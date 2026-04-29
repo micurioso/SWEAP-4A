@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { MemberWithRelations } from "@/lib/schemas";
@@ -18,6 +18,16 @@ export default function MemberForm({ initial, mode }: Props) {
   const [m, setM] = useState<MemberWithRelations>(initial || empty);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const initialClaimantCount = Math.max(
+    1,
+    (initial?.claimants || []).filter(c => c.name && c.name.trim()).length
+  );
+  const [claimantCount, setClaimantCount] = useState<number>(initialClaimantCount);
+  const initialDependentCount = Math.max(
+    1,
+    (initial?.dependents || []).filter(d => d.name && d.name.trim()).length
+  );
+  const [dependentCount, setDependentCount] = useState<number>(initialDependentCount);
 
   function setField<K extends keyof MemberWithRelations>(k: K, v: MemberWithRelations[K]) {
     setM(prev => ({ ...prev, [k]: v }));
@@ -28,6 +38,15 @@ export default function MemberForm({ initial, mode }: Props) {
       const cur = prev.dependents.find(d => d.slot === slot) || { slot };
       return { ...prev, dependents: [...others, { ...cur, [key]: value }].sort((a,b) => a.slot - b.slot) };
     });
+    if (key === "status" && mode === "edit" && m.employee_number) {
+      try {
+        const storageKey = `dependent-status:${m.employee_number}`;
+        const raw = window.localStorage.getItem(storageKey);
+        const map = raw ? JSON.parse(raw) : {};
+        map[slot] = value === "Deceased" ? "deceased" : "active";
+        window.localStorage.setItem(storageKey, JSON.stringify(map));
+      } catch {}
+    }
   }
   function setCla(slot: number, key: string, value: string) {
     setM(prev => {
@@ -36,6 +55,42 @@ export default function MemberForm({ initial, mode }: Props) {
       return { ...prev, claimants: [...others, { ...cur, [key]: value }].sort((a,b) => a.slot - b.slot) };
     });
   }
+  function removeDep(slot: number) {
+    setM(prev => {
+      const remaining = prev.dependents
+        .filter(d => d.slot !== slot)
+        .map(d => (d.slot > slot ? { ...d, slot: d.slot - 1 } : d))
+        .sort((a, b) => a.slot - b.slot);
+      return { ...prev, dependents: remaining };
+    });
+    setDependentCount(c => Math.max(1, c - 1));
+    if (mode === "edit" && m.employee_number) {
+      try {
+        const storageKey = `dependent-status:${m.employee_number}`;
+        const raw = window.localStorage.getItem(storageKey);
+        if (raw) {
+          const map = JSON.parse(raw) as Record<string, "active" | "deceased">;
+          const next: Record<string, "active" | "deceased"> = {};
+          for (const [k, v] of Object.entries(map)) {
+            const n = parseInt(k, 10);
+            if (n === slot) continue;
+            next[n > slot ? n - 1 : n] = v;
+          }
+          window.localStorage.setItem(storageKey, JSON.stringify(next));
+        }
+      } catch {}
+    }
+  }
+  function removeCla(slot: number) {
+    setM(prev => {
+      const remaining = prev.claimants
+        .filter(c => c.slot !== slot)
+        .map(c => (c.slot > slot ? { ...c, slot: c.slot - 1 } : c))
+        .sort((a, b) => a.slot - b.slot);
+      return { ...prev, claimants: remaining };
+    });
+    setClaimantCount(c => Math.max(1, c - 1));
+  }
   function depVal(slot: number, key: string) {
     return (m.dependents.find(d => d.slot === slot) as any)?.[key] || "";
   }
@@ -43,13 +98,30 @@ export default function MemberForm({ initial, mode }: Props) {
     return (m.claimants.find(c => c.slot === slot) as any)?.[key] || "";
   }
 
+  useEffect(() => {
+    if (mode !== "edit" || !m.employee_number) return;
+    try {
+      const raw = window.localStorage.getItem(`dependent-status:${m.employee_number}`);
+      if (!raw) return;
+      const map = JSON.parse(raw) as Record<string, "active" | "deceased">;
+      setM(prev => ({
+        ...prev,
+        dependents: prev.dependents.map(d => {
+          const v = map[d.slot];
+          if (!v) return d;
+          return { ...d, status: v === "deceased" ? "Deceased" : "Active" };
+        })
+      }));
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError(null);
     const supabase = createClient();
     const { dependents, claimants, ...member } = m;
-    // strip empty dependent/claimant slots
     const cleanDeps = dependents.filter(d => d.name && d.name.trim());
     const cleanClas = claimants.filter(c => c.name && c.name.trim());
 
@@ -123,7 +195,7 @@ export default function MemberForm({ initial, mode }: Props) {
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Employment & Inlife</h2>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Employment</h2>
         <div className="grid gap-3 md:grid-cols-2">
           <label className="text-sm">Chapter Base
             <input className={inputCls} value={m.chapter_base || ""} onChange={e => setField("chapter_base", e.target.value)} />
@@ -137,53 +209,77 @@ export default function MemberForm({ initial, mode }: Props) {
           <label className="text-sm">Status of Employment
             <input className={inputCls} value={m.status_of_employment || ""} onChange={e => setField("status_of_employment", e.target.value)} />
           </label>
-          <label className="text-sm flex items-center gap-2 mt-5">
-            <input type="checkbox" checked={!!m.has_physical_inlife_card}
-              onChange={e => setField("has_physical_inlife_card", e.target.checked)} />
-            Has Physical Inlife Card
-          </label>
-          <label className="text-sm">Inlife ID Number
-            <input className={inputCls} value={m.inlife_id_number || ""} onChange={e => setField("inlife_id_number", e.target.value)} />
-          </label>
-          <label className="text-sm md:col-span-2">No-card Reason
-            <input className={inputCls} value={m.no_inlife_card_reason || ""} onChange={e => setField("no_inlife_card_reason", e.target.value)} />
-          </label>
-          <label className="text-sm flex items-center gap-2">
-            <input type="checkbox" checked={!!m.claimed_burial_assistance}
-              onChange={e => setField("claimed_burial_assistance", e.target.checked)} />
-            Claimed Burial Assistance
-          </label>
         </div>
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Dependents (up to 4)</h2>
         <div className="space-y-3">
-          {[1,2,3,4].map(slot => (
-            <div key={slot} className="grid gap-2 rounded-md border border-slate-100 p-3 md:grid-cols-6">
-              <div className="col-span-6 text-xs font-mono text-slate-400">A.{slot}</div>
-              <input className={inputCls} placeholder="Name" value={depVal(slot, "name")} onChange={e => setDep(slot, "name", e.target.value)} />
-              <input className={inputCls} placeholder="Relationship" value={depVal(slot, "relationship")} onChange={e => setDep(slot, "relationship", e.target.value)} />
-              <input className={inputCls} placeholder="Status" value={depVal(slot, "status")} onChange={e => setDep(slot, "status", e.target.value)} />
-              <input className={inputCls} placeholder="Amount Claimed" value={depVal(slot, "amount_claimed")} onChange={e => setDep(slot, "amount_claimed", e.target.value)} />
-              <input className={inputCls} placeholder="Voucher #" value={depVal(slot, "check_voucher_number")} onChange={e => setDep(slot, "check_voucher_number", e.target.value)} />
-              <input className={inputCls} placeholder="Claimant" value={depVal(slot, "claimant_name")} onChange={e => setDep(slot, "claimant_name", e.target.value)} />
+          {Array.from({ length: dependentCount }, (_, i) => i + 1).map(slot => (
+            <div key={slot} className="rounded-md border border-slate-100 p-3">
+              <div className="text-xs font-mono text-slate-400 mb-2">A.{slot}</div>
+              <div className="flex flex-wrap items-center gap-2">
+                <input className={`${inputCls} flex-1 min-w-[140px]`} placeholder="Name" value={depVal(slot, "name")} onChange={e => setDep(slot, "name", e.target.value)} />
+                <input className={`${inputCls} flex-1 min-w-[140px]`} placeholder="Relationship" value={depVal(slot, "relationship")} onChange={e => setDep(slot, "relationship", e.target.value)} />
+                <select className={`${inputCls} flex-1 min-w-[140px]`} value={depVal(slot, "status") || "Active"} onChange={e => setDep(slot, "status", e.target.value)}>
+                  <option value="Active">Active</option>
+                  <option value="Deceased">Deceased</option>
+                </select>
+                {dependentCount > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeDep(slot)}
+                    className="ml-auto rounded-md bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
+        {dependentCount < 4 && (
+          <button
+            type="button"
+            onClick={() => setDependentCount(c => Math.min(4, c + 1))}
+            className="mt-3 rounded-md border border-dashed border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+          >
+            + Add dependent
+          </button>
+        )}
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Claimants (up to 4)</h2>
         <div className="grid gap-3 md:grid-cols-2">
-          {[1,2,3,4].map(slot => (
-            <div key={slot} className="grid grid-cols-2 gap-2 rounded-md border border-slate-100 p-3">
-              <div className="col-span-2 text-xs font-mono text-slate-400">B.{slot}</div>
-              <input className={inputCls} placeholder="Name" value={claVal(slot, "name")} onChange={e => setCla(slot, "name", e.target.value)} />
-              <input className={inputCls} placeholder="Relationship" value={claVal(slot, "relationship")} onChange={e => setCla(slot, "relationship", e.target.value)} />
+          {Array.from({ length: claimantCount }, (_, i) => i + 1).map(slot => (
+            <div key={slot} className="rounded-md border border-slate-100 p-3">
+              <div className="text-xs font-mono text-slate-400 mb-2">B.{slot}</div>
+              <div className="flex flex-wrap items-center gap-2">
+                <input className={`${inputCls} flex-1 min-w-[140px]`} placeholder="Name" value={claVal(slot, "name")} onChange={e => setCla(slot, "name", e.target.value)} />
+                <input className={`${inputCls} flex-1 min-w-[140px]`} placeholder="Relationship" value={claVal(slot, "relationship")} onChange={e => setCla(slot, "relationship", e.target.value)} />
+                {claimantCount > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeCla(slot)}
+                    className="ml-auto rounded-md bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
+        {claimantCount < 4 && (
+          <button
+            type="button"
+            onClick={() => setClaimantCount(c => Math.min(4, c + 1))}
+            className="mt-3 rounded-md border border-dashed border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+          >
+            + Add claimant
+          </button>
+        )}
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-5">

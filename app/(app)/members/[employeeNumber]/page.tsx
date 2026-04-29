@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient, getSessionAndProfile } from "@/lib/supabase/server";
+import DependentsTable from "./dependents-table";
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -63,51 +64,21 @@ export default async function MemberProfile({ params }: { params: { employeeNumb
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Employment & Inlife</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Employment</h2>
           <dl className="divide-y divide-slate-100">
             <Field label="Chapter Base" value={member.chapter_base} />
             <Field label="Division" value={member.division} />
             <Field label="Position" value={member.position} />
             <Field label="Status of Employment" value={member.status_of_employment} />
-            <Field label="Has Physical Inlife Card" value={YN(member.has_physical_inlife_card)} />
-            <Field label="Inlife ID Number" value={member.inlife_id_number} />
-            <Field label="No-card Reason" value={member.no_inlife_card_reason} />
-            <Field label="Claimed Burial Assistance" value={YN(member.claimed_burial_assistance)} />
           </dl>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Dependents</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-                <tr>
-                  <th className="px-3 py-2">#</th><th className="px-3 py-2">Name</th><th className="px-3 py-2">Relationship</th>
-                  <th className="px-3 py-2">Status</th><th className="px-3 py-2">Amount Claimed</th>
-                  <th className="px-3 py-2">Voucher #</th><th className="px-3 py-2">Claimant</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[1,2,3,4].map(slot => {
-                  const d: any = (dependents || []).find((x: any) => x.slot === slot);
-                  return (
-                    <tr key={slot} className="border-t border-slate-100">
-                      <td className="px-3 py-2 font-mono text-xs">A.{slot}</td>
-                      <td className="px-3 py-2">{d?.name || <span className="text-slate-300">—</span>}</td>
-                      <td className="px-3 py-2">{d?.relationship || "—"}</td>
-                      <td className="px-3 py-2">{d?.status || "—"}</td>
-                      <td className="px-3 py-2">{d?.amount_claimed || "—"}</td>
-                      <td className="px-3 py-2">{d?.check_voucher_number || "—"}</td>
-                      <td className="px-3 py-2">{d?.claimant_name || "—"}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <DependentsTable employeeNumber={employeeNumber} dependents={(dependents || []) as any} isAdmin={isAdmin} />
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Claimants</h2>
           <ol className="space-y-2 text-sm">
             {[1,2,3,4].map(slot => {
@@ -123,7 +94,7 @@ export default async function MemberProfile({ params }: { params: { employeeNumb
           </ol>
         </section>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-5">
+        <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Emergency Contact & Consent</h2>
           <dl className="divide-y divide-slate-100">
             <Field label="Contact Name" value={member.emergency_contact_name} />

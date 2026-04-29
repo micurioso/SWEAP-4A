@@ -75,7 +75,7 @@ export default function ImportPage() {
         <div>
           <h1 className="text-xl font-semibold text-slate-800">Import Members</h1>
           <p className="text-sm text-slate-500">
-            Upload a CSV exported from the SWEAP enrollment Google Form. Existing employees (matched by Employee Number) will be updated; new ones will be created.
+            Upload a CSV exported from the SWEAP enrollment Google Form. Rows in the CSV overwrite existing records matched by Employee Number; new Employee Numbers are inserted. Members already in the system whose Employee Number is not in the CSV are left untouched.
           </p>
         </div>
         <button onClick={downloadTemplate} className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">

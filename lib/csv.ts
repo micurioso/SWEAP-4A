@@ -1,10 +1,8 @@
-import { parseBoolean, parseDate, parseTimestamp } from "./utils";
+import { parseBoolean, parseDate } from "./utils";
 import type { MemberWithRelations } from "./schemas";
 
-// Header keys exactly as they appear in the Google Forms CSV export.
-// Using a single source of truth for both import and export keeps the round-trip lossless.
+// Header keys for the import template. Timestamp is omitted intentionally.
 export const CSV_HEADERS = [
-  "Timestamp",
   "Email Address",
   "Name of Staff",
   "Employee Number",
@@ -39,36 +37,31 @@ export const CSV_HEADERS = [
   "Consent Notice"
 ] as const;
 
-// Because some headers are repeated ("Relationship", "Claimant", etc.) we work positionally.
-// Indexes correspond to the columns above.
 const IDX = {
-  timestamp: 0,
-  email: 1,
-  name: 2,
-  empNo: 3,
-  permAddr: 4,
-  currAddr: 5,
-  contact: 6,
-  birthdate: 7,
-  sex: 8,
-  civilStatus: 9,
-  religion: 10,
-  sector: 11,
-  ipAffil: 12,
-  chapter: 13,
-  division: 14,
-  position: 15,
-  empStatus: 16,
-  hasInlife: 17,
-  inlifeId: 18,
-  noInlifeReason: 19,
-  claimedBurial: 20,
-  // Each dependent block is 6 columns starting at 21
-  dep1: 21, dep2: 27, dep3: 33, dep4: 39,
-  // Each claimant block is 2 columns starting at 45
-  cla1: 45, cla2: 47, cla3: 49, cla4: 51,
-  emName: 53, emPhone: 54, emRel: 55,
-  consent: 56
+  email: 0,
+  name: 1,
+  empNo: 2,
+  permAddr: 3,
+  currAddr: 4,
+  contact: 5,
+  birthdate: 6,
+  sex: 7,
+  civilStatus: 8,
+  religion: 9,
+  sector: 10,
+  ipAffil: 11,
+  chapter: 12,
+  division: 13,
+  position: 14,
+  empStatus: 15,
+  hasInlife: 16,
+  inlifeId: 17,
+  noInlifeReason: 18,
+  claimedBurial: 19,
+  dep1: 20, dep2: 26, dep3: 32, dep4: 38,
+  cla1: 44, cla2: 46, cla3: 48, cla4: 50,
+  emName: 52, emPhone: 53, emRel: 54,
+  consent: 55
 } as const;
 
 function depBlock(row: string[], start: number) {
@@ -105,7 +98,6 @@ export function rowToMember(row: string[]): MemberWithRelations | null {
   return {
     employee_number,
     full_name,
-    submission_timestamp: parseTimestamp(row[IDX.timestamp]),
     email_address: row[IDX.email] || null,
     permanent_address: row[IDX.permAddr] || null,
     current_address: row[IDX.currAddr] || null,
@@ -134,9 +126,74 @@ export function rowToMember(row: string[]): MemberWithRelations | null {
   };
 }
 
+export const EXPORT_HEADERS = [
+  "Email Address",
+  "Name of Staff",
+  "Employee Number",
+  "Permanent Address",
+  "Current Address",
+  "Contact Number",
+  "Birthdate",
+  "Sex",
+  "Civil Status",
+  "Religion",
+  "Sector",
+  "IP Affiliation",
+  "Chapter Base",
+  "Division",
+  "Position",
+  "Status of employment",
+  "A.1. Name of Declared Dependent (no.1)", "Relationship", "Dependent Status",
+  "A.2. Name of Declared Dependent (no.2)", "Relationship", "Dependent Status",
+  "A.3. Name of Declared Dependent (no.3)", "Relationship", "Dependent Status",
+  "A.4. Name of Declared Dependent (no.4)", "Relationship", "Dependent Status",
+  "B.1. Name of Declared Claimant (no.1)", "Relationship",
+  "B.2. Name of Declared Claimant (no.2)", "Relationship",
+  "B.3. Name of Declared Claimant (no.3)", "Relationship",
+  "B.4. Name of Declared Claimant (no.4)", "Relationship",
+  "Name of contact person", "Contact number/s", "Relationship",
+  "Consent Notice"
+] as const;
+
+export function memberToExportRow(m: MemberWithRelations): (string | null)[] {
+  const row: (string | null)[] = new Array(EXPORT_HEADERS.length).fill("");
+  let i = 0;
+  row[i++] = m.email_address ?? "";
+  row[i++] = m.full_name;
+  row[i++] = m.employee_number;
+  row[i++] = m.permanent_address ?? "";
+  row[i++] = m.current_address ?? "";
+  row[i++] = m.contact_number ?? "";
+  row[i++] = m.birthdate ?? "";
+  row[i++] = m.sex ?? "";
+  row[i++] = m.civil_status ?? "";
+  row[i++] = m.religion ?? "";
+  row[i++] = m.sector ?? "";
+  row[i++] = m.ip_affiliation ?? "";
+  row[i++] = m.chapter_base ?? "";
+  row[i++] = m.division ?? "";
+  row[i++] = m.position ?? "";
+  row[i++] = m.status_of_employment ?? "";
+  for (let s = 1; s <= 4; s++) {
+    const d = m.dependents.find(x => x.slot === s);
+    row[i++] = d?.name ?? "";
+    row[i++] = d?.relationship ?? "";
+    row[i++] = d?.status ?? "";
+  }
+  for (let s = 1; s <= 4; s++) {
+    const c = m.claimants.find(x => x.slot === s);
+    row[i++] = c?.name ?? "";
+    row[i++] = c?.relationship ?? "";
+  }
+  row[i++] = m.emergency_contact_name ?? "";
+  row[i++] = m.emergency_contact_number ?? "";
+  row[i++] = m.emergency_contact_relationship ?? "";
+  row[i++] = m.consent_text ?? (m.consent_signed ? "Yes" : "");
+  return row;
+}
+
 export function memberToRow(m: MemberWithRelations): (string | null)[] {
   const row: (string | null)[] = new Array(CSV_HEADERS.length).fill("");
-  row[IDX.timestamp] = m.submission_timestamp ?? "";
   row[IDX.email] = m.email_address ?? "";
   row[IDX.name] = m.full_name;
   row[IDX.empNo] = m.employee_number;
