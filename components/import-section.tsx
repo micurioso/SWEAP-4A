@@ -55,7 +55,7 @@ export default function ImportSection() {
         setDuplicateInCsv(dupes);
         setSkipped(skippedCount);
       },
-      error: (err) => setError(err.message)
+      error: (err: Error) => setError(err.message)
     });
   }
 

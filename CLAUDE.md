@@ -45,7 +45,7 @@ Public sign-up is disabled in Supabase. All accounts are admin-managed.
 ### Authorization — defense in depth
 Every write path is gated **twice**:
 
-1. **`middleware.ts`** — checks the session on every request, redirects unauthenticated users to `/login`, and blocks `/admin/*`, `/import`, `/export`, `*/edit`, `*/new` for non-admins.
+1. **`middleware.ts`** — checks the session on every request, redirects unauthenticated users to `/login`, and blocks `/admin/*` and any path ending in `/edit` or `/new` for non-admins. Admin-only features (Import, Export, Danger Zone, Users, Forms, Audit) all live under `/admin/*` and are therefore covered by the single `/admin` prefix.
 2. **Postgres RLS** in `supabase/migrations/0001_init.sql` — policies use the `is_admin()` SQL helper to reject any `INSERT/UPDATE/DELETE` to `sweap_members`, `member_dependents`, `member_claimants`, `profiles` from non-admin sessions, even if middleware were bypassed.
 
 API route handlers under `app/api/**` additionally call `requireAdmin()` from `lib/auth-guard.ts` before doing anything.
@@ -57,32 +57,54 @@ The Google Form has up to 4 declared **dependents** (A.1–A.4, 6 columns each: 
 
 These are normalized into `member_dependents` and `member_claimants` tables with a `slot smallint (1..4)` column and a `UNIQUE (employee_number, slot)` constraint, so re-imports overwrite the same slot rather than creating duplicates. Whenever rendering a profile, querying by `slot` preserves the original A.1/A.2/A.3/A.4 ordering exactly as the form intended.
 
+### Validation rules
+- **`employee_number`** must contain at least one digit (`/\d/`). This rejects rows where a name accidentally landed in the Emp # column without breaking codes like `Apr-51` or `04-12096`. Enforced in three places: `lib/csv.ts` (CSV import skip), `lib/schemas.ts` Zod (server-side `/api/import` and `/api/members`), and `components/member-form.tsx` (HTML `pattern=".*\d.*"`). Uniqueness is enforced by the Postgres PK.
+- **Dates** (`parseDate`/`parseTimestamp` in `lib/utils.ts`) are clamped to year 1900–2100. Out-of-range dates return `null` instead of producing the `time zone displacement out of range` error that bulk inserts used to throw on Excel-mangled birthdates.
+- **CSV encoding** is auto-detected: `decodeFile()` in `components/import-section.tsx` and `scripts/seed.ts` decode UTF-8 strictly first, then fall back to Windows-1252 if that throws. Excel-saved CSVs default to cp1252 and would otherwise show `�` for `ñ`/`Ñ`.
+
 ### CSV ↔ DB mapping is positional, not by header name
 `lib/csv.ts` is the **single source of truth** for the mapping between the 57-column Google Forms CSV and the database schema. It's used by:
 
-- The in-app `/import` page (PapaParse → dry-run preview → POST to `/api/import`)
-- `/api/export` (joins members + child rows → reconstructs the same row layout via `memberToRow` → SheetJS XLSX)
+- The Import tab inside `/admin/data-management` (PapaParse → dry-run preview → POST to `/api/import`)
+- `/api/export` (joins members + child rows → reconstructs the row layout via `memberToRow` → SheetJS XLSX)
 - `scripts/seed.ts` (one-time bulk load of `data.csv`)
 
 Headers like "Relationship" and "Claimant" repeat across the four dependent/claimant blocks, so `rowToMember`/`memberToRow` work **by column index** (`IDX` constants in `lib/csv.ts`), not by header lookup. Any change to the source form's column order requires updating those indexes.
 
-### Import pipeline (lib/import.ts)
-`importMembers(supabase, rows, mode)` takes an `ImportMode` of `"skip-existing"` (default) or `"overwrite"`.
+### Import pipeline (lib/import.ts + components/import-section.tsx)
+The import is **chunked client-side and bulk-batched server-side** to handle ~2k-row CSVs in seconds rather than minutes.
 
-Pipeline:
-1. **In-CSV dedupe** (always on) — drop later rows whose `employee_number` already appeared earlier in the same payload; counted into `result.skipped`.
-2. Pre-query which `employee_number`s already exist in `sweap_members` (single `IN` query).
-3. For each row:
-   - If it already exists in DB and `mode === "skip-existing"` → skip (counts toward `result.skipped`).
-   - Otherwise UPSERT on the `employee_number` PK, then DELETE+INSERT child rows in `member_dependents` and `member_claimants` so re-imports replace rather than duplicate.
-4. Result reports `inserted`, `updated`, `skipped`, and per-row `errors`.
+**Client (`components/import-section.tsx`)**:
+1. PapaParse the file (after `decodeFile()` UTF-8/cp1252 fallback). Drop rows missing emp #, name, or whose emp # has no digit. Drop in-CSV duplicates (first wins).
+2. Live-tag each preview row as **New**, **Skip**, or **Overwrite** by querying which employee numbers already exist.
+3. On commit, split rows into **200-row chunks** and run **4 chunks in parallel** via a worker pool. The progress bar updates as each chunk completes; results are aggregated client-side. If any chunk errors, the others still finish and the first error is surfaced.
 
-Both `/api/import` (which forwards `mode` from the UI checkbox; default skip) and `scripts/seed.ts` (pinned to `"overwrite"` so bulk loads behave like before) use this function. The `/import` UI dedupes client-side too — defense in depth — and live-tags each preview row as **New**, **Skip**, or **Overwrite** by querying which employee numbers exist before commit.
+**Server (`lib/import.ts` `importMembers`)**, called once per chunk by `/api/import`:
+1. In-CSV dedupe (defense in depth — the client also dedupes).
+2. One `IN` query to find which `employee_number`s already exist; partition into skip/write.
+3. **Bulk** `upsert(members[], { onConflict: "employee_number" })` for the entire chunk.
+4. Two **parallel** bulk `delete().in("employee_number", ...)` calls to wipe any prior child rows for the touched emp #s.
+5. Two **parallel** bulk `insert(...)` calls to write the new dependents / claimants.
 
-The audit log captures the import as a single event with `{mode, inserted, updated, skipped, errors}` in the diff, not per-row.
+So each chunk is ~5 round-trips to Supabase regardless of chunk size, vs the old ~5×N. Trade-off: if a single bad row in a chunk fails the bulk upsert, the **whole chunk** is reported as errors (not just that row).
+
+`scripts/seed.ts` is pinned to `"overwrite"`. The default mode for `/api/import` is `"skip-existing"`; the UI exposes an "Overwrite existing records" checkbox to switch.
 
 ### Audit
-Every `INSERT/UPDATE/DELETE` on `sweap_members` fires a `SECURITY DEFINER` trigger that writes to `audit_log` with the actor and a JSONB diff. Imports and exports also write a single audit row from the API route. `audit_log` is read-only to admins via RLS; clients cannot forge entries.
+Every `INSERT/UPDATE/DELETE` on `sweap_members` fires a `SECURITY DEFINER` trigger that writes to `audit_log` with the actor and a JSONB diff. The `audit_action` enum is `('insert','update','delete','import','export','login')` — keep new actions inside this set or extend the enum in a new migration. `audit_log` is read-only to admins via RLS; clients cannot forge entries.
+
+Note: imports run as multiple parallel chunks, so a single CSV import produces N per-row audit entries (one per inserted/updated row via the trigger). There is no longer a single consolidated "import" audit row.
+
+### Danger Zone
+Admin-only destructive actions live in the third tab of `/admin/data-management`:
+
+- **Erase all members** (`POST /api/admin/erase-members`) — deletes every row from `sweap_members`. Child tables cascade via the `ON DELETE CASCADE` FK on `employee_number`. The per-row audit trigger records each delete in `audit_log`.
+- **Clear audit log** (`POST /api/admin/clear-audit`) — wipes `audit_log` (typically used after the bulk-erase above to discard the resulting audit spam).
+
+Both routes require a typed-confirmation phrase in the modal (`"ERASE ALL MEMBERS"` / `"CLEAR AUDIT LOG"`) and are gated by `requireAdmin()`.
+
+### Viewer experience — search-only Members tab
+For non-admin (`viewer`) accounts, `/members` does **not** render the table on initial load — only the search bar is visible, with the hint "Enter an Employee Number to search." The Supabase query is also skipped server-side until a query is provided, so viewers can't enumerate the full member list. Admins see the full paginated table as before. Logic lives in `app/(app)/members/page.tsx` (`showTable = isAdmin || hasQuery`).
 
 ### SWEAP Forms (PDF library)
 Admins upload PDFs at `/admin/forms`; all authenticated users see them in the sidebar's "SWEAP Forms" dropdown and click a name to download.
@@ -102,9 +124,14 @@ These flags are **per-device, per-browser**. If a future task needs them shared 
 
 ### Routing
 - `app/(app)/**` — authenticated app shell with sidebar (`components/sidebar.tsx`); the layout fetches the session + profile via `getSessionAndProfile()` and redirects to `/login` if missing.
+- `app/(app)/admin/data-management/**` — Import + Export + Danger Zone tabs (admin-only). Old `/import` and `/export` top-level routes have been removed; `/api/import` and `/api/export` remain unchanged.
 - `app/login/**` — the page is a server-component Suspense wrapper; the actual form is in `login-form.tsx` because `useSearchParams()` requires a Suspense boundary in Next.js 14 strict static-prerender.
 - `app/api/**` — JSON route handlers, admin-gated except `/api/auth/resolve-username`, `/api/forms` (list), and `/api/forms/[id]/download` (any signed-in user).
-- `/admin/forms` is auto-protected by the existing `/admin/*` middleware rule; no new entry needed.
+
+### Admin user management
+- `app/(app)/admin/users/page.tsx` fetches profiles plus enriches each row with `last_sign_in_at` from `auth.admin.listUsers()` (paged at 200) and renders `components/users-manager.tsx`.
+- All actions (Create / Edit / Reset password / Delete) are modal-based with show/hide password toggles. `Reset password` requires the admin to type a new password (min 6 chars); there is no auto-generated temp password.
+- `DELETE /api/admin/users/[id]` removes the auth user and the profile row.
 
 ## Migrations
 
