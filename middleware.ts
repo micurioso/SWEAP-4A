@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
-const ADMIN_PREFIXES = ["/admin", "/import", "/export"];
+const ADMIN_PREFIXES = ["/admin"];
 const ADMIN_SUFFIXES = ["/edit", "/new"];
 
 export async function middleware(request: NextRequest) {

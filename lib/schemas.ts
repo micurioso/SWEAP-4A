@@ -17,7 +17,7 @@ export const claimantSchema = z.object({
 });
 
 export const memberSchema = z.object({
-  employee_number: z.string().min(1, "Employee number is required"),
+  employee_number: z.string().min(1, "Employee number is required").regex(/\d/, "Employee number must contain at least one digit"),
   submission_timestamp: z.string().nullable().optional(),
   email_address: z.string().nullable().optional(),
   full_name: z.string().min(1, "Full name is required"),

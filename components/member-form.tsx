@@ -206,12 +206,14 @@ export default function MemberForm({ initial, mode }: Props) {
               value={m.employee_number}
               disabled={mode === "edit"}
               required
+              pattern=".*\d.*"
+              title="Must contain at least one digit"
               onChange={e => { setField("employee_number", e.target.value); if (empNoTaken) setEmpNoTaken(false); }}
               onBlur={checkEmployeeNumber}
             />
             {mode === "create" && (
               <span className={`mt-1 block text-xs ${empNoTaken ? "text-red-600" : "text-slate-400"}`}>
-                {checkingEmpNo ? "Checking…" : empNoTaken ? "This employee number is already taken." : "Must be unique."}
+                {checkingEmpNo ? "Checking…" : empNoTaken ? "This employee number is already taken." : "Must contain at least one digit · must be unique."}
               </span>
             )}
           </label>

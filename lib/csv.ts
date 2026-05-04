@@ -86,6 +86,7 @@ export function rowToMember(row: string[]): MemberWithRelations | null {
   const employee_number = (row[IDX.empNo] || "").trim();
   const full_name = (row[IDX.name] || "").trim();
   if (!employee_number || !full_name) return null;
+  if (!/\d/.test(employee_number)) return null;
 
   const dependents = [IDX.dep1, IDX.dep2, IDX.dep3, IDX.dep4]
     .map((s, i) => ({ slot: i + 1, ...depBlock(row, s) }))

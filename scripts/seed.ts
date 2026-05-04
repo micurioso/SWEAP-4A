@@ -20,7 +20,14 @@ async function main() {
     console.error(`data.csv not found at ${csvPath}`);
     process.exit(1);
   }
-  const csv = fs.readFileSync(csvPath, "utf8");
+  const buf = fs.readFileSync(csvPath);
+  let csv: string;
+  try {
+    csv = new TextDecoder("utf-8", { fatal: true }).decode(buf);
+  } catch {
+    csv = new TextDecoder("windows-1252").decode(buf);
+    console.warn("data.csv is not valid UTF-8 — decoded as windows-1252");
+  }
 
   const { data } = Papa.parse<string[]>(csv, { skipEmptyLines: true });
   // Skip header row

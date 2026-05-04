@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
-  Upload,
-  Download,
+  Database,
   UserCog,
   ScrollText,
   FileText,
@@ -28,8 +27,7 @@ const TOP_ITEMS: Item[] = [
 ];
 
 const BOTTOM_ITEMS: Item[] = [
-  { href: "/import",       label: "Import",    icon: Upload,    admin: true },
-  { href: "/export",       label: "Export",    icon: Download,  admin: true },
+  { href: "/admin/data-management", label: "Data Management", icon: Database, admin: true },
   { href: "/admin/users",  label: "Users",     icon: UserCog,   admin: true },
   { href: "/admin/forms",  label: "Manage Forms", icon: FileText, admin: true },
   { href: "/admin/audit",  label: "Audit log", icon: ScrollText, admin: true }

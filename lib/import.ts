@@ -30,44 +30,78 @@ export async function importMembers(
     deduped.push(r);
   }
 
+  if (deduped.length === 0) return result;
+
   const empNos = deduped.map(r => r.employee_number);
-  const { data: existing } = await supabase
+  const { data: existing, error: existErr } = await supabase
     .from("sweap_members")
     .select("employee_number")
     .in("employee_number", empNos);
+  if (existErr) {
+    for (const m of deduped) result.errors.push({ employee_number: m.employee_number, message: existErr.message });
+    return result;
+  }
   const existingSet = new Set((existing || []).map((r: any) => r.employee_number));
 
+  // Partition rows: skip vs upsert.
+  const toWrite: MemberWithRelations[] = [];
   for (const m of deduped) {
-    const isExisting = existingSet.has(m.employee_number);
-    if (isExisting && mode === "skip-existing") {
+    if (existingSet.has(m.employee_number) && mode === "skip-existing") {
       result.skipped++;
       continue;
     }
+    toWrite.push(m);
+  }
+  if (toWrite.length === 0) return result;
 
-    const { dependents, claimants, ...member } = m;
-    const { error: upsertErr } = await supabase
-      .from("sweap_members")
-      .upsert(member, { onConflict: "employee_number" });
-    if (upsertErr) {
-      result.errors.push({ employee_number: m.employee_number, message: upsertErr.message });
-      continue;
-    }
-    await supabase.from("member_dependents").delete().eq("employee_number", m.employee_number);
-    await supabase.from("member_claimants").delete().eq("employee_number", m.employee_number);
-    if (dependents.length) {
-      const { error } = await supabase.from("member_dependents").insert(
-        dependents.map(d => ({ ...d, employee_number: m.employee_number }))
-      );
-      if (error) result.errors.push({ employee_number: m.employee_number, message: `dependents: ${error.message}` });
-    }
-    if (claimants.length) {
-      const { error } = await supabase.from("member_claimants").insert(
-        claimants.map(c => ({ ...c, employee_number: m.employee_number }))
-      );
-      if (error) result.errors.push({ employee_number: m.employee_number, message: `claimants: ${error.message}` });
-    }
-    if (isExisting) result.updated++;
+  const writeEmpNos = toWrite.map(m => m.employee_number);
+  const memberPayload = toWrite.map(({ dependents: _d, claimants: _c, ...member }) => member);
+  const dependentPayload = toWrite.flatMap(m =>
+    m.dependents.map(d => ({ ...d, employee_number: m.employee_number }))
+  );
+  const claimantPayload = toWrite.flatMap(m =>
+    m.claimants.map(c => ({ ...c, employee_number: m.employee_number }))
+  );
+
+  // 1. Bulk upsert members
+  const { error: upsertErr } = await supabase
+    .from("sweap_members")
+    .upsert(memberPayload, { onConflict: "employee_number" });
+  if (upsertErr) {
+    for (const m of toWrite) result.errors.push({ employee_number: m.employee_number, message: upsertErr.message });
+    return result;
+  }
+
+  // 2. Bulk delete child rows for all touched employee numbers
+  const [delDeps, delClaims] = await Promise.all([
+    supabase.from("member_dependents").delete().in("employee_number", writeEmpNos),
+    supabase.from("member_claimants").delete().in("employee_number", writeEmpNos)
+  ]);
+  if (delDeps.error) result.errors.push({ employee_number: "(bulk)", message: `dependents delete: ${delDeps.error.message}` });
+  if (delClaims.error) result.errors.push({ employee_number: "(bulk)", message: `claimants delete: ${delClaims.error.message}` });
+
+  // 3. Bulk insert child rows
+  const childOps: Promise<unknown>[] = [];
+  if (dependentPayload.length) {
+    childOps.push(
+      supabase.from("member_dependents").insert(dependentPayload).then(({ error }) => {
+        if (error) result.errors.push({ employee_number: "(bulk)", message: `dependents insert: ${error.message}` });
+      })
+    );
+  }
+  if (claimantPayload.length) {
+    childOps.push(
+      supabase.from("member_claimants").insert(claimantPayload).then(({ error }) => {
+        if (error) result.errors.push({ employee_number: "(bulk)", message: `claimants insert: ${error.message}` });
+      })
+    );
+  }
+  await Promise.all(childOps);
+
+  for (const m of toWrite) {
+    if (existingSet.has(m.employee_number)) result.updated++;
     else result.inserted++;
   }
+
   return result;
 }

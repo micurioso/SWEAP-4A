@@ -7,7 +7,7 @@ import type { MemberWithRelations } from "@/lib/schemas";
 
 type Result = { inserted: number; updated: number; skipped: number; errors: { employee_number: string; message: string }[] };
 
-export default function ImportPage() {
+export default function ImportSection() {
   const [parsed, setParsed] = useState<MemberWithRelations[] | null>(null);
   const [duplicateInCsv, setDuplicateInCsv] = useState<string[]>([]);
   const [existingInDb, setExistingInDb] = useState<Set<string>>(new Set());
@@ -17,15 +17,26 @@ export default function ImportPage() {
   const [overwrite, setOverwrite] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
 
-  function onFile(e: React.ChangeEvent<HTMLInputElement>) {
+  async function decodeFile(file: File): Promise<string> {
+    const buf = await file.arrayBuffer();
+    try {
+      return new TextDecoder("utf-8", { fatal: true }).decode(buf);
+    } catch {
+      return new TextDecoder("windows-1252").decode(buf);
+    }
+  }
+
+  async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setFilename(file.name);
     setResult(null);
     setError(null);
     setExistingInDb(new Set());
-    Papa.parse<string[]>(file, {
+    const text = await decodeFile(file);
+    Papa.parse<string[]>(text, {
       skipEmptyLines: true,
       complete: ({ data }) => {
         const rows = data.slice(1);
@@ -79,18 +90,58 @@ export default function ImportPage() {
     if (!parsed) return;
     setBusy(true);
     setError(null);
-    const res = await fetch("/api/import", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ rows: parsed, mode: overwrite ? "overwrite" : "skip-existing" })
-    });
-    const data = await res.json();
+    setResult(null);
+
+    const CHUNK = 200;
+    const CONCURRENCY = 4;
+    const total = parsed.length;
+    setProgress({ done: 0, total });
+    const totals: Result = { inserted: 0, updated: 0, skipped: 0, errors: [] };
+
+    const chunks: MemberWithRelations[][] = [];
+    for (let i = 0; i < total; i += CHUNK) chunks.push(parsed.slice(i, i + CHUNK));
+
+    let done = 0;
+    let firstErr: string | null = null;
+    let cursor = 0;
+
+    async function worker() {
+      while (cursor < chunks.length) {
+        const idx = cursor++;
+        const chunk = chunks[idx];
+        try {
+          const res = await fetch("/api/import", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ rows: chunk, mode: overwrite ? "overwrite" : "skip-existing" })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            if (!firstErr) firstErr = data.error || "Import failed";
+          } else {
+            totals.inserted += data.inserted || 0;
+            totals.updated += data.updated || 0;
+            totals.skipped += data.skipped || 0;
+            if (Array.isArray(data.errors)) totals.errors.push(...data.errors);
+          }
+        } catch (e: any) {
+          if (!firstErr) firstErr = e?.message || "Network error";
+        } finally {
+          done += chunk.length;
+          setProgress({ done: Math.min(done, total), total });
+        }
+      }
+    }
+
+    await Promise.all(Array.from({ length: Math.min(CONCURRENCY, chunks.length) }, () => worker()));
+
     setBusy(false);
-    if (!res.ok) {
-      setError(data.error || "Import failed");
+    setProgress(null);
+    if (firstErr) {
+      setError(firstErr);
       return;
     }
-    setResult(data);
+    setResult(totals);
   }
 
   const willInsert = parsed ? parsed.filter(r => !existingInDb.has(r.employee_number)).length : 0;
@@ -99,12 +150,9 @@ export default function ImportPage() {
   return (
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-800">Import Members</h1>
-          <p className="text-sm text-slate-500">
-            Upload a CSV exported from the SWEAP enrollment Google Form. By default, rows whose Employee Number already exists are skipped — check &ldquo;Overwrite existing records&rdquo; if you want to update them. Rows with duplicate Employee Numbers within the CSV are always deduplicated (first occurrence wins).
-          </p>
-        </div>
+        <p className="text-sm text-slate-500">
+          Upload a CSV exported from the SWEAP enrollment Google Form. By default, rows whose Employee Number already exists are skipped — check &ldquo;Overwrite existing records&rdquo; to update them. In-CSV duplicates are always deduplicated (first occurrence wins).
+        </p>
         <button onClick={downloadTemplate} className="shrink-0 rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100">
           Download template
         </button>
@@ -141,10 +189,29 @@ export default function ImportPage() {
               </label>
               <button onClick={commit} disabled={busy || parsed.length === 0}
                 className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
-                {busy ? "Importing…" : `Commit ${parsed.length} rows`}
+                {busy
+                  ? progress
+                    ? `Importing… ${Math.round((progress.done / progress.total) * 100)}%`
+                    : "Importing…"
+                  : `Commit ${parsed.length} rows`}
               </button>
             </div>
           </div>
+
+          {progress && (
+            <div className="mb-3">
+              <div className="mb-1 flex justify-between text-xs text-slate-600">
+                <span>Importing {progress.done} of {progress.total} rows</span>
+                <span className="font-mono">{Math.round((progress.done / progress.total) * 100)}%</span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                <div
+                  className="h-full rounded-full bg-brand-600 transition-all"
+                  style={{ width: `${(progress.done / progress.total) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
 
           {duplicateInCsv.length > 0 && (
             <details className="mb-3 rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
