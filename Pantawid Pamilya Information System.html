@@ -1,0 +1,3614 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)https://ppisv3.dswd.gov.ph/BUS/BUS -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <!--<link rel="icon" type="image/png" sizes="16x16" href="<?/*=base_url()*/ ?>assets/images/favicon-4ps-circle.png">-->
+    <link rel="icon" type="image/png" sizes="16x16" href="./Pantawid Pamilya Information System_files/pantawid_logo_icon.png">
+    <title>Pantawid Pamilya Information System</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="./Pantawid Pamilya Information System_files/bootstrap.min.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/dropify.min.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/steps.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/jquery.dataTables.min.css" rel="stylesheet">
+    <!--This page css - Morris CSS -->
+    <link href="./Pantawid Pamilya Information System_files/c3.min.css" rel="stylesheet">
+    <!--alerts CSS -->
+    <link href="./Pantawid Pamilya Information System_files/sweetalert.css" rel="stylesheet" type="text/css">
+    <link href="./Pantawid Pamilya Information System_files/nestable.css" rel="stylesheet" type="text/css">
+    <link href="./Pantawid Pamilya Information System_files/switchery.min.css" rel="stylesheet">
+    <!-- chartist CSS -->
+    <link href="./Pantawid Pamilya Information System_files/chartist.min.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/chartist-init.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/chartist-plugin-tooltip.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/css-chart.css" rel="stylesheet">
+    <link rel="stylesheet" href="./Pantawid Pamilya Information System_files/confirmation.css">
+
+    <!-- Custom CSS -->
+    
+    <link href="./Pantawid Pamilya Information System_files/green-dark.css" id="theme" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/style.css" rel="stylesheet">
+    <!-- You can change the theme colors from here -->
+    <link href="./Pantawid Pamilya Information System_files/green-dark.css" id="theme" rel="stylesheet">
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!--        <script src="--><!--?//= base_url() ?--><!--assets/plugins/jquery/jquery.min.js"></script>-->
+    <script src="./Pantawid Pamilya Information System_files/jquery-3.7.1.min.js.download"></script>
+    <script src="./Pantawid Pamilya Information System_files/popper.min.js.download"></script>
+    <script src="./Pantawid Pamilya Information System_files/bootstrap.min.js.download"></script>
+    <script src="./Pantawid Pamilya Information System_files/bootstrap-select.min.js.download"></script>
+
+    <!--bootgrid-->
+    <link href="./Pantawid Pamilya Information System_files/jquery.bootgrid.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/jquery.bootgrid.min.css" rel="stylesheet">
+    <script src="./Pantawid Pamilya Information System_files/jquery.bootgrid.min.js.download"></script>
+    <script src="./Pantawid Pamilya Information System_files/jquery.serialize.js.download"></script>
+    <script src="./Pantawid Pamilya Information System_files/jquery.bootgrid.fa.js.download"></script>
+    <script src="./Pantawid Pamilya Information System_files/jquery.bootgrid.fa.min.js.download"></script>
+
+    <link rel="stylesheet" href="./Pantawid Pamilya Information System_files/all.css">
+    <link href="./Pantawid Pamilya Information System_files/steps.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/swap.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/open_swap.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/lato_swap.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/alegreya_swap.css" rel="stylesheet">
+    <link href="./Pantawid Pamilya Information System_files/cairo_swap.css" rel="stylesheet">
+    <style>
+        .profile-pic-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .profile-pic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .upload-btn:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .upload-btn input {
+            display: none;
+        }
+
+        .upload-btn i {
+            font-size: 20px;
+        }
+
+        .upload-new-picture {
+            display: none;
+        }
+    </style>
+<link href="./Pantawid Pamilya Information System_files/css" rel="stylesheet"><link href="./Pantawid Pamilya Information System_files/css(1)" rel="stylesheet"><link href="./Pantawid Pamilya Information System_files/cvs_custom.css" rel="stylesheet" type="text/css"><style>
+    .darkbg {
+        /*background-color: #006F63; old*/
+        background-color: #3151AB;
+    }
+    .logonav {
+        color: #F2F2D2;
+        font-size: 22px;
+        font-family: 'Montserrat Alternates', sans-serif;
+    }
+
+</style><style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style></head>
+
+
+
+
+<body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader" style="display: none;">
+        <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle> </svg>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light darkbg">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header darkbg">
+                    <a class="navbar-brand">
+                        <!--s Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <!--<img src="<?/*=base_url()*/?>assets/images/favicon-4ps-circle.png"  height="45" alt="" class="dark-logo" />-->
+                            <!-- Light Logo icon -->
+                            <!--<img src="<?/*=base_url()*/?>assets/images/favicon-4ps-circle.png"  height="45" alt="" class="light-logo" />-->
+                        <!--<img src="<?/*= base_url() */?>assets/images/favicon-4ps-circle.png"  height="50" alt="" class="light-logo ml-1" />-->
+                            <img src="./Pantawid Pamilya Information System_files/pantawid_logo_icon.png" height="50" alt="" class="">
+                            &nbsp;&nbsp;
+                            <span class="logonav">PPIS v3</span>
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><!--<span>-->
+                        <!-- dark Logo text -->
+                        <!--<img src="<?/*=base_url()*/?>assets/images/logo-4ps-text.png"  height="55" alt="homepage" class="dark-logo" />-->
+                        <!-- Light Logo text -->
+                         <!--<img src="<?/*=base_url()*/?>assets/images/logo-4ps-text.png" height="55" class="light-logo" alt="homepage" /></span> -->
+                    </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse darkbg">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav mr-auto mt-md-0">
+                        <!-- This is  -->
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-menu"></i></a> </li>
+                        <li class="nav-item"> <a class="nav-link sidebartoggler hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-menu"></i></a> </li>
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item hidden-sm-down search-box"> <a class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                            <!---->
+                            <div class="app-search">
+                                <form method="post" action="https://ppisv3.dswd.gov.ph/hh_profile/household/profile/">
+                                                                        <input type="text" disabled="" class="form-control" id="searchHousehold" name="searchHousehold" placeholder="Enter Household ID"> <a class="srh-btn"><i class="ti-close"></i></a>
+                                </form>
+                                <div id="searchString">
+                                    <!--<div class="card">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item"><span style="cursor:pointer;" id="' . $per->uid . '" class="clickedName" >Jaypee Cumagun</span></li>
+                                        </ul>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <!---->
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- Messages -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown mega-dropdown"> <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/BUS/BUS" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="mdi mdi-view-grid"></i></a>
+                            <div class="dropdown-menu scale-up-left pt-3 pl-3">
+                                <ul class="mega-dropdown-menu row">
+                                    
+                                    <li class="col-lg-3 m-b-30">
+                                        <span class="opensans size16 w-heavy">ADMINISTRATION</span>
+                                        <hr class="mt-1 mb-3">
+                                        <!-- Accordian -->
+                                        <div id="accordion" class="nav-accordion opensans size-14" role="tablist" aria-multiselectable="true">
+                                                                                                                                    <div class="card">
+                                                <div class="card-header" role="tab" id="headingTwo">
+                                                    <h5 class="mb-0">
+                                                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="https://ppisv3.dswd.gov.ph/BUS/BUS#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                            Library Management
+                                                        </a>
+                                                    </h5> </div>
+                                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                    <div class="card-body">
+                                                        <ul class="list-style-none">
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#psgcCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="psgcCollapse"><i class="fas fa-map-marked-alt"></i> PSGC</a></li>
+                                                            <div id="psgcCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Region"><i class="fas fa-map-marker-alt"></i> Region</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Province"><i class="fas fa-map-marker-alt"></i> Province</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/City_Municipality"><i class="fas fa-map-marker-alt"></i> City/Municipality</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Barangay"><i class="fas fa-map-marker-alt"></i> Barangay</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#faciCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="faciCollapse"><i class="fas fa-building"></i> Facilities</a></li>
+                                                            <div id="faciCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Educational_Facility"><i class="fas fa-school"></i> Educational Facility</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Educ_ADM_Assoc"><i class="fas fa-school"></i> Educational Facilities ADM Association</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Health_Facility"><i class="fas fa-hospital"></i> Health Facility</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Facility_Archive_Status"><i class="fas fa-hospital"></i> Facility Archive Status</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/ADM"><i class="fas fa-hospital"></i> Alternative Delivery Mode</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <!--                                                            <li><a data-toggle="collapse" href="#adminLibCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="adminLibCollapse"><i class="fas fa-toolbox"></i> System Toolbox</a></li>
+                                                            <div id="adminLibCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href=""><i class="fas fa-question"></i> Secret Passphrase Questionnaire</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>-->
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#orgCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="orgCollapse"><i class="fa fa-sitemap"></i> Organization</a></li>
+                                                            <div id="orgCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Directorate"><i class="fas fa-map"></i> Directorate</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/OBSU"><i class="fas fa-university"></i> Office/Bureau/Service/Unit</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Congressional_District"><i class="fas fa-archway"></i> Congressional District</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Congressional_District_Barangay_Assoc"><i class="fas fa-road"></i> Congressional District Barangay Association</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#calendarCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="calendarCollapse"><i class="far fa-calendar-alt"></i> Calendar</a></li>
+                                                            <div id="calendarCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Year"><i class="fas fa-calendar"></i> Year</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Month"><i class="fas fa-calendar-alt"></i> Month</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/YearMonthAssoc"><i class="fas fa-calendar-check"></i> Year-Month Association</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Period"><i class="fas fa-clock"></i> Period</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/PeriodYearMonthAssoc"><i class="fas fa-project-diagram"></i> Period Year-Month Association</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#personCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="personCollapse"><i class="fa fa-user-cog"></i> Person Attributes</a></li>
+                                                            <div id="personCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Civil_Status"><i class="fas fa-users-cog"></i> Civil Status</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Grade_Level"><i class="fas fa-user-graduate"></i> Grade Level</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Extension_Name"><i class="fas fa-sort-numeric-down"></i> Extension Name</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Occupation"><i class="fas fa-user-md"></i> Occupation</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Sex"><i class="fas fa-venus-mars"></i> Sex</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/IP_Group"><i class="fas fa-users"></i> IP Group</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/IP_Group_Status"><i class="fas fa-user-tag"></i> IP Group Status</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Disability"><i class="fas fa-wheelchair"></i> Disability</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#rosterCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="rosterCollapse"><i class="fa fa-users"></i> Roster Attributes</a></li>
+                                                            <div id="rosterCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Relation_To_Head"><i class="fas fa-user-friends"></i> Relation to Head</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Roster_Status"><i class="fas fa-user-tag"></i> Roster Status</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#beneCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="beneCollapse"><i class="fa fa-hands"></i> Beneficiary Attributes</a></li>
+                                                            <div id="beneCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Client_Status"><i class="fas fa-user-tag"></i> Client Status</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Client_Status_Category"><i class="fas fa-user-cog"></i> Client Status Category</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Registration_Status"><i class="fas fa-user-cog"></i> Registration Status</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Vulnerable_Sector"><i class="fas fa-user-tag"></i> Vulnerable Sector</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#hzCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="hzCollapse"><i class="fa fa-bolt"></i> Hazard Map Attributes</a></li>
+                                                            <div id="hzCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Hazard_Category"><i class="fas fa-user-cog"></i> Hazard Category</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Hazard_Subcategory"><i class="fas fa-user-cog"></i> Hazard Subcategory</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Hazard_Type"><i class="fas fa-user-cog"></i> Hazard Type</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Incident"><i class="fas fa-user-cog"></i> Incident</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Incident_Hazard_Classification"><i class="fas fa-user-cog"></i> Incident-Hazard Classification</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Incident_Hazard_Location"><i class="fas fa-user-cog"></i> Incident-Hazard Location</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#payrollCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="payrollCollapse"><i class="fa fa-money-bill"></i> Payroll Attributes</a></li>
+                                                            <div id="payrollCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Conduit_Branch"><i class="fas fa-code-branch"></i> Conduit Branch</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Servicing_Branch"><i class="fas fa-code-branch"></i> Servicing Branch</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Unclaimed_Reason"><i class="fas fa-solid fa-comment"></i> Unclaimed Reason</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Recommended_Action"><i class="fas fa-tasks"></i> Recommended Action</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Action_Taken"><i class="fas fa-tasks"></i> Action Taken</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#grievanceCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="grievanceCollapse"><i class="fa fa-question-circle"></i> Grievance Attributes</a></li>
+                                                            <div id="grievanceCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Grievance_Category"><i class="fas fa-cubes"></i> Grievance Category</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Grievance_Category_Type"><i class="fas fa-cube"></i> Grievance Category Type</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Grievance_Source"><i class="fas fa-inbox"></i> Grievance Source</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Grievance_Status"><i class="fas fa-info"></i> Grievance Status</a></li>
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Reason"><i class="fas fa-info-circle"></i> Reason</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                            <li><a data-toggle="collapse" href="https://ppisv3.dswd.gov.ph/BUS/BUS#userCollapse" data-parent="#collapseTwo" aria-expanded="true" aria-controls="userCollapse"><i class="fas fa-user-friends"></i> User Attributes</a></li>
+                                                            <div id="userCollapse" class="collapse">
+                                                                <div class="card-body">
+                                                                    <ul class="list-style-none">
+                                                                        <li><a href="https://ppisv3.dswd.gov.ph/library/Position"><i class="fas fa-user-tag"></i> Position </a></li>
+
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+
+                                                                                                                    </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-header" role="tab" id="headingThree">
+                                                    <h5 class="mb-0">
+                                                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="https://ppisv3.dswd.gov.ph/BUS/BUS#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                            Account Management
+                                                        </a>
+                                                    </h5> </div>
+                                                <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                    <div class="card-body"> 
+                                                        <ul class="list-style-none">
+                                                            <li><a href="https://ppisv3.dswd.gov.ph/account/listing"><i class="fas fa-user-friends"></i> Users</a></li>
+                                                            <li><a href="https://ppisv3.dswd.gov.ph/account/Module"><i class="fas fa-laptop"></i> Module</a></li>
+                                                            <li><a href="https://ppisv3.dswd.gov.ph/account/Permission"><i class="fas fa-key"></i> Permission</a></li>
+                                                            <li><a href="https://ppisv3.dswd.gov.ph/account/Access_Level"><i class="fas fa-id-card"></i> Access Level</a></li>
+                                                            <li><a href="https://ppisv3.dswd.gov.ph/account/Access_Control"><i class="fas fa-user-cog"></i> Access Control</a></li>
+                                                            <li><a href="https://ppisv3.dswd.gov.ph/account/System_Usage_Agreement"><i class="fas fa-handshake"></i> System Usage Agreement</a></li>
+                                                        </ul> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div></li>
+                                    <!--                                    -->                                    <li class="col-lg-3 col-xlg-4 m-b-30">
+                                        <span class="opensans size16 w-heavy">SUPPORT CENTER</span>
+                                        <hr class="mt-1 mb-3">
+                                        <!-- List style -->
+                                        <ul class="list-style-none opensans size-14">
+                                            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSdFVnBwHBifDB6rCxo7f3y2gDs9n1Nh5IByEAFen1BMUs8KqQ/viewform" target="_blank"><i class="fas fa-bug mr-2 text-danger"></i> Bug Report</a></li>
+                                            <li><a href="https://ppisv3.dswd.gov.ph/support/changelog"><i class="fas fa-tasks mr-2"></i> Changelog</a></li>
+<!--                                            <li><a href="https://webdev.dswd.gov.ph/beta/pppp-docs" target="_blank"><i class="fa fa-book text-success"></i> User Guide</a></li>-->
+                                            <li><a href="http://localhost/ppis-docs" target="_blank"><i class="fa fa-book text-success"></i> User Guide</a></li>
+                                            <!--<li><a href="javascript:void(0)"><i class="fa fa-check text-success"></i> Recent Updates</a></li>-->
+                                            <li><a href="https://ictsupport.dswd.gov.ph/" target="_blank"><i class="fas fa-code mr-1"></i> Change Request</a></li>
+                                            <li>
+                                                <a href="javascript:void(0)" id="menu_open_sua">
+                                                    <i class="fa fa-handshake"></i> Review System Usage Agreement
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- End Messages -->
+                        <!-- ============================================================== -->
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- User profile and search -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Comment -->
+                        <!-- ============================================================== -->
+                                                <li class="nav-item dropdown">
+                            <!--<a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-message"></i>
+                                <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                            </a>-->
+                            <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/BUS/BUS" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-message"></i>
+                                <div class="notify"> <span class="heartbit"><strong></strong></span> <span class="point"></span> </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right mailbox scale-up">
+                                <ul>
+                                    <li>
+                                        <div class="drop-title">Notifications </div>
+                                    </li>
+                                    <li>
+                                        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 250px;"><div class="message-center" style="overflow: hidden; width: auto; height: 250px;">
+                                                                                        <!--UNCOMMENT TO SEE SAMPLE ICONS-->
+                                            <!--
+                                            <a href="#">
+                                                <div class="btn btn-danger btn-circle"><i class="fa fa-link"></i></div>
+                                                <div class="mail-contnet">
+                                                    <h5>Luanch Admin</h5> <span class="mail-desc">Just see the my new admin!</span> <span class="time">9:30 AM</span> </div>
+                                            </a>
+    
+                                            <a href="#">
+                                                <div class="btn btn-success btn-circle"><i class="ti-calendar"></i></div>
+                                                <div class="mail-contnet">
+                                                    <h5>Event today</h5> <span class="mail-desc">Just a reminder that you have event</span> <span class="time">9:10 AM</span> </div>
+                                            </a>
+    
+                                            <a href="#">
+                                                <div class="btn btn-info btn-circle"><i class="ti-settings"></i></div>
+                                                <div class="mail-contnet">
+                                                    <h5>Settings</h5> <span class="mail-desc">You can customize this template as you want</span> <span class="time">9:08 AM</span> </div>
+                                            </a>
+    
+                                            <a href="#">
+                                                <div class="btn btn-primary btn-circle"><i class="ti-user"></i></div>
+                                                <div class="mail-contnet">
+                                                    <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:02 AM</span> </div>
+                                            </a>
+                                            -->
+                                        </div><div class="slimScrollBar" style="background: rgb(220, 220, 220); width: 5px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 250px;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-center" href="javascript:void(0);"> <strong>Check all notifications</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- End Comment -->
+                        <!-- ============================================================== -->
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                                                <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/BUS/BUS" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img id="userLogoNavCircle" alt="user" class="profile-pic" src="./Pantawid Pamilya Information System_files/user_avatar.png">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right scale-up">
+                                <ul class="dropdown-user">
+                                    <li>
+                                        <div class="dw-user-box">
+                                            <div class="u-img">
+                                                                                                <img id="userLogoNav" class="img-circle" width="150" src="./Pantawid Pamilya Information System_files/user_avatar.png">
+                                                <script>
+                                                    document.addEventListener("DOMContentLoaded", function () {
+                                                        var userLogo = document.getElementById("userLogoNav");
+                                                        var userLogoCircle = document.getElementById("userLogoNavCircle");
+
+                                                        // Set the path to the user_logo.jpg
+                                                        var imagePath = "https://ppisv3.dswd.gov.ph/image/user_logo/35311.";
+
+                                                                // Set the fallback image path
+                                                                var fallbackImagePath = "https://ppisv3.dswd.gov.ph/image/user_logo/user_avatar.png";
+
+                                                                // Check if the image exists
+                                                                var image = new Image();
+                                                                image.src = imagePath;
+                                                                image.onload = function () {
+                                                                    // Image exists, set the source to user_logo.jpg
+                                                                    userLogo.src = imagePath;
+                                                                    userLogoCircle.src = imagePath;
+                                                                };
+                                                                image.onerror = function () {
+                                                                    // Image does not exist, set the source to fallback_logo.jpg
+                                                                    userLogo.src = fallbackImagePath;
+                                                                    userLogoCircle.src = fallbackImagePath;
+                                                                };
+                                                            });
+                                                </script>
+                                            </div>
+                                            <div class="u-text">
+                                                <h4>MELVIN CURIOSO</h4>
+                                                <p class="text-muted">&nbsp;</p><a href="https://ppisv3.dswd.gov.ph/account/profile" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+                                        </div>
+                                    </li>
+                                    <!--                                <li role="separator" class="divider"></li>-->
+                                    <!--                                <li><a href="--><!--"><i class="ti-user"></i> My Profile</a></li>-->
+                                    <!--                                <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li>-->
+                                    <!--                                <li><a href="#"><i class="ti-email"></i> Inbox</a></li>-->
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="https://ppisv3.dswd.gov.ph/account/change_password"><i class="ti-key"></i> Change Password</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="https://ppisv3.dswd.gov.ph/user/auth/change_pin"><i class="ti-key"></i> Change / Reset PIN</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="https://ppisv3.dswd.gov.ph/user/auth/logout"><i class="fa fa-power-off"></i> Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- End Profile -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <script>
+            $(document).ready(function () {
+                $('#searchHousehold').on('input', function () {
+                    // Get the current value of the input field
+                    var inputValue = $(this).val();
+
+                    // Remove any non-numeric characters except hyphen (-)
+                    var cleanedValue = inputValue.replace(/[^0-9-]/g, '');
+
+                    // Set the cleaned value back to the input field
+                    $(this).val(cleanedValue);
+                });
+            });
+
+            $('#menu_open_sua').on('click', function (e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: "https://ppisv3.dswd.gov.ph/hh_profile/Household/openMOV",
+                        type: "POST",
+                        data: {
+//                            row_id: <?//= json_encode($active_nda ?? 0); ?>//, // your current active SUA ID from session
+                            [csrfName]: csrfHash
+                        },
+                        dataType: "json",
+                        success: function (result) {
+
+                            csrfHash = result.csrf_token;
+
+                            if (result.hasOwnProperty('csrf_token')) {
+                                delete result.csrf_token;
+                            }
+
+                            if (result.status === 'success') {
+                                window.open(result.target_file, "_blank", "toolbar=0,location=0,menubar=0");
+                            } else {
+                                alert(result.message || "There are no active System Usage Agreement to review.");
+                            }
+
+                        }
+//                        ,
+//                        error: function (xhr, ajaxOptions, thrownError) {
+//                            alert('Error loading SUA: ' + xhr.status + ' - ' + thrownError);
+//                        }
+                    });
+                });
+        </script>
+<aside class="left-sidebar">
+    <!-- Sidebar scroll-->
+    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 100%;"><div class="scroll-sidebar" style="overflow: hidden; width: auto; height: 100%;">
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav active">
+            <ul id="sidebarnav" class="in">
+                <li class="nav-small-cap">MAIN MENU</li>
+                <!--                <li><a class="waves-effect waves-dark" href="--><!--" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a></li>-->
+                <!--<li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/devcheatsheet/index"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Devs Cheatsheet</span></a></li>
+                -->
+                <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/hh_profile/household"><i class="mdi mdi-account-card-details"></i><span class="hide-menu">Household
+                            Profile</span></a></li>
+                <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/MobilityUpload"><i class="mdi mdi-account-check"></i><span class="hide-menu">Beneficiary Identity
+                            Check</span></a></li>
+                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-crosshairs-gps"></i><span class="hide-menu">Targeting</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                                                <!--                        <li><a href="--><!--" title="Year List"><span>Year</span></a></li>-->
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/Grantee_Category" title="Grantee Category"><span>Grantee Category</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/Grantee_Category_Prioritization" title="Grantee Category Prioritization"><span>Grantee Category Prioritization</span></a>
+                        </li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/Set_Group" title="Set/Group" class="waves-effect"><span>Set/Group</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/Eligibility_Criteria" title="ECR Criteria" class="waves-effect"><span>Eligibility Criteria</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/Endorsement_Type" title="Endorsement Type" class="waves-effect"><span>Endorsement Type</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/ECR_Schedule" title="ECR Schedule" class="waves-effect"><span>ECR Schedule</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/Selection_of_Target_Areas" title="Selection of Target Areas" class="waves-effect"><span>Selection of Target
+                                    Areas</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/ECR_Processing" title="ECR Processing" class="waves-effect"><span>ECR Processing</span></a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/targeting/ECR_Results" title="ECR Results" class="waves-effect"><span>ECR Results</span></a></li>
+                    </ul>
+                </li>
+                <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-account-plus"></i><span class="hide-menu">Household Registration</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="https://ppisv3.dswd.gov.ph/cars" class="waves-effect">Encoding</a></li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/cars/review" class="waves-effect" data-toggle="tooltip" data-original-title="Registration Review">Registration Review
+
+                            </a>
+                        </li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/cars/approval" class="waves-effect" data-toggle="tooltip" data-original-title="RD Approval">Approval
+
+                            </a>
+                        </li>
+                        <!-- disabled concurrence module -->
+                        <!--                        <li><a href="--><!--" class="waves-effect">Concurrence Module</a></li>-->
+                        <!--                        <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><span class="hide-menu">Concurrence Module</span></a>-->
+                        <!--                            <ul aria-expanded="false" class="collapse">-->
+                        <!--                                <li><a href="--><!--" class="waves-effect">Change Address</a></li>-->
+                        <!--                                <li><a href="--><!--" class="waves-effect">Household Status</a></li>-->
+                        <!--                                <li><a href="--><!--" class="waves-effect">Member Status</a></li>-->
+                        <!--                            </ul>-->
+                        <!--                        </li>-->
+                    </ul>
+                </li>
+                <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-sitemap"></i><span class="hide-menu">Relational Lineage
+                            Integration</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="https://ppisv3.dswd.gov.ph/relic/Relic" class="waves-effect">Encoding / Mapping</a>
+                        </li>
+                        <li><a href="https://ppisv3.dswd.gov.ph/relic/Relic_Review" class="waves-effect" data-toggle="tooltip" data-original-title="RD Approval">Review</a>
+                        </li>
+                    </ul>
+                </li>
+                        <li class="active"><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-account-edit"></i><span class="hide-menu">Beneficiary
+                                    Updating</span></a>
+                            <ul aria-expanded="true" class="collapse in">
+                                                                <li class="active"><a href="https://ppisv3.dswd.gov.ph/BUS/BUS" id="aid" class="waves-effect active"><span id="spanid">HH Profile Module</span></a>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/Review" id="aid" class="waves-effect"><span id="spanid">Review Module</span></a></li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/delistedmgmt" id="aid" class="waves-effect"><span id="spanid5">Delisted Profile Management</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/delistedmgmt" id="delist_hh" class="waves-effect">Delisted Household</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/delist_person" id="delist_person" class="waves-effect"><span id="spanid1">Delisted Member</span></a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/bus_ham" id="aid3" class="waves-effect"><span id="spanid3">Household Advancement</span></a>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/HHStatus" id="hh_status" class="waves-effect"><span id="spanid1" class="hide-menu">HH Status</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/HHStatus" class="waves-effect">HH Status</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/Duplicate" id="aid1" class="waves-effect"><span id="spanid1">Duplicate Module</span></a></li>
+                                        <!-- <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/MasterDuplicateUpload" id="mduplicate"
+                                        class="waves-effect" ><span
+                                            id="spanid1">Master List</span></a></li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/MasDuplicate" id="mdupe"
+                                        class="waves-effect" ><span
+                                            id="spanid1">Master Duplicate</span></a></li> -->
+                                    </ul>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/MemberStatus" id="member_status" class="waves-effect"><span id="spanid">Member Status</span></a></li>
+
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/Concurrence" id="aid2" class="waves-effect"><span id="spanid2" class="hide-menu">Concurrence Module</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/Concurrence" class="waves-effect">Concurrence
+                                                per Member</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/Con_NA" class="waves-effect">Concurrence
+                                                per Household</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/Con_HH" class="waves-effect">Concurrence
+                                                per Region</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/ConcurGrandChild" class="waves-effect">Concurrence
+                                                New GrandChild</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/viewSHS" class="waves-effect">Human Capital Development <br>Indicators (HCDI)</a></li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/approval" id="aid3" class="waves-effect"><span id="spanid3">Approval</span></a>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/bus_summary" id="aid3" class="waves-effect"><span id="spanid3">BUS Encoding Summary</span></a></li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/BUS/BUS/bus_discarding" id="aid3" class="waves-effect"><span id="spanid3">BUS Discarding Module</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-bookmark-check"></i><span class="hide-menu">Compliance
+                                    Verification</span></a>
+                            <ul aria-expanded="false" class="collapse">
+
+                                <!-- CVD modules -->
+                                                                                                                                                                                                                                                                        <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><span class="hide-menu"><i class="fas fa-laptop mr-2 goldish size-normal"></i>Encoding
+                                            </span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form2_encoding" class="waves-effect">Form 2 -
+                                                Education</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form3_encoding" class="waves-effect">Form 3 -
+                                                Health</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form4_encoding" class="waves-effect">Form 4 -
+                                                FDS</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form5_encoding" class="waves-effect">Form 5 -
+                                                F1KD</a></li>
+                                    </ul>
+
+                                </li>
+                                                                                                                                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"><span class="hide-menu"><i class="fas fa-desktop mr-2 goldish size-normal"></i>Encoding Progress</span></a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form2_approval_list" class="waves-effect">Form 2 - Education</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form3_approval_list" class="waves-effect">Form 3 - Health</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form4_approval_list" class="waves-effect">Form 4 - FDS</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/form5_approval_list" class="waves-effect">Form 5 - F1KD</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="https://ppisv3.dswd.gov.ph/cvs/unencoded_forms" class="waves-effect"><i class="fas fa-file-code mr-2 red size-normal"></i>Unencoded Forms</a></li>
+                                                                                                        <li><a href="https://ppisv3.dswd.gov.ph/cvs/cv_form_generator/form_generator" class="waves-effect"><i class="fas fa-list-ul mr-2 green size-normal"></i>First Page Gen</a></li>
+
+                                
+
+
+                            </ul>
+                        </li>
+                                                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-calculator"></i><span class="hide-menu">Payroll
+                                    Preparation </span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a href="https://ppisv3.dswd.gov.ph/payroll/initialnapa/compute_eligible_children" class="waves-effect">Compute Newly Registered</a></li>
+
+                                
+                                
+                                
+                                                                <li><a href="https://ppisv3.dswd.gov.ph/payroll/educreceived/listing" class="waves-effect">Educ
+                                        Paid Generator</a></li>
+
+                                <li><a class="has-arrow waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/BUS/BUS#">Reports Gen</a>
+                                    <ul aria-expanded="false" class="collapse">
+                                        <li><a href="https://ppisv3.dswd.gov.ph/payroll/datareports/matched_account" class="waves-effect">Matched Account</a></li>
+                                        <li><a href="https://ppisv3.dswd.gov.ph/payroll/datareports/grants_reports" class="waves-effect">Grants</a></li>
+                                    </ul>
+                                </li>
+
+                                                                                                            <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu"><!--<a href="" class="waves-effect">-->Cash
+                        Card</span></a>
+                <ul aria-expanded="false" class="collapse">
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-home"></i><span class="hide-menu"> Main Menu</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/masterlist/masterlist_view" title="Master List"><span>Master List</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/masterlist/masterlist_uploaded_file" title="ML Offline"><span>ML Offline Process</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/masterlist/masterlist_pdf_view" title="Forms"><span>Enrollment/Claim Form</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-folder-account"></i><span class="hide-menu"> Account Opening</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/tor_uob_view" title="Type of Request &amp; Updating of Branch"><span>ToR / UoB</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/account_opening_uploaded_file" title="Account Opening Offline"><span>AO Offline Process</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/ao_recommendation" title="Account Opening Recommendation"><span>AO Recommendation</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/ao_approval" title="Account Opening Approval"><span>AO Approval</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/request_generator" title="Request Generator"><span>Request Generator</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/monitoring_fo_request" title="Monitoring FO Request"><span>Monitoring FO Request</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/account_opening/co_report_generator" title="CO Report Generator"><span>CO/FO Report Generator</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/distribution/distribution_co_importing" title="Distribution Importing"><span>Distribution Import from LBP</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-truck"></i><span class="hide-menu"> Distribution</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/distribution/dist_status" title="Distribution Status"><span>Distribution Status</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/distribution/distribution_uploaded_file" title="Offline Template"><span>Dist Offline Process</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/distribution/dist_recommendation" title="Files Uploaded"><span>Dist Recommendation</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/distribution/dist_approval" title="Files Uploaded"><span>Dist Approval</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/distribution/report_generator" title="Reports"><span>Reports</span></a></li>
+                        </ul>
+                    </li>
+                                        <!-- <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-folder-account"></i><span class="hide-menu"> Replacement</span></a>
+                                        <ul aria-expanded="false" class="collapse">
+                                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/replacement/Replacement/tagging" title="Replacement Tagging"><span>Replacement Tagging</span></a></li>
+                                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/replacement/Replacement/replacementOffline" title="Replacement Offline"><span>Replacement Offline Tagging</span></a></li>
+                                        </ul>
+                                    </li> -->
+                    <li><a class="waves-dark" href="https://ppisv3.dswd.gov.ph/payroll/ccs/cc_matching/matching"><i class="mdi mdi-briefcase-check"></i><span class="hide-menu"> Special Matching</span></a>
+                    </li>
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-folder-account"></i><span class="hide-menu"> Account Status</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/Account_status/import_lockunlock" title="Account Status Uploader"><span>Account Status Uploader</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/Account_status/tagging" title="Account Status Tagging"><span>Account Status Tagging</span></a></li>
+                            <!--<li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/Account_status/co_review" title="AS Generation Report"><span>Account Status Generation Report</span></a></li>-->
+                        </ul>
+                    </li>
+                    <li><a class="waves-dark" href="https://ppisv3.dswd.gov.ph/payroll/ccs/auditTrail/AuditTrail/auditTrail_listview"><i class="mdi mdi-truck-trailer"></i><span class="hide-menu"> Audit Trail</span></a>
+                        <!-- <ul aria-expanded="false" class="collapse">
+                                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/auditTrail/auditTrail/mainMenu_listview" ><span>Main Menu </span></a></li>
+                                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/auditTrail/auditTrail/accountOpening_listview"><span>Account Opening</span></a></li>
+                                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/auditTrail/auditTrail/distribution_listview"><span>Distribution</span></a></li>
+                                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/auditTrail/auditTrail/replacement_listview"><span>Replacement</span></a></li>
+
+                                        </ul> -->
+                    </li>
+
+                </ul>
+            </li>
+            <li><a href="https://ppisv3.dswd.gov.ph/payroll/ccs/benewallet/bts_approval" title="Reports"><span>Transaction Account</span></a></li>
+            <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Other Reports</span></a>
+                <ul aria-expanded="false" class="collapse">
+                    <li><a href="https://ppisv3.dswd.gov.ph/dashboard/ncc_list" title="APS"><span>List of NCC</span></a>
+                    </li>
+                </ul>
+            </li>
+            </ul>
+            </li>
+                                    <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-basket"></i><span class="hide-menu">Payments Adjustment</span></a>
+                <ul aria-expanded="false" class="collapse">
+
+
+                    <!-- <li><a href="" title="Labels & Badges"><span>Liquidation</span></a></li> -->
+                    <!--Service Fee-->
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Adjustment</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/adjust/adjustment" title="Adjustment"><span>Adjustment List</span></a></li>
+                            <li>
+                                <a href="https://ppisv3.dswd.gov.ph/payroll/adjust/adjustment_balance">
+                                    <span class="menu-text">Overpayment Balance</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://ppisv3.dswd.gov.ph/payroll/adjust/balance_report">
+                                    <span class="menu-text">Balance Reports Generator</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a class="has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><span class="hide-menu">Collection</span></a>
+                        <ul aria-expanded="false" class="collapse">
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/adjustcollection/collection" title="Collection"><span>Inactive HHs List</span></a></li>
+                            <li><a href="https://ppisv3.dswd.gov.ph/payroll/adjustcollection/collection_remit" title="Collection"><span>Collection</span></a></li>
+                            <!--  <li>
+                                    <a href="">
+                                        <span class="menu-text">Overpayment Balance</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="">
+                                        <span class="menu-text">Balance Reports Generator</span>
+                                    </a>
+                                </li> -->
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!--<li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-hexagon-multiple"></i><span class="hide-menu">Service Fee
+                </span></a>
+                     <ul aria-expanded="false" class="collapse">
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/import_billing/import_view" title="Reconcile"><span>Import Billing</span></a></li>
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/validate_billing/validate_view" title="Transferred"><span>Validate Billing</span></a></li>
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/compute_service_fee/compute_view" title="Change Remarks"><span>Compute Service Fees</span></a></li>
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/transactionlist" title="Recommedation"><span>View Transactions</span></a></li>
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/gen_reports" title="Approval"><span>Generate Reports</span></a></li>
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/paymentlist" title="Unpaid Confirmation"><span>Post/View Payment Details</span></a></li>
+                         <li><a href="https://ppisv3.dswd.gov.ph/prs/service_fee/gen_other_reports" title="PRS Approval Schedule"><span>Generate Other Reports</span></a></li>
+                    </ul>
+                </li>-->
+            <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/grievance"><i class="mdi mdi-comment-alert-outline"></i><span class="hide-menu">Grievance</span></a></li>
+            <!-- <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/dashboard" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a></li> -->
+            <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/Tableau/view_tableau/9" aria-expanded="false"><i class="fa fa-bar-chart"></i><span class="hide-menu">Dashboard </span></a>
+            </li>
+                        <!-- MODULE
+                <li class="nav-devider"></li>
+                <li class="nav-small-cap">MODULE MANAGEMENT</li>
+                <li><a class="waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Modules </span></a></li>
+
+
+                <!-- LIBRARIES
+                <li class="nav-devider"></li>
+                <li class="nav-small-cap">LIBRARY MANAGEMENT</li>
+                <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/library/listing/table"><i class="mdi mdi-library-plus"></i><span class="hide-menu">Libraies </span></a></li>
+                <li><a class="waves-effect waves-dark" href="https://ppisv3.dswd.gov.ph/library/manage"><i class="mdi mdi-table-large"></i><span class="hide-menu">Tables </span></a></li>
+
+                <!-- ACCOUNT
+                <li class="nav-devider"></li>
+                <li class="nav-small-cap">ACCOUNT MANAGEMENT</li>
+                <li> <a class="has-arrow waves-effect waves-dark" href="javascript:void(0)"  aria-expanded="false"><i class="mdi mdi-account-settings-variant"></i><span class="hide-menu">Accounts </span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="https://ppisv3.dswd.gov.ph/account/listing"" class="waves-effect">Users</a></li>
+                        <li><a href="javascript:void(0)" class="waves-effect">Access Level</a></li>
+                    </ul>
+                </li>
+                <li><a class="waves-effect waves-dark" href="javascript:void(0)"><i class="mdi mdi-key-variant"></i><span class="hide-menu">Change Password </span></a></li>
+                -->
+
+            </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
+    </div><div class="slimScrollBar" style="background: rgb(220, 220, 220); width: 5px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; left: 1px; height: 302.394px;"></div><div class="slimScrollRail" style="width: 5px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; left: 1px;"></div></div>
+    <!-- End Sidebar scroll-->
+    <!-- Bottom points-->
+    <div class="sidebar-footer">
+        <!-- item--><a href="javascript:void(0)" class="link" data-toggle="tooltip" title="" data-original-title="Settings"><i class="ti-settings"></i></a>
+        <!-- item--><a href="javascript:void(0)" class="link" data-toggle="tooltip" title="" data-original-title="Email"><i class="mdi mdi-gmail"></i></a>
+        <!-- item--><a href="https://ppisv3.dswd.gov.ph/user/auth/logout" class="link" data-toggle="tooltip" title="" data-original-title="Logout"><i class="mdi mdi-power"></i></a>
+    </div>
+    <!-- End Bottom points-->
+</aside>
+<!-- ============================================================== -->
+<!-- End Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Page wrapper  -->
+<!-- ============================================================== -->
+<div class="page-wrapper" style="min-height: 560px;">
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid pt-0 pl-2 pr-2 pb-2"><div class="container-fluid">
+	<!-- <div class="container-fluid" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"> -->
+	<script src="./Pantawid Pamilya Information System_files/jquery.dataTables.min.js.download"></script>
+	<!-- start - This is for export functionality only -->
+	<!-- <script src="https://ppisv3.dswd.gov.ph/assets/js/dataTables.buttons.min.js"></script>
+	<script src="https://ppisv3.dswd.gov.ph/assets/js/buttons.flash.min.js"></script>
+	<script src="https://ppisv3.dswd.gov.ph/assets/js/jszip.min.js"></script>
+	<script src="https://ppisv3.dswd.gov.ph/assets/js/pdfmake.min.js"></script>
+	<script src="https://ppisv3.dswd.gov.ph/assets/js/vfs_fonts.js"></script>
+	<script src="https://ppisv3.dswd.gov.ph/assets/js/buttons.html5.min.js"></script>
+	<script src="https://ppisv3.dswd.gov.ph/assets/js/buttons.print.min.js"></script> -->
+	<style>
+		/* #add_member{
+	width: 110%;
+	} */
+	</style>
+
+	<!--Grid row-->
+	<div class="row">
+
+		<!--Grid column-->
+		<div class="col-12 mb-1 pr-0">
+			<!--Card BUS-->
+			<div class="card ">
+				<h5 class="card-header bg-primary font-weight-bold">Beneficiary Updating System</h5>
+				<br>
+				<!--div class="col-4 input-group mb-3">
+							<input type="text" class="form-control" placeholder="Household ID" aria-label="Household ID" aria-describedby="basic-addon2">
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary" type="button">Search</button>
+							</div>
+						</div-->
+
+
+				<div class="card-body col-md-12">
+					<!--        <script type="text/javascript" src="--><!--">-->
+					<!--        </script>-->
+					<script type="text/javascript">
+						//            $(document).ready(function(){
+						//                $("#hh_status").change(function(){
+						//                    var ans = confirm("Selected value is : " + $( "#hh_status option:selected" ).text() + " Do you want to continue?");
+						//                    var current_hh_status = $("#current_hh_status").val();
+						//
+						//                    if (!ans) {
+						//                        $(this).val($.data('key', val));
+						//                        return false;
+						//                    }
+						//
+						//                $.data(this, 'current', $(this).val());
+						//
+						//                });
+						//            });
+
+						$(document).ready(function () {
+
+							var sel = $("#hh_status");
+							var select_hh_status = $("#select_hh_status");
+							sel.data("prev", sel.val());
+
+							var hh_id = $("#add_hh_id").val();
+
+							sel.change(function (data) {
+								data.preventDefault();
+								var ans = confirm("Selected HH Status is : " + $("#hh_status option:selected").text() + ". Do you want to continue?");
+								var client_status = sel.val();
+								var jqThis = $(this);
+								var old_cs = $("#current_hh_status").val();
+								var household_id = $("#household_id").val();
+								var userlevel = $("#user_level").val();
+
+								if (!ans) {
+									var jqThis = $(this);
+									//alert(jqThis.data("prev"));
+									sel.val(jqThis.data("prev"));
+
+								} else {
+
+									//alert(old_cs);
+									if (userlevel == 8 || userlevel == 15 || userlevel == 16 || userlevel == 59) { // add RPC level iin NPMO level access CRF 2023-47 20230928
+
+									} else {
+										if ((count_eligible == 0 || if_eligible == 0) && client_status == 1) {
+											alert("The household is not eligible for reactivation. Please update necessary information or select at most 3 children for education monitoring before its reactivation.");
+											document.getElementById("hh_status").value = '';
+											return false;
+										}
+									}
+									if (client_status == 1 && old_cs == 26) {
+										var cs_26 = parseInt(document.getElementById("cs_26").value);
+										if (cs_26 >= 3) {
+											alert("The reactivation of this HH is not allowed.");
+											return false;
+										}
+									}
+
+									if (client_status == 6) {
+										alert("Please proceed to the Duplicate module for tagging of duplicate HHs.");
+										document.getElementById("hh_status").value = '';
+										return false;
+									}
+
+									if ((client_status == 12) && (userlevel != 8 && userlevel != 61 && userlevel != 59)) {
+										var ans1 = confirm("This action will be subject for the approval of the Regional Program Coordinator/Provincial Link. Do you want to continue?");
+										if (ans1) {
+											var check_encoded = document.getElementById("check_encoded12").value;
+											if (check_encoded >= 1 && client_status == 12) {
+												alert("This HH have a pending approval for HH status. Updating of this HH can only be done once.");
+												select_hh_status.prop("disabled", true);
+												return false;
+											} else { select_hh_status.prop("disabled", false); }
+											//select_hh_status.click(function (data){
+											//
+											//
+											//    $.ajax({
+											//        url: "<?//= base_url() ?>//BUS/BUS/insertHHStatus",
+											//        method: "POST",
+											//        data: {old_cs : old_cs, new_cs : sel.val(), hh_id : hh_id, household_id : household_id},
+											//        success: function (data) {
+											//            //$('#selection'+boo).modal('show');
+											//            //alert(data);
+											//            swal({
+											//                    title: 'Update Record Successful',
+											//                    type: 'success',
+											//                    icon: 'success',
+											//                    text: data,
+											//                    confirmButtonText: "OK",
+											//                    closeOnConfirm: true
+											//                },
+											//                function () {
+											//                    window.location.reload();
+											//                }
+											//            );
+											//
+											//            //$('#selection_id'+boo).html(data);
+											//        }
+											//    });
+											//});
+										} else {
+											return false;
+										}
+									}
+									select_hh_status.click(function (data) {
+										data.preventDefault();
+
+										$.ajax({
+											url: "https://ppisv3.dswd.gov.ph/BUS/BUS/insertHHStatus",
+											method: "POST",
+											data: { old_cs: old_cs, new_cs: sel.val(), hh_id: hh_id, household_id: household_id },
+											success: function (data) {
+												//$('#selection'+boo).modal('show');
+												//alert(data);
+												swal({
+													title: 'Update Record Successful',
+													type: 'success',
+													icon: 'success',
+													text: data,
+													confirmButtonText: "OK",
+													closeOnConfirm: true
+												},
+													function () {
+														window.location.reload();
+													}
+												);
+
+												//$('#selection_id'+boo).html(data);
+											}
+										});
+									});
+
+
+
+
+								}
+
+								jqThis.data("prev", jqThis.val());
+							});
+						});
+
+						function selectCategory(category) {
+							alert("Please select HH Status.");
+							document.getElementById('select_hh_status').disabled = false;
+							//    $.ajax({
+							//        url: "<?//= base_url() ?>//BUS/BUS/selectHHStatusbyCategory",
+							//        async: false,
+							//        type: "POST",
+							//        data: "category="+category,
+							//        dataType: "html",
+							//        success: function(data) {
+							//            //alert(data);
+							//            $('#hh_status').html(data);
+							//        },
+							//        error: function() {
+							//            alert('Error');
+							//        }
+							//    });
+							//redo to get HH status by category 20210611
+							var cs = $("#current_hh_status").val();
+							var household_id = $("#hh_id").val();
+							var user_level = $("#user_level").val();
+							$.ajax({
+								url: "https://ppisv3.dswd.gov.ph/BUS/BUS/selectHHStatusbyCategory",
+								async: false,
+								type: "POST",
+								data: { hh_status: cs, user: user_level, category: category, hh_id: household_id },
+								dataType: "html",
+								success: function (data) {
+									//alert(data);
+									$('#hh_status').html(data);
+								},
+								error: function () {
+									alert('Error');
+								}
+							});
+
+
+						}
+					</script>
+					<div class="row">
+						<div class="col-4 md-form">
+														<br>
+							
+							<form class="floating-labels" action="https://ppisv3.dswd.gov.ph/BUS/BUS" method="post">
+								<div class="form-group m-b-40 has-success row">
+									<div class="col-8">
+										<input type="text" class="form-control" id="hh_id" name="hh_id" pattern="^(?:[0-9\-]*[A-Za-z]?[0-9\-]*)$" title="Numbers, dash (-), and at most 1 letter only" maxlength="25" required="" value="">
+										<span class="bar"></span>
+										<label for="hh_id">Household ID</label>
+									</div>
+									<div class="col-4">
+										<button class="btn btn-unique btn-rounded form-group" type="submit">
+											Search <i class="fa fa-search"></i>
+										</button>
+									</div>
+								</div>
+
+															</form>
+						</div>
+
+
+													<!--Table head-->
+							<!--Table body-->
+							
+
+										</div>
+
+
+		<script type="text/javascript">
+			$(document).ready(function () {
+				$('#first_name, #middle_name, #last_name, #ext_name_id').on('blur', function () {
+					// Legacy local name check intentionally disabled; automatic duplicate gate handles this.
+					return false;
+					var first_name = $('#first_name').val(); // Get the entered first name
+					var middle_name = $('#middle_name').val(); // Get the entered middle name
+					var last_name = $('#last_name').val(); // Get the entered last name
+					var ext_name = $('#ext_name_id').val(); // Get the selected extension name
+					var household_id = $("#household_id").val(); //household id
+					var listahanan = $("#hh_id").val();// listahanan for v2
+
+					// Perform AJAX request to validate the name
+					$.ajax({
+						url: 'https://ppisv3.dswd.gov.ph/BUS/BUS/NameCheck', // Replace with the URL of your controller method
+						method: 'POST',
+						data: { first_name: first_name, middle_name: middle_name, last_name: last_name, ext_name: ext_name, household_id: household_id, listahanan: listahanan },
+						success: function (response) {
+							// Handle the response from the server
+							if (response == 'exists') {
+								// Name already exists, disable the button or take appropriate action
+								$("#newmember").prop("disabled", true);
+								swal({
+									title: 'Name Already Exists',
+									type: 'warning',
+									icon: 'warning',
+									text: 'I am sorry but the entered name already exists.',
+									confirmButtonText: "OK",
+									closeOnConfirm: true
+								});
+							} else {
+								// Name is valid, enable the button or continue with your logic
+								$("#newmember").prop("disabled", false);
+							}
+						}
+					});
+				});
+			});
+
+			$(document).ready(function () {
+				$('#first_name, #last_name').on('input', function () {
+					var first_name = $('#first_name').val();
+					var last_name = $('#last_name').val();
+
+					// Check if both textboxes have values
+					if (first_name !== '' && last_name !== '') {
+						$('#ValidateName').prop('disabled', false); // Enable the button
+					} else {
+						$('#ValidateName').prop('disabled', true); // Disable the button
+					}
+				});
+			});
+
+			$(document).ready(function () {
+				$('#ValidateName').on('click', function () {
+					// Legacy manual duplicate check intentionally disabled; automatic duplicate gate handles this.
+					return false;
+					var button = $(this);
+
+					// Show Loading Screen
+					$("#loadingScreen").show();
+
+					// Disable the button
+					button.prop("disabled", true);
+					$("#newmember").prop("disabled", true);
+
+					// Get input values
+					var first_name = $('#first_name').val();
+					var middle_name = $('#middle_name').val();
+					var last_name = $('#last_name').val();
+					var ext_name = $('#ext_name_id').val();
+					var dob = $('#date_of_birth').val();
+					var mmn = $('#mothers_mn').val();
+
+					$.ajax({
+						url: 'https://ppisv3.dswd.gov.ph/BUS/BUS/NameCheckNational',
+						method: 'POST',
+						data: {
+							first_name: first_name,
+							middle_name: middle_name,
+							last_name: last_name,
+							ext_name: ext_name,
+							dob: dob,
+							mothers_mn: mmn
+						},
+						success: function (response) {
+							$("#loadingScreen").hide(); // Hide loading screen
+
+							let parsedData;
+							try {
+								parsedData = JSON.parse(response);
+							} catch (e) {
+								console.error("Error parsing JSON:", e);
+								swal({
+									title: 'Error',
+									type: 'error',
+									icon: 'error',
+									text: 'An error occurred while processing your request.',
+									confirmButtonText: "OK"
+								});
+							}
+
+							if (parsedData.status === 'exists') {
+								let tableContent = `<table class="table table-bordered">
+						<thead class="thead-light">
+							<tr>
+								<th>Household ID</th>
+								<th>Entry ID</th>
+								<th>First Name</th>
+								<th>Middle Name</th>
+								<th>Last Name</th>
+								<th>Ext. Name</th>
+								<th>Mothers Maiden Name</th>
+								<th>Date of Birth</th>
+								<th>Reference</th>
+							</tr>
+						</thead>
+						<tbody>`;
+
+								parsedData.data.forEach(record => {
+									tableContent += `<tr>
+							<td>${record.hh_id}</td>
+							<td>${record.person_id || 'N/A'}</td>
+							<td>${record.first_name}</td>
+							<td>${record.middle_name}</td>
+							<td>${record.last_name}</td>
+							<td>${(record.ext_name && record.ext_name !== "0") ? record.ext_name : 'N/A'}</td>
+							<td>${(record.mother_maiden_name && record.mother_maiden_name !== "0") ? record.mother_maiden_name : 'N/A'}</td>
+							<td>${record.date_of_birth}</td>
+							<td>${record.reference}</td>
+						</tr>`;
+								});
+
+								tableContent += `</tbody></table>`;
+
+								$("#duplicateTableContainer").html(tableContent);
+								$("#duplicateNameModal").modal('show');
+
+							} else {
+								swal({
+									title: 'The name is available',
+									type: 'success',
+									icon: 'success',
+									text: 'The name doesn\'t have any duplicate value in the entire PPIS database',
+									confirmButtonText: "OK",
+									closeOnConfirm: true
+								});
+								loadingScreen.remove();
+								$("#newmember").prop("disabled", false);
+								$("#ValidateName").prop("disabled", false);
+							}
+						},
+						error: function () {
+							$("#loadingScreen").hide();
+							swal({
+								title: 'Error',
+								type: 'error',
+								icon: 'error',
+								text: 'An error occurred while processing your request.',
+								confirmButtonText: "OK"
+							});
+						}
+					});
+				});
+			});
+
+			let isNewMemberIdentityDuplicate = false;
+			let newMemberIdentityDuplicateTimer = null;
+			let newMemberIdentityDuplicateRequestId = 0;
+			let newMemberDuplicateModalDismissed = false;
+
+			function updateNewMemberSaveState() {
+				if (typeof updateSaveButtonsState === 'function') {
+					updateSaveButtonsState();
+					return;
+				}
+				$("#newmember").prop("disabled", isNewMemberIdentityDuplicate);
+			}
+
+			function showNewMemberDuplicateValue(v) {
+				if (v === undefined || v === null) return 'N/A';
+				const s = String(v).trim();
+				return (s === '' || s === '0') ? 'N/A' : s;
+			}
+
+			function renderNewMemberDuplicateTable(matches) {
+				renderBusDuplicateMatches('#duplicateTableContainer', matches);
+			}
+
+			function clearNewMemberDuplicateState() {
+				isNewMemberIdentityDuplicate = false;
+				newMemberDuplicateModalDismissed = false;
+				$("#duplicateTableContainer").empty();
+				updateNewMemberSaveState();
+			}
+
+			function isCompleteValidIdentityDate(value) {
+				if (!/^\d{4}-\d{2}-\d{2}$/.test(value || '')) {
+					return false;
+				}
+
+				const parts = value.split('-').map(Number);
+				const year = parts[0];
+				const month = parts[1];
+				const day = parts[2];
+				const date = new Date(year, month - 1, day);
+
+				return date.getFullYear() === year &&
+					date.getMonth() === month - 1 &&
+					date.getDate() === day;
+			}
+
+			function checkNewMemberIdentityDuplicate() {
+				const firstName = $('#first_name').val().trim();
+				const lastName = $('#last_name').val().trim();
+				const dob = $('#date_of_birth').val();
+				const targetRel = $('#rel_hh_id').val();
+
+				if (!firstName || !lastName || !isCompleteValidIdentityDate(dob) || !targetRel) {
+					newMemberIdentityDuplicateRequestId++;
+					$("#loadingScreen").hide();
+					clearNewMemberDuplicateState();
+					return;
+				}
+
+				const requestId = ++newMemberIdentityDuplicateRequestId;
+				$("#loadingScreen").show();
+
+				$.ajax({
+					url: 'https://ppisv3.dswd.gov.ph/BUS/BUS/CheckMemberIdentityDuplicate',
+					method: 'POST',
+					data: {
+						first_name: firstName,
+						last_name: lastName,
+						ext_name: $('#ext_name_id').val(),
+						dob: dob,
+						current_person_id: '',
+						target_rel_hh_id: targetRel
+					},
+					success: function (response) {
+						if (requestId !== newMemberIdentityDuplicateRequestId) {
+							return;
+						}
+
+						$("#loadingScreen").hide();
+
+						let parsedData;
+						try {
+							parsedData = JSON.parse(response);
+						} catch (e) {
+							console.error("Error parsing new member duplicate response:", e);
+							isNewMemberIdentityDuplicate = true;
+							updateNewMemberSaveState();
+							swal({
+								title: 'Error',
+								type: 'error',
+								icon: 'error',
+								text: 'An error occurred while checking duplicate identity records.',
+								confirmButtonText: "OK"
+							});
+							return;
+						}
+
+						const matches = Array.isArray(parsedData.data) ? parsedData.data : [];
+						if (parsedData.status === 'exists' && matches.length > 0) {
+							isNewMemberIdentityDuplicate = true;
+							renderNewMemberDuplicateTable(matches);
+							updateNewMemberSaveState();
+							if (!newMemberDuplicateModalDismissed) {
+								$("#duplicateNameModal").modal('show');
+							}
+							return;
+						}
+
+						clearNewMemberDuplicateState();
+					},
+					error: function () {
+						if (requestId !== newMemberIdentityDuplicateRequestId) {
+							return;
+						}
+
+						$("#loadingScreen").hide();
+						isNewMemberIdentityDuplicate = true;
+						updateNewMemberSaveState();
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'An error occurred while checking duplicate identity records.',
+							confirmButtonText: "OK"
+						});
+					}
+				});
+			}
+
+			function scheduleNewMemberIdentityDuplicateCheck() {
+				clearTimeout(newMemberIdentityDuplicateTimer);
+				newMemberDuplicateModalDismissed = false;
+				newMemberIdentityDuplicateTimer = setTimeout(checkNewMemberIdentityDuplicate, 500);
+			}
+
+			$(document).ready(function () {
+				$('#first_name, #last_name').on('input', scheduleNewMemberIdentityDuplicateCheck);
+				$('#ext_name_id, #rel_hh_id').on('change', scheduleNewMemberIdentityDuplicateCheck);
+				$('#date_of_birth').on('change', scheduleNewMemberIdentityDuplicateCheck);
+				$('#duplicateNameModal').off('hidden.bs.modal.busDuplicateModal').on('hidden.bs.modal.busDuplicateModal', function () {
+					newMemberDuplicateModalDismissed = isNewMemberIdentityDuplicate;
+					updateNewMemberSaveState();
+					if ($('#ValidateName').length) {
+						$("#ValidateName").prop("disabled", false);
+					}
+				});
+			});
+
+			//_______________________________________________________________________________________________________________________
+
+			jQuery(document).ready(function ($) {
+				$(".clickable-row").click(function () {
+					window.location = $(this).data("href");
+				});
+			});
+
+			function CVSCheck() {
+				var age = $('#age').val();
+				var rel_hh = $('#rel_hh_id').val();
+				var cs = $('#newMemberSelection').is(":checked");
+				var cg_max = $('#cg_count').val();
+
+				if (cg_max >= 3) {
+					showModal("Max number of selected beneficiaries.");
+					$("#newMemberSelection").prop('checked', false);
+					return false;
+				} else {
+					if (cs == true) {
+						if ((age >= 3 && age <= 19) && (rel_hh == 3 || rel_hh == 6)) {
+							showModal("This will select the child for CVS Educ monitoring");
+						} else {
+							showModal("This child is not eligible for CVS Educ monitoring. Please check the age or relationship. The age must be between 3 and 18 only. The relationship must be Child or Grandchild of the HH Head.");
+							$("#newMemberSelection").prop('checked', false);
+						}
+					}
+				}
+			}
+
+			function showModal(message) {
+				$('#modalMessage').text(message);
+				$('#customModal').modal('show');
+			}
+
+
+			function ajaxTwin() {
+				var twin1 = $('#twin1').is(":checked");
+				var twin2 = $('#twin2').is(":checked");
+
+				if (twin2) {
+					$('#twin_button').hide();
+					//$('#add_member1').show();
+					//toggleview('add_member1');
+				}
+				if (twin1) {
+					$('#twin_button').show();
+					//$('#add_member1').hide();
+					//toggleview('add_member1');
+				}
+			}
+
+			function selectRelHH(up_type) {
+				//var up_type_check = $('#up_type').is(":checked");
+
+				if (up_type == 2) {
+					var up_type = 2;
+					var new_member_hh_id = $("#new_member_hh_id").val();
+					$.ajax({
+						url: "https://ppisv3.dswd.gov.ph/BUS/ajaxBUS/populate_rel_hh",
+						async: false,
+						type: "POST",
+						data: { up_type: up_type, new_member_hh_id: new_member_hh_id },
+						dataType: "html",
+						success: function (data) {
+							//alert('Successfully called');
+							$('#rel_hh_id').html(data);
+
+						},
+						error: function () {
+							alert('Error');
+						}
+					});
+					$("label[for='up_type']").text("New Member");
+					$('#twin_div').hide();
+
+					$('#newmember_type').val('2');
+					//alert($('#rel_hh_id').val());
+					if ($('#rel_hh_id').val() == 6) {
+						var div = document.getElementById("reason_no_parent_div");
+						if (div.style.display === "none" || div.style.display === "") {
+							div.style.display = "block"; // Change this to "inline-block" or "inline" if needed
+						} else {
+							div.style.display = "none";
+						}
+					}
+
+				}
+				else {
+					//var up_type = 2;
+					$.ajax({
+						url: "https://ppisv3.dswd.gov.ph/BUS/ajaxBUS/populate_rel_hh",
+						async: false,
+						type: "POST",
+						data: { up_type: '1' },
+						dataType: "html",
+						success: function (data) {
+							//alert('Successfully called');
+							$('#rel_hh_id').html(data);
+
+						},
+						error: function () {
+							alert('Error');
+						}
+					});
+
+					$("label[for='up_type']").text("Newborn");
+					$('#twin_div').show();
+					$('#newmember_type').val('1');
+				}
+			}
+
+			function selectParent(rel_hh) {
+				// var up_type_check = $('#up_type').is(":checked");
+				var new_member_hh_id = $("#new_member_hh_id").val();
+
+				// if(up_type_check){
+				// 	var up_type = 1;
+				// }else{
+				// 	var up_type = 2;
+				// }
+
+				var up_type = document.getElementById("up_type").value;
+
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/ajaxBUS/populate_parent",
+					async: false,
+					type: "POST",
+					data: { new_member_hh_id: new_member_hh_id, rel_hh: rel_hh, up_type: up_type },
+					dataType: "html",
+					success: function (data) {
+						//alert('Successfully called');
+						$('#parent_id').html(data);
+						$('#parent_id_twin').html(data);
+						$('#parent_id_twin').prop('disabled', true);
+						if (rel_hh == 5 || rel_hh == 2) {
+							$('#parent_label').html('Child');
+						} else {
+							$('#parent_label').html('Parent');
+						}
+
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+
+				var select1 = document.getElementById("rel_hh_id");;
+				//var select2 = document.getElementById("rel_hh_id_twin");
+				$('#rel_hh_id_twin').prop('disabled', true);
+				//select2.value = select1.value;
+
+				if (rel_hh == 6) {
+
+					var div = document.getElementById("reason_no_parent_div");
+					if (div.style.display === "none" || div.style.display === "") {
+						div.style.display = "block"; // Change this to "inline-block" or "inline" if needed
+					} else {
+						div.style.display = "none";
+					}
+					var div1 = document.getElementById("file_no_parent_div");
+					if (div1.style.display === "none" || div1.style.display === "") {
+						div1.style.display = "block"; // Change this to "inline-block" or "inline" if needed
+					} else {
+						div1.style.display = "none";
+					}
+
+
+				} else {
+					var parent = document.getElementById("parent_id");
+					parent.disabled = false;
+					parent.value = '';
+
+					var div = document.getElementById("reason_no_parent_div");
+					div.disabled = true;
+					div.style.display = "none";
+					var div1 = document.getElementById("file_no_parent_div");
+					div1.disabled = true;
+					div1.style.display = "none";
+				}
+
+
+
+			}
+
+			function ajaxParentTwin(rel_hh) {
+				var select1 = document.getElementById("parent_id");
+				var select2 = document.getElementById("parent_id_twin");
+				//select2.value = select1.value;
+
+			}
+
+			function ReasonParent() {
+				//document.getElementById("reason_no_parent").disabled = false;
+				var checkbox = document.getElementById("reason_no_parent");
+				checkbox.disabled = !checkbox.disabled;
+
+				var upload = document.getElementById("no_parent_file");
+				upload.disabled = !upload.disabled;
+
+				var parent = document.getElementById("parent_id");
+				parent.disabled = !parent.disabled;
+				parent.value = '';
+			}
+
+			$(document).ready(function () {
+				$('#attending_school').change(function () {
+					if ($(this).val() == 0) {
+
+						$('#reason_school').prop('disabled', false);
+						$('#educ_facility_id').prop('disabled', true);
+						$('#grade_level_id').prop('disabled', true);
+					} else if ($(this).val() == 1) {
+						$('#reason_school').prop('disabled', true);
+						$('#educ_facility_id').prop('disabled', false);
+						$('#grade_level_id').prop('disabled', false);
+					} else {
+						$('#reason_school').prop('disabled', true);
+						$('#educ_facility_id').prop('disabled', true);
+						$('#grade_level_id').prop('disabled', true);
+					}
+				});
+
+				$('#attending_health').change(function () {
+					if ($(this).val() == 2) {
+						$('#reason_health').prop('disabled', false);
+						$('#health_facility_id').prop('disabled', true);
+					} else {
+						$('#reason_health').prop('disabled', true);
+						$('#health_facility_id').prop('disabled', false);
+					}
+				});
+			});
+
+			$('#override_grade_age_rule').on('change', function () {
+				const checked = this.checked;
+
+				// show/hide reason box
+				$('#override_reason_wrap').toggle(checked);
+
+				// refresh grade list using the current DOB
+				const dob = $('#date_of_birth').val();
+				const current_grade = $('#grade_level_id').val();
+				//const old_grade = $('#old_grade_level_id').val(); // DB original grade
+
+				if (dob && dob !== '0000-00-00') {
+					$.ajax({
+						url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_grade",
+						type: "POST",
+						data: { date_of_birth: dob, grade: current_grade, override: checked ? 1 : 0 },
+						dataType: "html",
+						success: function (data) {
+							$('#grade_level_id').html(data);
+
+							if (checked) {
+								// Override ON: keep the user's current selection if it exists in the new list
+								if ($('#grade_level_id option[value="' + current_grade + '"]').length) {
+									$('#grade_level_id').val(current_grade);
+								}
+								return;
+							}
+
+							// current is NOT valid -> revert to old DB value if it exists in the list
+							const hasOld = $('#grade_level_id option[value="' + old_grade + '"]').length > 0;
+
+							if (hasOld) {
+								$('#grade_level_id').val(old_grade);
+								alert('Override removed. Grade level reverted to the previously saved value.');
+							} else {
+								// fallback: clear
+								$('#grade_level_id').val('');
+								alert('Override removed. Selected grade is not allowed for this age. Please select a valid grade level.');
+							}
+						}
+					});
+				}
+			});
+
+			function BirthdayValidate(birthday) {
+				//alert(birthday);
+				//frm=document.forms[0];
+				if (!isCompleteValidIdentityDate(birthday)) {
+					return false;
+				}
+
+				var now = new Date();
+				day = now.getDate();
+				month = (now.getMonth() + 1);
+				year = (now.getFullYear());
+				if (month < 10) {
+					month = "0" + month;
+				}
+				if (day < 10) {
+					day = "0" + day;
+				}
+				var currentdate = year + '-' + month + '-' + day;
+
+				var up_type_check = $('#up_type').is(":checked");
+
+				if (up_type_check) {
+					var up_type = 1;
+				} else {
+					var up_type = 2;
+				}
+
+				if (birthday > currentdate) {
+					alert("Birthday should not be later than today.");
+					document.getElementById('date_of_birth').value = '0000-00-00';
+				}
+				else {
+					document.getElementById('date_of_birth').value = birthday;
+					// document.getElementById('date_of_birth_twin').value = birthday;
+					// document.getElementById('date_of_birth_twin').disabled = true;
+				}
+
+				var date_interview = document.getElementById('date_interview').value;
+
+				if (birthday < date_interview && up_type == 1) {
+					alert("The birthday of the child should not be before the date of interview of the HH");
+					document.getElementById('date_of_birth').value = '0000-00-00';
+					return false;
+				}
+
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_grade",
+					async: false,
+					type: "POST",
+					data: "date_of_birth=" + birthday,
+					dataType: "html",
+					success: function (data) {
+						//alert('Successfully called');
+						$('#grade_level_id').html(data);
+						$('#grade_level_id_twin').html(data);
+
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+
+				showAge();
+
+			}
+
+			function BirthdayValidateGrantee(birthday) {
+				//alert(birthday);
+				//frm=document.forms[0];
+				if (!isCompleteValidIdentityDate(birthday)) {
+					return false;
+				}
+
+				var now = new Date();
+				day = now.getDate();
+				month = (now.getMonth() + 1);
+				year = (now.getFullYear());
+				if (month < 10) {
+					month = "0" + month;
+				}
+				if (day < 10) {
+					day = "0" + day;
+				}
+				var currentdate = year + '-' + month + '-' + day;
+
+				showAge();
+
+			}
+
+			document.addEventListener('DOMContentLoaded', function () {
+				const input = document.getElementById('philsys_id');
+
+				input.addEventListener('input', function () {
+					let value = input.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+					// Check if the input is "0000-0000-0000-0000"
+					if (value === "0000000000000000" || value === "0000-0000-0000-0000") {
+						input.setCustomValidity("Please enter a valid number.");
+					} else {
+						input.setCustomValidity("");
+					}
+
+					let formattedValue = '';
+
+					for (let i = 0; i < value.length; i += 4) {
+						formattedValue += value.substr(i, 4) + '-';
+					}
+
+					formattedValue = formattedValue.slice(0, -1);
+					input.value = formattedValue;
+				});
+			});
+
+			$(document).ready(function () {
+				$("#insert_newmember").submit(function (event) {
+					// Prevent the default form submission behavior
+					event.preventDefault();
+
+					if (isNewMemberIdentityDuplicate) {
+						$("#duplicateNameModal").modal('show');
+						updateNewMemberSaveState();
+						return false;
+					}
+
+					// Add your custom validation logic here
+					var isValid = true;
+
+					// if($user_level == 8 || $user_level == 1){
+					//     $pattern = "\"[a-zA-Z0-9\u00f1\u00d1\s.-]{1,}\"";
+					//     $pattern_mid = "pattern = \"[a-zA-Z\u00f1\u00d1\s.-]{1,}\" title='Format is wrong.'";
+					// }else{
+					//     $pattern = "pattern = \"[a-zA-Z\u00f1\u00d1\s.-]{2,}\" title='Format is wrong.'";
+					//     $pattern_mid = "pattern = \"[a-zA-Z\u00f1\u00d1\s.-]{1,}\" title='Format is wrong.'";
+					// }
+					var user_level = document.getElementById("user_level").value;
+
+					if (user_level == 8 || user_level == 1 || user_level == 15 || user_level == 16) { // CRF 2023-47 20230928
+						var pattern = /^[a-zA-Z0-9\u00f1\u00d1\s\.\-]{1,}$/;
+						var pattern_mid = /^[a-zA-Z0-9\u00f1\u00d1\s\.\-]{0,}$/;
+
+					} else if (user_level == 59 || user_level == 43) {
+						var pattern = /^.*$/; // Matches any string, effectively bypassing the validation
+						var pattern_mid = /^.*$/;
+					} else {
+						var pattern = /^[a-zA-Z\u00f1\u00d1\s\.\-]{2,}$/;
+						var pattern_mid = /^[a-zA-Z\u00f1\u00d1\s\.\-]{0,}$/;
+					}
+
+					var firstName = $('#first_name').val();
+					var LastName = $('#last_name').val();
+					var MidName = $('#middle_name').val();
+					var NoMN = document.getElementById("remove_mn").value;
+					const trimmedMiddleName = MidName.trim();
+					var up_type = $('#up_type').val();
+					var reason_no_parent = $('#reason_no_parent').val();
+					var philsys_id = document.getElementById("philsys_id").value;
+					var rel_hh_id = document.getElementById("rel_hh_id").value;
+					var parent_id = document.getElementById("parent_id").value;
+					var lrn = $('#lrn').val();
+					var pattern_lrn = /^\d{10}$|^\d{12}$/;
+
+					var age = document.getElementById("age").value;
+
+					var grade = $('#grade_level_id').val();
+					var attending_school = $('#attending_school').val();
+					var name_of_school = $('#educ_facility_id').val();
+					var reason_school = $('#reason_school').val();
+					var reasonNoCheckbox = document.getElementById("reason_no");
+					var attending_health = $('#attending_health').val();
+					var health_facility_id = $('#health_facility_id').val();
+					var age_3_6 = $('#age_3_6').val();
+					var rel_hh_id = $("#rel_hh_id").val();
+					var livingChecked = $("#livingCheck").is(":checked");
+					var supportDoc = $("#supportDoc")[0];
+					let file = supportDoc.files[0];
+					// console.log(rel_hh_id);
+					// console.log(livingChecked);
+					// console.log(supportDoc);
+					// console.log(file);
+
+					// building FormData:
+					if (rel_hh_id == 6) {
+						if (!livingChecked) {
+							swal({
+								title: 'Error',
+								type: 'error',
+								icon: 'error',
+								text: 'You must certify that the member is living in the household.',
+								confirmButtonText: "OK",
+								closeOnConfirm: true
+							});
+							return false; // block submission
+						}
+
+						if (!file) {
+							swal({
+								title: 'Error',
+								type: 'error',
+								icon: 'error',
+								text: 'Please upload and confirm a supporting document before submitting.',
+								confirmButtonText: "OK",
+								closeOnConfirm: true
+							});
+							return false; // block submission
+						}
+
+						if (supportDoc.files.length === 0) {
+							swal({
+								title: 'Error',
+								type: 'error',
+								icon: 'error',
+								text: 'Supporting document is required.',
+								confirmButtonText: "OK",
+								closeOnConfirm: true
+							});
+							return false; // block submission
+						}
+					}
+
+
+					if (NoMN == 0 && (trimmedMiddleName == '' || trimmedMiddleName == ' ') && trimmedMiddleName !== '') {  //CRF-2024-96 Middle Name Modification
+						alert("Middle Name is required if No Middle Name is unchecked!");
+						return false;
+					}
+
+					// alert(attending_school + grade + name_of_school + reason_school);
+					if (rel_hh_id == 1 && age_3_6 > age) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'The age of the HH Head must be at least 9 year older than the age of the eldest child/grandchild.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if ((age >= 2 && age <= 19) && (rel_hh_id == 3 || rel_hh_id == 6) && attending_school == 1 && (grade == '' || name_of_school == '' || grade == 0 || name_of_school == 0)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Please input the school and/or grade level of the member',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+					// open to all relation to head
+					if ((age >= 2 && age <= 19) && attending_school == 3 && (grade == '' || name_of_school == '' || grade == 0 || name_of_school == 0)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Please Select Attending School Yes/No',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if ((age >= 3 && age <= 19) && attending_school == 0 && reason_school === '') {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Please State Reason for Not Attending School',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if ((age >= 0 && age <= 5) && (rel_hh_id == 3 || rel_hh_id == 6) && attending_health == 1 && (health_facility_id == '' || health_facility_id == 0)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Please input the Health Facility',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+					//if 0-5 Health is required
+					if ((age >= 0 && age <= 5) && (rel_hh_id == 3 || rel_hh_id == 6) && attending_health == 0 && (health_facility_id == '' || health_facility_id == 0)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Please Select Attending Health Yes/No',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					//add validation for rel hh 1 and age CRF 2023-35 20230926
+					if (age <= 18 && rel_hh_id == 1) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'HH Head must be 19 y/o and above. Please check the age and relationship to HH head.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if (philsys_id != 0 && philsys_id.length < 19) {
+						//alert("PhilSys ID. Please use the right format.");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'PhilSys ID. Please use the right format.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					// Check if the input is "0000-0000-0000-0000"
+					if (philsys_id === "0000000000000000" || philsys_id === "0000-0000-0000-0000") {
+						//alert("PhilSys ID. Please enter a valid number.");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'PhilSys ID. Please enter a valid number.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					if (!pattern_lrn.test(lrn) && lrn != '') {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Wrong Format, LRN.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+					}
+
+					// Check rel hh is 0
+					if (rel_hh_id == "" || rel_hh_id == "0") {
+						// alert("Relationship is required.");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Relationship is required.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					// Check rel hh is 0
+					if (parent_id === '' && (rel_hh_id != "" && rel_hh_id != 1) && !reasonNoCheckbox.checked) {
+						//alert("Parent is required.");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Parent is required.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					if ((rel_hh_id == 3 || rel_hh_id == 6) && parent_id === '' && !reasonNoCheckbox.checked) {
+						//alert("Parent is required");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Parent is required.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					if ((rel_hh_id == 3 || rel_hh_id == 6) && parent_id === '' && reasonNoCheckbox.checked) {
+						if (reason_no_parent == 0) {
+							swal({
+								title: 'Error',
+								type: 'error',
+								icon: 'error',
+								text: 'Reason for Parent not in Roster is required.',
+								confirmButtonText: "OK",
+								closeOnConfirm: true
+							});
+							isValid = false;
+							return false;
+						}
+
+					}
+
+					if ((rel_hh_id == 3 || rel_hh_id == 6) && parent_id === '' && up_type == 1) {
+						//alert("Parent is required");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Parent is required.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					if ((rel_hh_id == 2 || rel_hh_id == 5) && parent_id === '') {
+						//alert("Child is required");
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Child is required.',
+							confirmButtonText: "OK",//sample merge qa
+							closeOnConfirm: true
+						});
+						isValid = false;
+						return false;
+					}
+
+					if (!pattern.test(firstName)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Wrong Format, First Name.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if (!pattern.test(LastName)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Wrong Format, Last Name.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if (!pattern_mid.test(MidName)) {
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Wrong Format, Middle Name.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+					if ((rel_hh_id == 2 || rel_hh_id == 5) && (age <= 14)) { //BUGFIX 2025-09-18
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: 'Age is not allowed to the selected Relation to Head.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						});
+						//$('#summary_encoding').modal('hide');
+						isValid = false;
+					}
+
+
+					// If there are validation errors, prevent form submission
+					if (!isValid) {
+						// You can display a message, style the fields with errors, or take other actions here.
+						return false;
+					} else {
+						let form = $('#insert_newmember')[0];
+						let formData = new FormData(form);
+
+						// Add file to the form
+						let supportDocFile = $('#supportDoc')[0].files[0];
+						if (rel_hh_id == 6 && supportDocFile) {
+							formData.append('supportDoc', supportDocFile);
+						}
+
+						swal({
+							title: "Are you sure you want to proceed with the transaction/s?",
+							text: "Any intentional or negligent data manipulation and misrepresentation of Pantawid Pamilya by any staff may constitute a criminal offense with corresponding penalties as provided by Section 24 of Republic Act No. 11310 or an Act Institutionalizing the Pantawid Pamilyang Pilipino Program (4Ps). Do you want to continue?",
+							type: "warning",
+							showCancelButton: true,
+							confirmButtonColor: "#DD6B55",
+							confirmButtonText: "Proceed!",
+							closeOnConfirm: false
+						}, function (isConfirmed) {
+							if (isConfirmed) {
+								// User confirmed, proceed with form submission
+								$.ajax({
+									url: "https://ppisv3.dswd.gov.ph/BUS/BUS/insertNewMember/
+<div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Notice</p>
+<p>Message:  Undefined variable: hhs</p>
+<p>Filename: bus/bus.php</p>
+<p>Line Number: 3098</p>
+
+
+	<p>Backtrace:</p>
+	
+		
+	
+		
+	
+		
+			<p style="margin-left:10px">
+			File: /opt/html/ppis3/application/views/bus/bus.php<br />
+			Line: 3098<br />
+			Function: _error_handler			</p>
+
+		
+	
+		
+	
+		
+	
+		
+			<p style="margin-left:10px">
+			File: /opt/html/ppis3/application/controllers/BUS/BUS.php<br />
+			Line: 479<br />
+			Function: view			</p>
+
+		
+	
+		
+	
+		
+			<p style="margin-left:10px">
+			File: /opt/html/ppis3/index.php<br />
+			Line: 327<br />
+			Function: require_once			</p>
+
+		
+	
+
+</div>
+<div style="border:1px solid #990000;padding-left:20px;margin:0 0 10px 0;">
+
+<h4>A PHP Error was encountered</h4>
+
+<p>Severity: Notice</p>
+<p>Message:  Trying to get property 'listahanan_id' of non-object</p>
+<p>Filename: bus/bus.php</p>
+<p>Line Number: 3098</p>
+
+
+	<p>Backtrace:</p>
+	
+		
+	
+		
+	
+		
+			<p style="margin-left:10px">
+			File: /opt/html/ppis3/application/views/bus/bus.php<br />
+			Line: 3098<br />
+			Function: _error_handler			</p>
+
+		
+	
+		
+	
+		
+	
+		
+			<p style="margin-left:10px">
+			File: /opt/html/ppis3/application/controllers/BUS/BUS.php<br />
+			Line: 479<br />
+			Function: view			</p>
+
+		
+	
+		
+	
+		
+			<p style="margin-left:10px">
+			File: /opt/html/ppis3/index.php<br />
+			Line: 327<br />
+			Function: require_once			</p>
+
+		
+	
+
+</div>",
+									method: "POST",
+									data: formData,
+									processData: false,
+									contentType: false,
+									beforeSend: function () {
+										$('#newmember').val("Saving");
+									},
+									success: function (data) {
+										$('#insert_newmember')[0].reset();
+										$('#add_member').modal('hide');
+										swal({
+											title: 'Encoded',
+											type: 'success',
+											icon: 'success',
+											text: data,
+											confirmButtonText: "OK",
+											closeOnConfirm: true
+										},
+											function () {
+												window.location.reload();
+											});
+									},
+									error: function (data) {
+										alert(data + "Error. Please contact ICTMS.");
+									}
+								});
+
+							} else {
+								// User canceled, do nothing or handle it as needed
+							}
+						});
+
+					}
+
+					// If all validations pass, submit the form programmatically
+					// This will trigger the default form submission behavior
+
+				});
+			});
+
+
+			$(document).ready(function () {
+				$('#insert_form').on("submit", function (event) {
+					event.preventDefault();
+					if ($('#region').val() == "") {
+						alert("Region is required");
+					}
+					else if ($('#Province').val() == '') {
+						alert("Address is required");
+					}
+					else if ($('#city').val() == '') {
+						alert("City is required");
+					}
+					else if ($('#barangay').val() == '') {
+						alert("Barangay is required");
+					}
+					else if ($('#barangay').val() == 0) {
+						alert("Barangay is required");
+					}
+					else if ($('#address').val() == $('#old_address').val() && $('#barangay').val() == $('#old_barangay').val()) {
+						alert("Please update some fields.");
+					} else if ($('#count_new_address').val() >= 1) {
+						swal({
+							title: 'Warning',
+							type: 'warning',
+							icon: 'warning',
+							text: 'This HH already has a Change of Address Transaction. Multiple encoding is not allowed.',
+							confirmButtonText: "OK",
+							closeOnConfirm: true
+						}
+
+						);
+						$('#select_location').prop("disabled", true);
+					}
+					// else if ($('#address').val() == '') {
+					// 	alert("Address is required");
+					// }
+
+					else {
+						$.ajax({
+							url: "https://ppisv3.dswd.gov.ph/BUS/BUS/insertAddress",
+							method: "POST",
+							data: $('#insert_form').serialize(),
+							beforeSend: function () {
+								$('#select_location').val("Saving");
+							},
+							success: function (data) {
+								$('#insert_form')[0].reset();
+								$('#change_address').modal('hide');
+								//$('#employee_table').html(data);
+								swal({
+									title: 'Encoded',
+									type: 'success',
+									icon: 'success',
+									text: 'New Address has been encoded.',
+									confirmButtonText: "OK",
+									closeOnConfirm: true
+								},
+									function () {
+										window.location.reload();
+									}
+								);
+								//                            $("#UpdatesAddress").ajax.reload();
+								//                            $('#UpdatesAddress').DataTable().clear();
+								//                            $('#UpdatesAddress').DataTable().destroy();
+
+								$('#UpdatesAddress').DataTable().ajax.reload();
+							}
+						});
+
+					}
+				});
+
+			});
+
+			$("#hh_status_category").change(function () {
+				$('#hh_status_modal').modal('show');
+			});
+
+			function closeHHStatus() {
+				document.getElementById('hh_status_category').value = '';
+			}
+
+			$(document).ready(function () {
+
+				$(".eligible").click(function () {
+					var person_id = $(this).val();
+					var cg_count = $('#cg_count').val();
+					var id = $('#selection_id' + person_id).val();
+					var approval_status = $('#selection_approval_status' + person_id).val();
+					var child_grantee = $('#child_grantee_' + person_id).val();
+
+					if ($(this).is(":checked")) {
+						//alert(cg_count);
+						//$("#dvPassport").show();
+						if (cg_count < 3) {
+							if (child_grantee == 0) {
+								$.ajax({
+									url: "https://ppisv3.dswd.gov.ph/BUS/BUS/insertChildSelection",
+									method: "POST",
+									data: { person_id: person_id },
+									success: function (data) {
+										$('#selection' + person_id).modal('show');
+										//alert(data);
+										$('#selection_id' + person_id).html(data);
+									}
+								});
+							} else {
+
+							}
+						} else {
+							showModal("Max number of selected beneficiaries.");
+							return false;
+						}
+
+
+					} else {
+
+						//					$.ajax({
+						//						url: "<?//= base_url() ?>//BUS/BUS/discardChildSelection",
+						//						method: "POST",
+						//						data: {id : id},
+						//						success: function () {
+						//							$('#discard_selection'+boo).modal('show');
+						//						}
+						//					});
+						if (approval_status == 1 && child_grantee == 0) {
+							$.ajax({
+								url: "https://ppisv3.dswd.gov.ph/BUS/BUS/discardChildSelection",
+								method: "POST",
+								data: { id: id },
+								success: function () {
+									$('#discard_selection' + person_id).modal('show');
+								}
+							});
+						} else if (approval_status == 9 || child_grantee == 1 || child_grantee == 2) {
+							$('#replacement_modal').modal('show');
+							$.ajax({
+								url: "https://ppisv3.dswd.gov.ph/BUS/BUS/getCG",
+								async: false,
+								type: "POST",
+								data: "person_id=" + person_id,
+								dataType: "html",
+								success: function (data) {
+									//alert('Successfully called');
+									$('.modal_replace').html(data);
+									$('#old_cg_name').val(data);
+
+								},
+								error: function () {
+									alert('Error');
+								}
+							});
+							// if($('#replacement_modal').hide())
+							// {
+							// 	$(this).prop('checked', false);
+							// }
+
+						}
+					}
+				});
+
+			});
+
+
+			function toggleview(element1) {
+
+				var element1 = document.getElementById(element1);
+
+				if (element1.style.display == 'block' || element1.style.display == '')
+					element1.style.display = 'none';
+				else
+					element1.style.display = 'block';
+
+				//setHeight();
+				return;
+			}
+
+			function populate_province(region) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_prov",
+					async: false,
+					type: "POST",
+					data: "region_code=" + region,
+					dataType: "html",
+					success: function (data) {
+						//alert('Successfully called');
+						$('#province').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+
+				$('#city').empty();
+				$('#barangay').empty();
+			}
+
+			function populate_city(prov) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_city",
+					async: false,
+					type: "POST",
+					data: "prov_code=" + prov,
+					dataType: "html",
+					success: function (data) {
+						//alert(data);
+						$('#city').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+				$('#barangay').empty();
+			}
+
+			function populate_barangay(city) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_barangay",
+					async: false,
+					type: "POST",
+					data: "city_code=" + city,
+					dataType: "html",
+					success: function (data) {
+						$('#barangay').html(data);
+					}
+				});
+			}
+
+			function showAge() {
+				if (!isCompleteValidIdentityDate(document.getElementById('date_of_birth').value)) {
+					return false;
+				}
+
+				var bday = document.getElementById('date_of_birth').value.substring(8, 10);
+				var bmo = document.getElementById('date_of_birth').value.substring(5, 7);
+				var byr = document.getElementById('date_of_birth').value.substring(0, 4);
+				var age = 0;
+				var now = new Date();
+				tday = now.getDate();
+				tmo = (now.getMonth() + 1);
+				tyr = (now.getFullYear());
+				if ((tmo > bmo) || (tmo == bmo & tday >= bday)) { age = byr }
+				else { age = Number(byr) + 1 }
+				age = tyr - age;
+				if (age < 0) { age = 0 }
+				document.getElementById('age').value = age;
+				document.getElementById('age').disabled = true;
+				// document.getElementById('age_twin').value= age;
+				// document.getElementById('age_twin').disabled=true;
+
+				if (age >= 3 && age <= 19) {
+					//document.getElementById('disablednewMemberSelection').disabled = false;
+				}
+
+				if (age <= 2) {
+					document.getElementById('attending_school').value = 0;
+				}
+
+				if (age >= 130) {
+					alert("Age is not allowed.");
+					location.reload();
+					return false;
+				}
+			}
+
+			function ajaxSchool() {
+				var city_school = document.getElementById('city_school').value;
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_school",
+					async: false,
+					type: "POST",
+					data: "city_id=" + city_school,
+					dataType: "html",
+					success: function (data) {
+						//alert('Successfully called');
+						$('#educ_facility_id').html(data);
+						$('#school_location').modal('hide');
+						$('.modal-backdrop').remove();
+
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+			}
+
+			function populate_province_school(region) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_prov",
+					async: false,
+					type: "POST",
+					data: "region_code=" + region,
+					dataType: "html",
+					success: function (data) {
+						//alert('Successfully called');
+						$('#province_school').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+
+				$('#city_school').empty();
+				$('#barangay_school').empty();
+			}
+
+			function populate_city_school(prov) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_city",
+					async: false,
+					type: "POST",
+					data: "prov_code=" + prov,
+					dataType: "html",
+					success: function (data) {
+						//alert(data);
+						$('#city_school').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+				$('#barangay_school').empty();
+			}
+
+			function populate_barangay_school(city) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_barangay",
+					async: false,
+					type: "POST",
+					data: "city_code=" + city,
+					dataType: "html",
+					success: function (data) {
+						$('#barangay_school').html(data);
+					}
+				});
+			}
+
+			function ajaxHealth1() {
+				var city_health = document.getElementById('city_health').value;
+				//alert(city_health);
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_health",
+					async: false,
+					type: "POST",
+					data: "city_id=" + city_health,
+					dataType: "html",
+					success: function (data) {
+						$('#health_facility_id').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				})
+			}
+
+			function ajaxSchool1() {
+				var city_school = document.getElementById('city_school').value;
+				//alert(city_health);
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_school",
+					async: false,
+					type: "POST",
+					data: "city_id=" + city_school,
+					dataType: "html",
+					success: function (data) {
+						$('#educ_facility_id').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				})
+			}
+			function ajaxSchoolTwin() {
+				var city_school = document.getElementById('city_school').value;
+				//alert(city_health);
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_school",
+					async: false,
+					type: "POST",
+					data: "city_id=" + city_school,
+					dataType: "html",
+					success: function (data) {
+						$('#educ_facility_id_twin').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				})
+			}
+			function ajaxHealthTwin() {
+				var city_health = document.getElementById('city_health').value;
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_health",
+					async: false,
+					type: "POST",
+					data: "city_id=" + city_health,
+					dataType: "html",
+					//                success: function(data) {
+					//                    $('#health_facility_id').html(data);
+					//                }
+					/*success: function(data) {
+					 //alert('Successfully called');
+					 $('#health_location').modal('hide');
+					 //$('#health_facility_id').html(data);
+
+
+					 },*/
+					error: function () {
+						alert('Error');
+					}
+				})
+					.done(function (data) {
+						//alert('Successfully called');
+						$("#health_location.close").click();
+						$('#health_facility_id_twin').html(data);
+					})
+			}
+			function ajaxHealth() {
+				var city_health = document.getElementById('city_health').value;
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_health",
+					async: false,
+					type: "POST",
+					data: "city_id=" + city_health,
+					dataType: "html",
+					//                success: function(data) {
+					//                    $('#health_facility_id').html(data);
+					//                }
+					/*success: function(data) {
+					 //alert('Successfully called');
+					 $('#health_location').modal('hide');
+					 //$('#health_facility_id').html(data);
+
+
+					 },*/
+					error: function () {
+						alert('Error');
+					}
+				})
+					.done(function (data) {
+						//alert('Successfully called');
+						$("#health_location.close").click();
+						$('#health_facility_id').html(data);
+					})
+			}
+
+			function populate_province_health(region) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_prov",
+					async: false,
+					type: "POST",
+					data: "region_code=" + region,
+					dataType: "html",
+					success: function (data) {
+						//alert('Successfully called');
+						$('#province_health').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+
+				$('#city_health').empty();
+				$('#barangay_health').empty();
+			}
+
+			function populate_city_health(prov) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_city",
+					async: false,
+					type: "POST",
+					data: "prov_code=" + prov,
+					dataType: "html",
+					success: function (data) {
+						//alert(data);
+						$('#city_health').html(data);
+					},
+					error: function () {
+						alert('Error');
+					}
+				});
+				$('#barangay_health').empty();
+			}
+
+			function populate_barangay_health(city) {
+				$.ajax({
+					url: "https://ppisv3.dswd.gov.ph/BUS/location/populate_barangay",
+					async: false,
+					type: "POST",
+					data: "city_code=" + city,
+					dataType: "html",
+					success: function (data) {
+						$('#barangay_health').html(data);
+					}
+				});
+			}
+
+			function HHStatusAlert() {
+				alert("HH Status module is locked.");
+			}
+
+
+			function ajax_confirm_contact_no() {
+
+				var hh_id = document.getElementById("hh_id").value;
+				var contact_no = document.getElementById("contact_no").value;
+				var old_contact_no = document.getElementById("old_contact_no").value;
+				var old_contact_no = document.getElementById("old_contact_no").value;
+				var length = contact_no.length;
+				var letters = /^[A-Za-z]+$/;
+
+				if (contact_no.match(letters)) {
+					//return true;
+					alert("Please input correct format.")
+					return false;
+				} else {
+
+				}
+
+				if (length < 11) {
+					alert("Please input 11 digits only.")
+					return false;
+				}
+
+				if (old_contact_no === contact_no) {
+					swal({
+						title: 'Error',
+						type: 'error',
+						icon: 'error',
+						text: 'Old Mobile No. is the same as the New Mobile No.',
+						confirmButtonText: "OK"
+					});
+					return false;
+				}
+
+				var inputValue = $("#contact_no").val();
+				if (inputValue.length >= 2) {
+					if (inputValue.substring(0, 2) !== '09' && inputValue.substring(0, 2) !== '08') {
+						//alert("Input must start with '09' or '08'.");
+						// Optionally, clear the input:
+						// $(this).val('');
+						swal({
+							title: 'Error',
+							type: 'error',
+							icon: 'error',
+							text: "Mobile No. must start with '09' or '08'",
+							confirmButtonText: "OK"
+						});
+						return false;
+					}
+				}
+
+
+
+				var ans = confirm("This will save the new mobile number for the HH. Do you want to continue?");
+				if (ans) {
+					//alert("New Contact Number has been saved");
+					//window.location.href = "ajax_contact_no.php?type=1&up_type=1&hh_id="+hh_id+"&contact_no="+contact_no;
+					$.ajax({
+						url: "https://ppisv3.dswd.gov.ph/BUS/BUS/insertContactNo",
+						method: "POST",
+						data: $('#contact_no_form').serialize(),
+						beforeSend: function () {
+							$('#contact_no_save').val("Saving");
+						},
+						success: function (data) {
+							$('#contact_no_form')[0].reset();
+							$('#contact_no_modal').modal('hide');
+							//$('#employee_table').html(data);
+							swal({
+								title: 'Encoded',
+								type: 'success',
+								icon: 'success',
+								text: 'Mobile Number has been saved into the profile of the HH.',
+								confirmButtonText: "OK",
+								closeOnConfirm: true
+							},
+								function () {
+									window.location.reload();
+								}
+							);
+							//                            $("#UpdatesAddress").ajax.reload();
+							//                            $('#UpdatesAddress').DataTable().clear();
+							//                            $('#UpdatesAddress').DataTable().destroy();
+
+							$('#ContactNoHistory').DataTable().ajax.reload();
+						}
+					});
+
+				}
+
+
+				else {
+					//window.location.href = "tbl_types.php?hh_id="+hh_id;
+				}
+			}
+
+			function ajax_discard_contact_no() {
+
+				var hh_id = document.getElementById("hh_id").value;
+				var id = document.getElementById("contact_no_id").value;
+
+				var ans = confirm("This will discard the encoded mobile number for the HH. Do you want to continue?");
+				if (ans) {
+					alert("Contact Number has been discarded");
+					window.location.href = "ajax_contact_no.php?type=2&up_type=1&hh_id=" + hh_id + "&id=" + id;
+				}
+				else {
+					window.location.href = "tbl_types.php?hh_id=" + hh_id;
+				}
+			}
+
+			//CRF-BDMD-2024-22
+			let isPhilSysIDDuplicate = false;
+			let isLRNDuplicate = false;
+
+			function checkDuplicatePhilSysID() {
+				const philsys_id = $('#philsys_id').val();
+
+				// Validate PhilSysID format before sending AJAX request
+				const pattern = /^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$/;
+				if (!pattern.test(philsys_id)) {
+					return;
+				}
+
+				$.ajax({
+					url: 'https://ppisv3.dswd.gov.ph/BUS/BUS/check_duplicate_philsys_id',
+					type: 'POST',
+					data: { philsys_id: philsys_id },
+					success: function (response) {
+						const parsedResponse = JSON.parse(response);
+						if (parsedResponse.is_duplicate) {
+							isPhilSysIDDuplicate = true;
+							displayDuplicateDetails(parsedResponse.details, parsedResponse.bus_encoded, parsedResponse.cars_encoded, parsedResponse.newmember_encoded);
+							$('#duplicateMessage').modal('show');
+						} else {
+							isPhilSysIDDuplicate = false;
+						}
+						updateSaveButtonsState();
+					}
+				});
+			}
+
+			function checkDuplicateLRN() {
+				const lrn_id = $('#lrn').val();
+
+				//validate pattern
+				const pattern = /^[0-9]{12}$/;
+				if (!pattern.test(lrn_id)) {
+					return;
+				}
+
+				$.ajax({
+					url: 'https://ppisv3.dswd.gov.ph/BUS/BUS/check_duplicate_lrn',
+					type: 'POST',
+					data: { lrn_id: lrn_id },
+					success: function (response) {
+						const parsedResponse = JSON.parse(response);
+						if (parsedResponse.is_duplicate) {
+							isLRNDuplicate = true;
+							displayDuplicateDetails(parsedResponse.details, parsedResponse.bus_encoded, parsedResponse.cars_encoded, parsedResponse.newmember_encoded);
+							$('#duplicateMessage').modal('show');
+						} else {
+							isLRNDuplicate = false;
+						}
+						updateSaveButtonsState();
+					}
+				});
+			}
+
+			function displayDuplicateDetails(details, busEncoded, carsEncoded, newmemberEncoded) {
+				let detailHtml = `
+				<div class="d-flex align-items-center">
+					<div class="mr-3">
+						<i class="fas fa-exclamation-circle fa-3x text-warning"></i>
+					</div>
+					<div>
+						<strong><b>The entry you are trying to add already exists.</b></strong><br><br>
+			`;
+
+				// Additional checks for BUS and CARS encoding
+				if (busEncoded || newmemberEncoded) {
+					detailHtml += `<span class="text-danger"><b>Note:</b> There is already BUS encoded for approval.</span><br>`;
+				}
+
+				if (carsEncoded) {
+					detailHtml += `<span class="text-danger"><b>Note:</b> There is already CARS encoded for approval.</span><br>`;
+				}
+
+				// Check if details from tbl_person exist before showing household/person details
+				if (details && details.person_id) {
+					if (details.phil_id) {
+						detailHtml += `<strong>PhilSys ID:</strong><b> ${details.phil_id}</b><br>`;
+					}
+
+					if (details.lrn_id) {
+						detailHtml += `<strong>LRN:</strong><b> ${details.lrn_id} </b><br>`;
+					}
+
+					detailHtml += `<strong>Household ID:</strong><b> ${details.listahanan_id}</b><br>`;
+					detailHtml += `<strong>Name:</strong><b> ${details.name}</b><br>`;
+					detailHtml += `<strong>Entry ID:</strong><b> ${details.person_id}</b><br>`;
+
+					const hasAddressDetails = !!(details.region || details.province || details.city || details.barangay);
+					if (hasAddressDetails) {
+						detailHtml += `
+					<strong>Address:</strong><br>
+					<table class="table table-sm">
+						<tr><td><strong>Region:</strong></td><td><b>${details.region || ''}</b></td></tr>
+						<tr><td><strong>Province:</strong></td><td><b>${details.province || ''}</b></td></tr>
+						<tr><td><strong>City:</strong></td><td><b>${details.city || ''}</b></td></tr>
+						<tr><td><strong>Barangay:</strong></td><td><b>${details.barangay || ''}</b></td></tr>
+					</table>
+				`;
+					}
+				}
+
+				detailHtml += `<br><i>Please check the details and try again.</i></div></div>`;
+
+				$('#duplicateMessage .modal-body').html(detailHtml);
+			}
+
+			//disable button if any of the 2 is true
+			function updateSaveButtonsState() {
+				const shouldDisable = isPhilSysIDDuplicate || isLRNDuplicate || isNewMemberIdentityDuplicate;
+				$('#newmember').prop('disabled', shouldDisable);
+				// $('#okButton1').prop('disabled', shouldDisable);
+			}
+
+			$(document).ready(function () {
+				$('#philsys_id').on('blur', checkDuplicatePhilSysID);
+				$('#lrn').on('blur', checkDuplicateLRN);
+				$('#philsys_id').on('input', function () {
+					$('#newmember').prop('disabled', true);
+				});
+				$('#lrn').on('input', function () {
+					$('#newmember').prop('disabled', true);
+				});
+
+				$(document).on('show.bs.modal', '.modal', function (event) {
+					var zIndex = 1040 + (10 * $('.modal:visible').length);
+					$(this).css('z-index', zIndex);
+					setTimeout(function () {
+						$('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+					}, 0);
+				});
+
+				// When a modal is hidden, remove the modal-stack class from the backdrop
+				$(document).on('hidden.bs.modal', '.modal', function (event) {
+					$('.modal:visible').length && $(document.body).addClass('modal-open');
+				});
+
+			});
+			// END of CRF-BDMD-2024-22
+			document.addEventListener('DOMContentLoaded', function () { //disable DOB future dates
+				const dob = document.getElementById('date_of_birth');
+				if (dob) {
+					// Get today's date in YYYY-MM-DD format
+					const today = new Date().toISOString().split('T')[0];
+					dob.setAttribute('max', today);
+				}
+			});
+		</script>
+
+
+
+	</div>
+
+
+</div>
+
+<!-- Modal CRF-2024-BDMD-22 -->
+<div class="modal fade" id="duplicateMessage" tabindex="-1" role="dialog" aria-labelledby="duplicateModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content border-warning">
+			<div class="modal-header bg-warning text-white">
+				<h5 class="modal-title" id="duplicateModalLabel">
+					<i class="fas fa-exclamation-triangle"></i> Duplicate Entry Warning
+				</h5>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- Details will be inserted here by JavaScript -->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- AlertChildSelectionModal -->
+<div class="modal fade" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content radius">
+			<div class="modal-header bg-danger text-white">
+				<h5 class="modal-title" id="customModalLabel">
+					<i class="fas fa-exclamation-triangle"></i> Alert
+				</h5>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body" id="modalMessage">
+				<!-- Message goes here -->
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">
+					<i class="fas fa-times"></i> Close
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+    .duplicate-record-list {
+        display: grid;
+        gap: 12px;
+        max-height: 360px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .duplicate-record-card {
+        border: 1px solid #f2cf78;
+        border-radius: 12px;
+        background: #fffdf7;
+        padding: 14px 16px;
+        box-shadow: 0 8px 18px rgba(155, 112, 16, 0.08);
+    }
+
+    .duplicate-record-card__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .duplicate-record-card__title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #4e3a0a;
+    }
+
+    .duplicate-record-card__subtitle {
+        font-size: 12px;
+        color: #7a6a43;
+    }
+
+    .duplicate-record-card__badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #fff1c9;
+        color: #8b6200;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .duplicate-record-card__grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 14px;
+    }
+
+    .duplicate-record-card__grid span {
+        display: block;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        color: #8a7b56;
+        margin-bottom: 2px;
+    }
+
+    .duplicate-record-card__grid strong {
+        display: block;
+        color: #2f2a1d;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .duplicate-empty-state {
+        padding: 18px;
+        border: 1px dashed #d7d7d7;
+        border-radius: 10px;
+        text-align: center;
+        color: #777;
+    }
+</style>
+
+<div class="modal fade" id="duplicateNameModal" tabindex="-1" role="dialog" aria-labelledby="duplicateNameModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content border-warning">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="duplicateNameModalLabel">
+                    <i class="fas fa-exclamation-triangle"></i> Duplicate Entry Warning
+                </h5>
+                <button type="button" class="close text-white bus-duplicate-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <div class="mr-3">
+                        <i class="fas fa-exclamation-circle fa-3x text-warning"></i>
+                    </div>
+                    <div>
+                        The name and date of birth you are trying to add already exists/encoded for approval. Please check the details and try again.                    </div>
+                </div>
+                <div class="duplicate-record-list mt-3" id="duplicateTableContainer">
+                    <div class="duplicate-empty-state">No duplicate records found.</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="continueBtn" class="btn btn-primary bus-duplicate-close" data-dismiss="modal">OK</button>
+                <button type="button" id="closeDuplicateNameModal" class="btn btn-outline-danger bus-duplicate-close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loadingScreen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); text-align: center; color: white; font-size: 18px; z-index: 9999;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <i class="fas fa-spinner fa-spin"></i> Finding duplicate names...
+    </div>
+</div>
+
+<script type="text/javascript">
+    if (typeof window.escapeBusDuplicateHtml !== 'function') {
+        window.escapeBusDuplicateHtml = function (value) {
+            return String(value === undefined || value === null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        };
+    }
+
+    if (typeof window.showBusDuplicateValue !== 'function') {
+        window.showBusDuplicateValue = function (value) {
+            if (value === undefined || value === null) return 'N/A';
+            var text = String(value).trim();
+            return (text === '' || text === '0') ? 'N/A' : text;
+        };
+    }
+
+    if (typeof window.formatBusDuplicateFullName !== 'function') {
+        window.formatBusDuplicateFullName = function (record) {
+            var firstName = window.showBusDuplicateValue(record.first_name);
+            var middleName = window.showBusDuplicateValue(record.middle_name);
+            var lastName = window.showBusDuplicateValue(record.last_name);
+            var extName = window.showBusDuplicateValue(record.ext_name);
+            var parts = [firstName];
+
+            if (middleName !== 'N/A') {
+                parts.push(middleName);
+            }
+            if (lastName !== 'N/A') {
+                parts.push(lastName);
+            }
+            if (extName !== 'N/A') {
+                parts.push(extName);
+            }
+
+            return parts.join(' ').trim();
+        };
+    }
+
+    if (typeof window.renderBusDuplicateMatches !== 'function') {
+        window.renderBusDuplicateMatches = function (targetSelector, matches) {
+            var $target = $(targetSelector);
+            if (!$target.length) {
+                return;
+            }
+
+            if (!matches || !matches.length) {
+                $target.html('<div class="duplicate-empty-state">No duplicate records found.</div>');
+                return;
+            }
+
+            var rows = matches.map(function (record) {
+                return '<article class="duplicate-record-card">' +
+                    '<div class="duplicate-record-card__top">' +
+                    '<div>' +
+                    '<div class="duplicate-record-card__title">' + window.escapeBusDuplicateHtml(window.formatBusDuplicateFullName(record)) + '</div>' +
+                    '<div class="duplicate-record-card__subtitle">Person/New Member ID: ' + window.escapeBusDuplicateHtml(window.showBusDuplicateValue(record.person_id)) + '</div>' +
+                    '</div>' +
+                    '<span class="duplicate-record-card__badge">' + window.escapeBusDuplicateHtml(window.showBusDuplicateValue(record.reference)) + '</span>' +
+                    '</div>' +
+                    '<div class="duplicate-record-card__grid">' +
+                    '<div><span>Household ID</span><strong>' + window.escapeBusDuplicateHtml(window.showBusDuplicateValue(record.hh_id)) + '</strong></div>' +
+                    '<div><span>Date of Birth</span><strong>' + window.escapeBusDuplicateHtml(window.showBusDuplicateValue(record.date_of_birth)) + '</strong></div>' +
+                    '<div><span>Relation to Head</span><strong>' + window.escapeBusDuplicateHtml(window.showBusDuplicateValue(record.relation_to_head)) + '</strong></div>' +
+                    '<div><span>Member Status</span><strong>' + window.escapeBusDuplicateHtml(window.showBusDuplicateValue(record.roster_status)) + '</strong></div>' +
+                    '</div>' +
+                    '</article>';
+            }).join('');
+
+            $target.html(rows);
+        };
+    }
+
+    $(document).off('click.busDuplicateModalShared.duplicateNameModal', '#duplicateNameModal .bus-duplicate-close')
+        .on('click.busDuplicateModalShared.duplicateNameModal', '#duplicateNameModal .bus-duplicate-close', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $('#duplicateNameModal').modal('hide');
+        });
+
+    $(document).off('hidden.bs.modal.busDuplicateModalShared.duplicateNameModal', '#duplicateNameModal')
+        .on('hidden.bs.modal.busDuplicateModalShared.duplicateNameModal', '#duplicateNameModal', function () {
+            if ($('.modal.in:visible, .modal.show:visible').length) {
+                $('body').addClass('modal-open');
+            }
+        });
+</script>
+
+<!-- Modal for file upload -->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header bg-primary text-white">
+				<h5 class="modal-title" id="uploadModalLabel">Upload Supporting
+					Document</h5>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<input type="file" class="form-control-file" id="supportDoc" name="supportDoc" accept=".pdf,.jpg,.jpeg,.png">
+				<small class="form-text text-muted mt-2">
+					Accepted documents: Barangay Certificate, ML Certificate,
+					Social Case Study Report, Marriage Certificate.<br>
+					Allowed formats: PDF, JPG, PNG | Max size: 4MB | No
+					password-protected PDFs.
+				</small>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<button type="button" id="confirmUploadBtn" class="btn btn-success">Confirm Upload</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+</div>
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+<footer class="footer center pt-1 pb-0"> © 2018 Copyright: <a href="https://www.dswd.gov.ph/" target="_blank"><img src="./Pantawid Pamilya Information System_files/favicon-dswd.png" height="25"></a></footer>
+<!-- ============================================================== -->
+<!-- End footer -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script src="./Pantawid Pamilya Information System_files/jquery.multi-select.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/jquery.bootstrap-touchspin.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/switchery.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/select2.full.min.js.download" type="text/javascript"></script>
+<!--<script src="--><!--?//=base_url()?--><!--assets/plugins/jquery/jquery.min.js"></script>-->
+<!-- slimscrollbar scrollbar JavaScript -->
+<script src="./Pantawid Pamilya Information System_files/jquery.slimscroll.js.download"></script>
+<!--Wave Effects -->
+<script src="./Pantawid Pamilya Information System_files/waves.js.download"></script>
+<!--Menu sidebar -->
+<script src="./Pantawid Pamilya Information System_files/sidebarmenu.js.download"></script>
+<!--stickey kit -->
+<script src="./Pantawid Pamilya Information System_files/sticky-kit.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/jquery.sparkline.min.js.download"></script>
+<!--Custom JavaScript -->
+<script src="./Pantawid Pamilya Information System_files/custom.min.js.download"></script>
+<!-- Form Wizard -->
+<!--<script src="--><!--?//=base_url()?--><!--assets/plugins/moment/min/moment.min.js"></script>-->
+<script src="./Pantawid Pamilya Information System_files/jquery.steps.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/jquery.validate.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/steps.js.download"></script>
+<!-- ============================================================== -->
+<!-- This page plugins -->
+<!-- ============================================================== -->
+<!-- chartist chart -->
+<script src="./Pantawid Pamilya Information System_files/chartist.min.js.download"></script>
+<!--<script src="--><!--?//=base_url()?--><!--assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>-->
+<!--<script src="--><!--?//=base_url()?--><!--assets/plugins/echarts/echarts-all.js"></script>-->
+<!-- Vector map JavaScript -->
+<!--<script src="--><!--?//=base_url()?--><!--assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js"></script>-->
+<!--<script src="--><!--?//=base_url()?--><!--assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js"></script>-->
+<!-- sparkline chart -->
+<script src="./Pantawid Pamilya Information System_files/jquery.sparkline.min.js.download"></script>
+<!--<script src="--><!--?//=base_url()?--><!--assets/js/dashboard4.js"></script>-->
+<!--c3 JavaScript -->
+<script src="./Pantawid Pamilya Information System_files/d3.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/c3.min.js.download"></script>
+<!-- Chart JS -->
+<!--<script src="--><!--?//=base_url()?--><!--assets/js/dashboard1.js"></script>-->
+<!-- ============================================================== -->
+<!-- Style switcher -->
+<!-- ============================================================== -->
+<script src="./Pantawid Pamilya Information System_files/jQuery.style.switcher.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/jquery.dataTables.min.js.download"></script>
+<!--<script src="--><!--?//=base_url()?--><!--assets/js/dataTables.buttons.min.js"></script>-->
+
+<!-- Toastr Alerts -->
+<script src="./Pantawid Pamilya Information System_files/jquery.toast.js.download"></script>
+<!--<script src="--><!--?//=base_url()?--><!--assets/js/toastr.js"></script>-->
+
+ <!-- jQuery file upload -->
+ <script src="./Pantawid Pamilya Information System_files/dropify.min.js.download"></script>
+ <script src="./Pantawid Pamilya Information System_files/fileupload.js.download"></script>
+
+<!-- datatable -->
+<script src="./Pantawid Pamilya Information System_files/datatable.js.download"></script>
+<!-- Sweet-Alert  -->
+<script src="./Pantawid Pamilya Information System_files/sweetalert.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/jquery.sweet-alert.custom.js.download"></script>
+<!--bootgrid-->
+<!-- ============================================================== -->
+<!-- Plugins for Grievance Add View -->
+<!-- ============================================================== -->
+<!-- Plugin JavaScript -->
+<script src="./Pantawid Pamilya Information System_files/moment.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/bootstrap-material-datetimepicker.js.download"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="./Pantawid Pamilya Information System_files/bootstrap-timepicker.min.js.download"></script>
+<script src="./Pantawid Pamilya Information System_files/daterangepicker.js.download"></script>
+<!-- Mask -->
+<script src="./Pantawid Pamilya Information System_files/mask.js.download"></script>
+
+<!--session timeout -->
+<!--<script src="--><!--"></script>-->
+<!--<script src="--><!--"></script>-->
+<script src="./Pantawid Pamilya Information System_files/jquery.cookie.js.download"></script>
+<script>
+
+
+// Daterange picker
+$('.input-daterange-datepicker').daterangepicker({
+   buttonClasses: ['btn', 'btn-sm'],
+   applyClass: 'btn-danger',
+   cancelClass: 'btn-inverse'
+});
+$('.input-daterange-timepicker').daterangepicker({
+   timePicker: true,
+   format: 'MM/DD/YYYY h:mm A',
+   timePickerIncrement: 30,
+   timePicker12Hour: true,
+   timePickerSeconds: false,
+   buttonClasses: ['btn', 'btn-sm'],
+   applyClass: 'btn-danger',
+   cancelClass: 'btn-inverse'
+});
+$('.input-limit-datepicker').daterangepicker({
+   format: 'MM/DD/YYYY',
+   minDate: '06/01/2015',
+   maxDate: '06/30/2015',
+   buttonClasses: ['btn', 'btn-sm'],
+   applyClass: 'btn-danger',
+   cancelClass: 'btn-inverse',
+   dateLimit: {
+      days: 6
+   }
+});
+
+
+</script>
+
+
+
+
+
+</div></div></div></body></html>

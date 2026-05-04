@@ -1,0 +1,328 @@
+.hidden {
+    display: none;
+}
+.nunito {
+    font-family: 'Nunito', sans-serif;!important
+}
+.opensans {
+    font-family: 'Open Sans', sans-serif;!important
+}
+.alegreya {
+    font-family: 'Alegreya Sans SC', sans-serif;!important
+}
+.lato {
+    font-family: 'Lato', sans-serif;!important
+}
+.cairo {
+    font-family: 'Cairo', sans-serif;!important
+}
+.fonts {
+    font-family: 'Calibri', sans-serif;!important
+}
+.monolisa {
+    font-family: 'Monolisa', sans-serif;!important
+}
+
+/*spin faster*/
+.fast-spin {
+  -webkit-animation: fa-spin 1s infinite linear;
+  animation: fa-spin 1s infinite linear;
+}
+
+/* color */
+.red {
+    color:#EF5252;
+}
+.darker {
+    color:#444245;
+}
+.green {
+    color:green;
+}
+.light-green {
+    color:#d4ff33;
+}
+.dark-green {
+    color:#245529;
+}
+.violet {
+	color:#772492;
+}
+.faci-link {
+    color:#294B89;
+    cursor: pointer;
+}
+.flesh {
+    color:#FFF6DB;
+}
+.bg-blue-header {
+	background-color:#3151AB;
+}
+.bg-xtralight-yellow {
+    background-color:#FCFEEA;
+}
+.bg-light-blue {
+    background-color:#E7EDFE;
+}
+.bg-xtralight-blue {
+    background-color:#F1F6FB;
+}
+.bg-xtralight-green {
+    background-color:#EBFDE6;
+}
+.bg-green {
+    background-color:#39713E;
+}
+.bg-light-green {
+    background-color:#e9f9ea;
+}
+.bg-red {
+    background-color:red;
+}
+.bg-nc {
+    background-color:#fdefe2;
+}
+.dark-brown {
+    color:#370412;
+}
+.dark-blue {
+    color:#294B89;
+}
+.goldish {
+    color:#B6A33A;
+}
+.bg-darky {
+    background-color:#4A4D57;
+}
+.plain-blue {
+    color:#2596be;
+}
+.bg-dropout, .bg-dropout select {
+    background-color:#F9A68F;
+    font-weight:bold; 
+    color:black;   
+}
+.bg-not-enrolled, .bg-not-enrolled select {
+    background-color:#FFFE44;    
+    font-weight:bold;
+    color:black; 
+}
+.bg-transferred, .bg-transferred select {
+    background-color:#73CAFF; 
+    font-weight:bold; 
+    color:black;   
+    
+}
+
+
+/*font sizes*/
+.size-large {
+    font-size: 24px;
+}
+.size-normal {
+    font-size: 16px;
+}
+.size-14 {
+    font-size: 14px;
+}
+.size-13 {
+    font-size: 13px;
+}
+.size-16 {
+    font-size: 16px;
+}
+.size-18 {
+    font-size: 18px;
+}
+.size-20 {
+    font-size: 20px;
+}
+.size-32 {
+    font-size: 32px;
+}
+.size-small {
+    font-size: 12px;
+}
+.size-11 {
+    font-size: 11px;
+}
+.size-8 {
+    font-size: 8px;
+}
+/*font weights*/
+.w-light {
+    font-weight: 200;
+}
+.w-normal {
+    font-weight: 300;
+}
+.w-heavy {
+    font-weight: 400;
+}
+/*button*/
+.btn-blue {
+    background-color:#546ACD;
+    color:white;
+}
+.btn-orange {
+    background-color:#992C00;
+    color:white;
+}
+.btn-approve {
+    background-color:#384085;
+    color:white;
+}
+.btn-disapprove {
+    background-color:#771826;
+    color:white;
+}
+.a-link {
+    color:#2C60DF;
+    cursor: pointer;
+    /*text-decoration: underline;*/
+}
+.a-link:hover {
+    color:red;
+    /*text-decoration: underline;*/
+}
+/*label*/
+.label-approved {
+    background-color:#1C5B13;
+    color:white;
+}
+delete-attachment {
+	color:#771826;
+	cursor: pointer;
+}
+/*badge*/
+.badge-approved {
+    background-color:#309C21;
+    color:white;
+}
+.badge-cv-regular {
+    background-color:#546ACD;
+    color:white;
+}
+.badge-cvr {
+    background-color:#772492;
+    color:white;
+}
+.badge-other-mode {
+    background-color:#873e23;
+    color:white;
+}
+.badge-position {
+    background-color:#294B89;
+    color:white;
+}
+.badge-fm-encoded {
+    background-color:#A3CFCD;
+    color:black;
+}
+.badge-fm-submit-rd {
+    background-color:#00C9A7;
+    color:black;
+}
+.badge-fm-rd-approved {
+    background-color:#4ABAFF;
+    color:black;
+}
+.badge-fm-rd-disapproved {
+    background-color:#C90700;
+    color:white;
+}
+.badge-fm-co-approved {
+    background-color:#4ABAFF;
+    color:black;
+}
+.badge-fm-co-disapproved {
+    background-color:#C90700;
+    color:white;
+}
+.badge-fm {
+    background-color:white;
+    color:black;
+}
+.badge-light-blue {
+    background-color:#e9f5f9;
+    color:black;
+}
+.badge-f1kd {
+    background-color:none;
+    color:black !important;
+}
+/* statistics */
+.stat-label {
+    color:#694B00;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.stat-value {
+    color:black;
+    font-size:24px;
+}
+
+.stat-value-20 {
+    color:black;
+    font-size:18px;
+}
+
+.stat-value-16 {
+    color:black;
+    font-size:16px;
+}
+
+.stat-value-15 {
+    color:black;
+    font-size:15px;
+}
+
+.stat-value-dark {
+    color:#33343C;
+    font-size:18px;
+}
+
+.number-large {
+    color:#18245A;
+    font-weight:350;
+    font-size:32px;
+}
+
+.hr-cv {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 96%;
+  background-color:#A3A9A9;
+  height: 1px;
+}
+.hr-cv-history {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 99%;
+  background-color:#A3A9A9;
+  height: 1px;
+}
+.hr-napa {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 95%;
+  background-color:#A3A9A9;
+  height: 1px;
+}
+.hr-db {
+    border: 0;
+    clear:both;
+    display:block;
+    width: 99%;
+    background-color:#A3A9A9;
+    height: 2px;
+  }
+
+/*hover*/
+.table-hover-cvs tbody tr:hover td, .table-hover-cvs tbody tr:hover th {
+  background-color: #FDF0E3;
+}
