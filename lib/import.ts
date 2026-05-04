@@ -83,18 +83,16 @@ export async function importMembers(
   // 3. Bulk insert child rows
   const childOps: Promise<unknown>[] = [];
   if (dependentPayload.length) {
-    childOps.push(
-      supabase.from("member_dependents").insert(dependentPayload).then(({ error }) => {
-        if (error) result.errors.push({ employee_number: "(bulk)", message: `dependents insert: ${error.message}` });
-      })
-    );
+    childOps.push((async () => {
+      const { error } = await supabase.from("member_dependents").insert(dependentPayload);
+      if (error) result.errors.push({ employee_number: "(bulk)", message: `dependents insert: ${error.message}` });
+    })());
   }
   if (claimantPayload.length) {
-    childOps.push(
-      supabase.from("member_claimants").insert(claimantPayload).then(({ error }) => {
-        if (error) result.errors.push({ employee_number: "(bulk)", message: `claimants insert: ${error.message}` });
-      })
-    );
+    childOps.push((async () => {
+      const { error } = await supabase.from("member_claimants").insert(claimantPayload);
+      if (error) result.errors.push({ employee_number: "(bulk)", message: `claimants insert: ${error.message}` });
+    })());
   }
   await Promise.all(childOps);
 
