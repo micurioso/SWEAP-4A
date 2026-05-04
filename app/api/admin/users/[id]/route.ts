@@ -29,3 +29,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   }
   return NextResponse.json({ ok: true });
 }
+
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  const guard = await requireAdmin();
+  if (!guard.ok) return guard.response;
+
+  const supabase = createAdminClient();
+  const { error } = await supabase.auth.admin.deleteUser(params.id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  await supabase.from("profiles").delete().eq("id", params.id);
+  return NextResponse.json({ ok: true });
+}

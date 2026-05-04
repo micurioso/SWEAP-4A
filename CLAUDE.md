@@ -67,12 +67,19 @@ These are normalized into `member_dependents` and `member_claimants` tables with
 Headers like "Relationship" and "Claimant" repeat across the four dependent/claimant blocks, so `rowToMember`/`memberToRow` work **by column index** (`IDX` constants in `lib/csv.ts`), not by header lookup. Any change to the source form's column order requires updating those indexes.
 
 ### Import pipeline (lib/import.ts)
-Given an array of `MemberWithRelations`, for each member:
-1. UPSERT `sweap_members` on the `employee_number` PK conflict
-2. DELETE then INSERT child rows in `member_dependents` and `member_claimants` (so re-imports replace, not duplicate)
-3. Track inserted vs updated counts by pre-querying which `employee_number`s already exist
+`importMembers(supabase, rows, mode)` takes an `ImportMode` of `"skip-existing"` (default) or `"overwrite"`.
 
-The same function powers both the live import API and the seed script. The audit log captures the import as a single event, not per-row.
+Pipeline:
+1. **In-CSV dedupe** (always on) — drop later rows whose `employee_number` already appeared earlier in the same payload; counted into `result.skipped`.
+2. Pre-query which `employee_number`s already exist in `sweap_members` (single `IN` query).
+3. For each row:
+   - If it already exists in DB and `mode === "skip-existing"` → skip (counts toward `result.skipped`).
+   - Otherwise UPSERT on the `employee_number` PK, then DELETE+INSERT child rows in `member_dependents` and `member_claimants` so re-imports replace rather than duplicate.
+4. Result reports `inserted`, `updated`, `skipped`, and per-row `errors`.
+
+Both `/api/import` (which forwards `mode` from the UI checkbox; default skip) and `scripts/seed.ts` (pinned to `"overwrite"` so bulk loads behave like before) use this function. The `/import` UI dedupes client-side too — defense in depth — and live-tags each preview row as **New**, **Skip**, or **Overwrite** by querying which employee numbers exist before commit.
+
+The audit log captures the import as a single event with `{mode, inserted, updated, skipped, errors}` in the diff, not per-row.
 
 ### Audit
 Every `INSERT/UPDATE/DELETE` on `sweap_members` fires a `SECURITY DEFINER` trigger that writes to `audit_log` with the actor and a JSONB diff. Imports and exports also write a single audit row from the API route. `audit_log` is read-only to admins via RLS; clients cannot forge entries.

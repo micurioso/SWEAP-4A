@@ -10,7 +10,17 @@ type Profile = {
   role: "admin" | "viewer";
   is_active: boolean;
   created_at: string;
+  last_sign_in_at: string | null;
 };
+
+function formatLastSignIn(ts: string | null): string {
+  if (!ts) return "Never";
+  const d = new Date(ts);
+  return d.toLocaleString(undefined, {
+    year: "numeric", month: "short", day: "2-digit",
+    hour: "2-digit", minute: "2-digit"
+  });
+}
 
 export default function UsersManager({ initial }: { initial: Profile[] }) {
   const router = useRouter();
@@ -60,6 +70,29 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
     setMsg(`New temporary password: ${data.tempPassword}`);
   }
 
+  async function editUser(u: Profile) {
+    const newName = window.prompt("Full name", u.full_name || "");
+    if (newName === null) return;
+    const trimmed = newName.trim();
+    if (trimmed === (u.full_name || "")) return;
+    setErr(null); setMsg(null);
+    await update(u.id, { full_name: trimmed });
+    setMsg(`Updated @${u.username || u.email}`);
+  }
+
+  async function deleteUser(u: Profile) {
+    if (!window.confirm(`Delete account @${u.username || u.email}? This cannot be undone.`)) return;
+    setErr(null); setMsg(null);
+    const res = await fetch(`/api/admin/users/${u.id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setErr(data.error || "Delete failed");
+      return;
+    }
+    setUsers(prev => prev.filter(x => x.id !== u.id));
+    setMsg(`Deleted @${u.username || u.email}`);
+  }
+
   return (
     <div className="space-y-5">
       <form onSubmit={createUser} className="rounded-xl border border-slate-200 bg-white p-5">
@@ -71,7 +104,7 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
             <option value="viewer">Viewer</option>
             <option value="admin">Admin</option>
           </select>
-          <input placeholder="Temp password (optional)" value={password} onChange={e => setPassword(e.target.value)} className="rounded-md border border-slate-300 px-3 py-1.5 text-sm" />
+          <input placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="rounded-md border border-slate-300 px-3 py-1.5 text-sm" />
         </div>
         <button disabled={busy} className="mt-3 rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 disabled:opacity-50">
           {busy ? "Creating…" : "Create account"}
@@ -83,7 +116,7 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
       <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-            <tr><th className="px-4 py-2">Username</th><th className="px-4 py-2">Name</th><th className="px-4 py-2">Role</th><th className="px-4 py-2">Active</th><th className="px-4 py-2">Actions</th></tr>
+            <tr><th className="px-4 py-2">Username</th><th className="px-4 py-2">Name</th><th className="px-4 py-2">Role</th><th className="px-4 py-2">Active</th><th className="px-4 py-2">Last sign-in</th><th className="px-4 py-2">Actions</th></tr>
           </thead>
           <tbody>
             {users.map(u => (
@@ -102,10 +135,19 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
                     {u.is_active ? "Active" : "Disabled"}
                   </label>
                 </td>
+                <td className="px-4 py-2 whitespace-nowrap text-xs text-slate-600">{formatLastSignIn(u.last_sign_in_at)}</td>
                 <td className="px-4 py-2">
-                  <button onClick={() => resetPassword(u.id)} className="rounded-md border border-slate-300 px-2 py-1 text-xs hover:bg-slate-100">
-                    Reset password
-                  </button>
+                  <div className="flex flex-wrap gap-1.5">
+                    <button onClick={() => editUser(u)} className="rounded-md border border-slate-300 px-2 py-1 text-xs hover:bg-slate-100">
+                      Edit
+                    </button>
+                    <button onClick={() => resetPassword(u.id)} className="rounded-md border border-slate-300 px-2 py-1 text-xs hover:bg-slate-100">
+                      Reset pw
+                    </button>
+                    <button onClick={() => deleteUser(u)} className="rounded-md border border-red-300 px-2 py-1 text-xs text-red-700 hover:bg-red-50">
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
