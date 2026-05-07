@@ -18,7 +18,8 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const parsed = newUserSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid input", details: parsed.error.flatten() }, { status: 400 });
+    const msg = parsed.error.issues[0]?.message || "Invalid input";
+    return NextResponse.json({ error: msg, details: parsed.error.flatten() }, { status: 400 });
   }
 
   const supabase = createAdminClient();
