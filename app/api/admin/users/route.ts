@@ -35,7 +35,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Username already taken" }, { status: 400 });
   }
 
-  const email = `${username}@${SYNTHETIC_DOMAIN}`;
+  // Supabase Auth requires an ASCII email, so map ñ→n for the synthetic local-part.
+  // The original username (with ñ) is still stored on profiles and used at login lookup.
+  const emailLocal = username.replace(/ñ/g, "n");
+  const email = `${emailLocal}@${SYNTHETIC_DOMAIN}`;
   const password = parsed.data.password || genTempPassword();
   const { data, error } = await supabase.auth.admin.createUser({
     email,

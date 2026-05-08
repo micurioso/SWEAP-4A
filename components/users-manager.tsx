@@ -319,7 +319,7 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
             <label className="mb-1 block text-sm font-medium text-slate-700">Username</label>
             <input
               autoFocus required value={username} onChange={e => setUsername(e.target.value)}
-              pattern="[a-zA-Z0-9._-]+" title="Letters, numbers, dot, dash, underscore only"
+              pattern="[a-zA-Z0-9ñÑ._-]+" title="Letters, numbers, dot, dash, underscore only"
               className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>

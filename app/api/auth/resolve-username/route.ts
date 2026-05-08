@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const username = String(body?.username || "").trim().toLowerCase();
-  if (!username || !/^[a-zA-Z0-9._-]+$/.test(username)) {
+  if (!username || !/^[a-zA-Z0-9ñÑ._-]+$/.test(username)) {
     return NextResponse.json({ error: "Invalid username" }, { status: 400 });
   }
   const supabase = createAdminClient();
