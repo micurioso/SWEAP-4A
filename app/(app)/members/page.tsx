@@ -35,18 +35,11 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-slate-800">Members</h1>
-          {showTable
-            ? <p className="text-sm text-slate-500">{count} record{count === 1 ? "" : "s"}</p>
-            : <p className="text-sm text-slate-500">Enter an Employee Number to search.</p>}
-        </div>
-        {isAdmin && (
-          <Link href="/members/new" className="rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
-            + Add member
-          </Link>
-        )}
+      <div>
+        <h1 className="text-xl font-semibold text-slate-800">Members</h1>
+        {showTable
+          ? <p className="text-sm text-slate-500">{count} record{count === 1 ? "" : "s"}</p>
+          : <p className="text-sm text-slate-500">Enter an Employee Number to search.</p>}
       </div>
 
       <form className="mr-auto flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white p-3 text-sm md:w-1/2">
