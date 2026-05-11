@@ -114,13 +114,11 @@ Admins upload PDFs at `/admin/forms`; all authenticated users see them in the si
 - `app/api/forms/[id]/download/route.ts` streams the bytes back with `Content-Disposition: attachment` so the browser downloads instead of navigating. Available to any signed-in user; uses the service-role client server-side to read the private bucket.
 - `app/api/forms/route.ts` returns `{id, name}` for the sidebar; the sidebar fetches it client-side on mount.
 
-### Client-only UI state in localStorage
-A few non-canonical, per-record UI flags are stored **only** in the browser's `localStorage`, not the DB:
+### Life status columns
+- **`sweap_members.employee_status`** — `'active' | 'separated' | 'deceased'`, added in migration `0004_employee_status.sql`. Lowercase enum enforced by a CHECK constraint. When `deceased`, the profile view applies `pointer-events-none opacity-60 grayscale` to the detail grid and hides the Edit link. Updated via `PATCH /api/members/[employeeNumber]/status` (admin-gated) when toggled from the profile view; the member-form also submits it as part of the full record on save.
+- **`member_dependents.status`** — pre-existing CSV column (`"Active" | "Deceased"`, capitalized to match form imports). Updated via `PATCH /api/members/[employeeNumber]/dependents/[slot]/status` (admin-gated) from the dependents table on the profile view.
 
-- `employee-status:<employee_number>` → `"active" | "separated" | "deceased"`. Read in `app/(app)/members/[employeeNumber]/profile-view.tsx` and `components/member-form.tsx`. When `deceased`, the profile view applies `pointer-events-none opacity-60 grayscale` to the detail grid and hides the Edit link.
-- `dependent-status:<employee_number>` → `Record<slot, "active" | "deceased">`. Read in `dependents-table.tsx`; the edit form syncs the dependent `status` field to/from this map and re-keys it when slots are deleted.
-
-These flags are **per-device, per-browser**. If a future task needs them shared across devices, add real columns + a migration rather than extending the localStorage scheme.
+The dashboard's "Staff (deceased)" / "Dependents (deceased)" cards count these directly. Earlier versions of the app stored both in `localStorage` (`employee-status:<empNo>` and `dependent-status:<empNo>` keys) — those keys are no longer read or written, and any per-device selections made before migration `0004` ran are not preserved.
 
 ### Routing
 - `app/(app)/**` — authenticated app shell with sidebar (`components/sidebar.tsx`); the layout fetches the session + profile via `getSessionAndProfile()` and redirects to `/login` if missing.

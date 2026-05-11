@@ -1,32 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-type Status = "active" | "deceased";
+type Status = "Active" | "Deceased";
 
 type Dependent = {
   slot: number;
   name?: string | null;
   relationship?: string | null;
+  status?: string | null;
 };
 
+function normalize(s?: string | null): Status {
+  return s && s.trim().toLowerCase() === "deceased" ? "Deceased" : "Active";
+}
+
 export default function DependentsTable({ employeeNumber, dependents, isAdmin }: { employeeNumber: string; dependents: Dependent[]; isAdmin: boolean }) {
-  const storageKey = `dependent-status:${employeeNumber}`;
-  const [statuses, setStatuses] = useState<Record<number, Status>>({});
-  const [hydrated, setHydrated] = useState(false);
+  const initial: Record<number, Status> = {};
+  for (const d of dependents) initial[d.slot] = normalize(d.status);
+  const [statuses, setStatuses] = useState<Record<number, Status>>(initial);
+  const [savingSlot, setSavingSlot] = useState<number | null>(null);
 
-  useEffect(() => {
+  async function update(slot: number, next: Status) {
+    const prev = statuses[slot] || "Active";
+    setStatuses(s => ({ ...s, [slot]: next }));
+    setSavingSlot(slot);
     try {
-      const raw = window.localStorage.getItem(storageKey);
-      if (raw) setStatuses(JSON.parse(raw));
-    } catch {}
-    setHydrated(true);
-  }, [storageKey]);
-
-  function update(slot: number, next: Status) {
-    const updated = { ...statuses, [slot]: next };
-    setStatuses(updated);
-    try { window.localStorage.setItem(storageKey, JSON.stringify(updated)); } catch {}
+      const res = await fetch(
+        `/api/members/${encodeURIComponent(employeeNumber)}/dependents/${slot}/status`,
+        {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ status: next })
+        }
+      );
+      if (!res.ok) setStatuses(s => ({ ...s, [slot]: prev }));
+    } catch {
+      setStatuses(s => ({ ...s, [slot]: prev }));
+    } finally {
+      setSavingSlot(null);
+    }
   }
 
   return (
@@ -43,8 +56,8 @@ export default function DependentsTable({ employeeNumber, dependents, isAdmin }:
         <tbody>
           {[1, 2, 3, 4].map((slot) => {
             const d = dependents.find((x) => x.slot === slot);
-            const status: Status = statuses[slot] || "active";
-            const frozen = hydrated && status === "deceased";
+            const status: Status = statuses[slot] || "Active";
+            const frozen = status === "Deceased";
             return (
               <tr key={slot} className={`border-t border-slate-100 ${frozen ? "opacity-60 grayscale" : ""}`}>
                 <td className="px-3 py-2 font-mono text-xs">A.{slot}</td>
@@ -55,14 +68,14 @@ export default function DependentsTable({ employeeNumber, dependents, isAdmin }:
                     <select
                       value={status}
                       onChange={(e) => update(slot, e.target.value as Status)}
-                      disabled={!d?.name}
+                      disabled={!d?.name || savingSlot === slot}
                       className="rounded-md border border-slate-300 px-2 py-1 text-sm disabled:bg-slate-50 disabled:text-slate-400"
                     >
-                      <option value="active">Active</option>
-                      <option value="deceased">Deceased</option>
+                      <option value="Active">Active</option>
+                      <option value="Deceased">Deceased</option>
                     </select>
                   ) : (
-                    <span className="capitalize">{d?.name ? status : "—"}</span>
+                    <span>{d?.name ? status : "—"}</span>
                   )}
                 </td>
               </tr>

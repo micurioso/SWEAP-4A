@@ -4,19 +4,18 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
   const supabase = createClient();
 
   const [
-    { count: memberCount },
-    { count: claimedCount },
-    { data: dependentRows },
+    { count: staffActiveCount },
+    { count: staffSeparatedCount },
+    { count: staffDeceasedCount },
+    { count: dependentsDeceasedCount },
     { data: chapterRows }
   ] = await Promise.all([
-    supabase.from("sweap_members").select("*", { count: "exact", head: true }),
-    supabase.from("sweap_members").select("*", { count: "exact", head: true }).eq("claimed_burial_assistance", true),
-    supabase.from("member_dependents").select("check_voucher_number"),
+    supabase.from("sweap_members").select("*", { count: "exact", head: true }).eq("employee_status", "active"),
+    supabase.from("sweap_members").select("*", { count: "exact", head: true }).eq("employee_status", "separated"),
+    supabase.from("sweap_members").select("*", { count: "exact", head: true }).eq("employee_status", "deceased"),
+    supabase.from("member_dependents").select("*", { count: "exact", head: true }).ilike("status", "deceased"),
     supabase.from("sweap_members").select("chapter_base, division, status_of_employment")
   ]);
-
-  const dependents = dependentRows || [];
-  const processedClaims = dependents.filter((d: any) => d.check_voucher_number && String(d.check_voucher_number).trim() !== "").length;
 
   const chapterCounts: Record<string, number> = {};
   const divisionCounts: Record<string, number> = {};
@@ -44,20 +43,28 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         </div>
       )}
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="text-xs uppercase tracking-wide text-slate-400">Total members</div>
-          <div className="mt-1 text-3xl font-bold text-slate-800">{memberCount ?? 0}</div>
+          <div>
+            <div className="text-xs uppercase tracking-wide text-slate-400">Active staff</div>
+            <div className="mt-1 text-3xl font-bold text-emerald-600">{staffActiveCount ?? 0}</div>
+          </div>
+          <div className="mt-3 border-t border-slate-100 pt-3">
+            <div className="text-xs uppercase tracking-wide text-slate-400">Separated staff</div>
+            <div className="mt-1 text-3xl font-bold text-slate-500">{staffSeparatedCount ?? 0}</div>
+          </div>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="text-xs uppercase tracking-wide text-slate-400">Burial assistance claimed</div>
-          <div className="mt-1 text-3xl font-bold text-emerald-600">{claimedCount ?? 0}</div>
-          <div className="mt-1 text-xs text-slate-500">members marked as claimed</div>
-        </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="text-xs uppercase tracking-wide text-slate-400">Claims processed</div>
-          <div className="mt-1 text-3xl font-bold text-brand-700">{processedClaims}</div>
-          <div className="mt-1 text-xs text-slate-500">dependents with voucher #</div>
+          <div>
+            <div className="text-xs uppercase tracking-wide text-slate-400">Staff (deceased)</div>
+            <div className="mt-1 text-3xl font-bold text-emerald-600">{staffDeceasedCount ?? 0}</div>
+            <div className="mt-1 text-xs text-slate-500">employees marked deceased</div>
+          </div>
+          <div className="mt-3 border-t border-slate-100 pt-3">
+            <div className="text-xs uppercase tracking-wide text-slate-400">Dependents (deceased)</div>
+            <div className="mt-1 text-3xl font-bold text-emerald-600">{dependentsDeceasedCount ?? 0}</div>
+            <div className="mt-1 text-xs text-slate-500">declared dependents marked deceased</div>
+          </div>
         </div>
       </section>
 

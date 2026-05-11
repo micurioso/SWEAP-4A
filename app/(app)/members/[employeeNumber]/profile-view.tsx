@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DependentsTable from "./dependents-table";
 
 type EmployeeStatus = "active" | "separated" | "deceased";
@@ -23,6 +23,7 @@ type Member = {
   current_address?: string | null;
   chapter_base?: string | null;
   status_of_employment?: string | null;
+  employee_status?: string | null;
   emergency_contact_name?: string | null;
   emergency_contact_number?: string | null;
   emergency_contact_relationship?: string | null;
@@ -30,7 +31,7 @@ type Member = {
   consent_text?: string | null;
 };
 
-type Dependent = { slot: number; name?: string | null; relationship?: string | null };
+type Dependent = { slot: number; name?: string | null; relationship?: string | null; status?: string | null };
 type Claimant = { slot: number; name?: string | null; relationship?: string | null };
 
 function Field({ label, value, right }: { label: string; value: React.ReactNode; right?: React.ReactNode }) {
@@ -69,26 +70,32 @@ export default function ProfileView({
   claimants: Claimant[];
   isAdmin: boolean;
 }) {
-  const storageKey = `employee-status:${member.employee_number}`;
-  const [status, setStatus] = useState<EmployeeStatus>("active");
-  const [hydrated, setHydrated] = useState(false);
+  const initialStatus: EmployeeStatus =
+    member.employee_status === "separated" || member.employee_status === "deceased"
+      ? member.employee_status
+      : "active";
+  const [status, setStatus] = useState<EmployeeStatus>(initialStatus);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(storageKey);
-      if (raw === "active" || raw === "separated" || raw === "deceased") setStatus(raw);
-    } catch {}
-    setHydrated(true);
-  }, [storageKey]);
-
-  function update(next: EmployeeStatus) {
+  async function update(next: EmployeeStatus) {
+    const prev = status;
     setStatus(next);
+    setSaving(true);
     try {
-      window.localStorage.setItem(storageKey, next);
-    } catch {}
+      const res = await fetch(`/api/members/${encodeURIComponent(member.employee_number)}/status`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ employee_status: next })
+      });
+      if (!res.ok) setStatus(prev);
+    } catch {
+      setStatus(prev);
+    } finally {
+      setSaving(false);
+    }
   }
 
-  const frozen = hydrated && status === "deceased";
+  const frozen = status === "deceased";
   const bd = formatBirthdate(member.birthdate);
 
   return (
@@ -126,8 +133,9 @@ export default function ProfileView({
                 {isAdmin ? (
                   <select
                     value={status}
+                    disabled={saving}
                     onChange={(e) => update(e.target.value as EmployeeStatus)}
-                    className="pointer-events-auto rounded-md border border-slate-300 px-2 py-1 text-sm"
+                    className="pointer-events-auto rounded-md border border-slate-300 px-2 py-1 text-sm disabled:opacity-60"
                   >
                     <option value="active">Active</option>
                     <option value="separated">Separated</option>

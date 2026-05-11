@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { MemberWithRelations } from "@/lib/schemas";
@@ -28,7 +28,11 @@ export default function MemberForm({ initial, mode }: Props) {
     (initial?.dependents || []).filter(d => d.name && d.name.trim()).length
   );
   const [dependentCount, setDependentCount] = useState<number>(initialDependentCount);
-  const [employeeStatus, setEmployeeStatus] = useState<"active" | "separated" | "deceased">("active");
+  const initialEmployeeStatus: "active" | "separated" | "deceased" =
+    initial?.employee_status === "separated" || initial?.employee_status === "deceased"
+      ? initial.employee_status
+      : "active";
+  const [employeeStatus, setEmployeeStatus] = useState<"active" | "separated" | "deceased">(initialEmployeeStatus);
   const [empNoTaken, setEmpNoTaken] = useState(false);
   const [checkingEmpNo, setCheckingEmpNo] = useState(false);
 
@@ -41,15 +45,6 @@ export default function MemberForm({ initial, mode }: Props) {
       const cur = prev.dependents.find(d => d.slot === slot) || { slot };
       return { ...prev, dependents: [...others, { ...cur, [key]: value }].sort((a,b) => a.slot - b.slot) };
     });
-    if (key === "status" && mode === "edit" && m.employee_number) {
-      try {
-        const storageKey = `dependent-status:${m.employee_number}`;
-        const raw = window.localStorage.getItem(storageKey);
-        const map = raw ? JSON.parse(raw) : {};
-        map[slot] = value === "Deceased" ? "deceased" : "active";
-        window.localStorage.setItem(storageKey, JSON.stringify(map));
-      } catch {}
-    }
   }
   function setCla(slot: number, key: string, value: string) {
     setM(prev => {
@@ -67,22 +62,6 @@ export default function MemberForm({ initial, mode }: Props) {
       return { ...prev, dependents: remaining };
     });
     setDependentCount(c => Math.max(1, c - 1));
-    if (mode === "edit" && m.employee_number) {
-      try {
-        const storageKey = `dependent-status:${m.employee_number}`;
-        const raw = window.localStorage.getItem(storageKey);
-        if (raw) {
-          const map = JSON.parse(raw) as Record<string, "active" | "deceased">;
-          const next: Record<string, "active" | "deceased"> = {};
-          for (const [k, v] of Object.entries(map)) {
-            const n = parseInt(k, 10);
-            if (n === slot) continue;
-            next[n > slot ? n - 1 : n] = v;
-          }
-          window.localStorage.setItem(storageKey, JSON.stringify(next));
-        }
-      } catch {}
-    }
   }
   function removeCla(slot: number) {
     setM(prev => {
@@ -101,27 +80,6 @@ export default function MemberForm({ initial, mode }: Props) {
     return (m.claimants.find(c => c.slot === slot) as any)?.[key] || "";
   }
 
-  useEffect(() => {
-    if (mode !== "edit" || !m.employee_number) return;
-    try {
-      const raw = window.localStorage.getItem(`dependent-status:${m.employee_number}`);
-      if (raw) {
-        const map = JSON.parse(raw) as Record<string, "active" | "deceased">;
-        setM(prev => ({
-          ...prev,
-          dependents: prev.dependents.map(d => {
-            const v = map[d.slot];
-            if (!v) return d;
-            return { ...d, status: v === "deceased" ? "Deceased" : "Active" };
-          })
-        }));
-      }
-      const es = window.localStorage.getItem(`employee-status:${m.employee_number}`);
-      if (es === "active" || es === "separated" || es === "deceased") setEmployeeStatus(es);
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   async function checkEmployeeNumber() {
     if (mode !== "create") return;
     const v = m.employee_number.trim();
@@ -138,10 +96,6 @@ export default function MemberForm({ initial, mode }: Props) {
 
   function updateEmployeeStatus(next: "active" | "separated" | "deceased") {
     setEmployeeStatus(next);
-    if (!m.employee_number) return;
-    try {
-      window.localStorage.setItem(`employee-status:${m.employee_number}`, next);
-    } catch {}
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -149,7 +103,8 @@ export default function MemberForm({ initial, mode }: Props) {
     setSaving(true);
     setError(null);
     const supabase = createClient();
-    const { dependents, claimants, ...member } = m;
+    const { dependents, claimants, ...rest } = m;
+    const member = { ...rest, employee_status: employeeStatus };
     const cleanDeps = dependents.filter(d => d.name && d.name.trim());
     const cleanClas = claimants.filter(c => c.name && c.name.trim());
 

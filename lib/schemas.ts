@@ -34,6 +34,7 @@ export const memberSchema = z.object({
   division: z.string().nullable().optional(),
   position: z.string().nullable().optional(),
   status_of_employment: z.string().nullable().optional(),
+  employee_status: z.enum(["active", "separated", "deceased"]).nullable().optional(),
   has_physical_inlife_card: z.boolean().nullable().optional(),
   inlife_id_number: z.string().nullable().optional(),
   no_inlife_card_reason: z.string().nullable().optional(),
