@@ -38,6 +38,7 @@ export const memberSchema = z.object({
   has_physical_inlife_card: z.boolean().nullable().optional(),
   inlife_id_number: z.string().nullable().optional(),
   no_inlife_card_reason: z.string().nullable().optional(),
+  hmo_name: z.string().nullable().optional(),
   claimed_burial_assistance: z.boolean().nullable().optional(),
   emergency_contact_name: z.string().nullable().optional(),
   emergency_contact_number: z.string().nullable().optional(),

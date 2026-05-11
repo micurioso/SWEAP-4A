@@ -145,6 +145,7 @@ export const EXPORT_HEADERS = [
   "Position",
   "Status of employment",
   "Employee Status",
+  "Name of HMO",
   "A.1. Name of Declared Dependent (no.1)", "Relationship", "Dependent Status",
   "A.2. Name of Declared Dependent (no.2)", "Relationship", "Dependent Status",
   "A.3. Name of Declared Dependent (no.3)", "Relationship", "Dependent Status",
@@ -177,6 +178,7 @@ export function memberToExportRow(m: MemberWithRelations): (string | null)[] {
   row[i++] = m.position ?? "";
   row[i++] = m.status_of_employment ?? "";
   row[i++] = m.employee_status ?? "active";
+  row[i++] = m.hmo_name ?? "";
   for (let s = 1; s <= 4; s++) {
     const d = m.dependents.find(x => x.slot === s);
     row[i++] = d?.name ?? "";

@@ -100,8 +100,17 @@ export default function Sidebar({
       </button>
       {formsOpen && (
         <div className="ml-7 flex flex-col gap-1 border-l border-slate-200 pl-2">
+          <a
+            href="/register"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            className="rounded-md px-2 py-1 text-sm font-medium text-brand-600 hover:bg-slate-100 hover:text-brand-700"
+          >
+            Member Registration
+          </a>
           {forms.length === 0 ? (
-            <span className="px-2 py-1 text-xs text-slate-400">No forms yet</span>
+            <span className="px-2 py-1 text-xs text-slate-400">No uploaded forms yet</span>
           ) : (
             forms.map((f) => (
               <a
