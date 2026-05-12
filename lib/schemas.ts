@@ -60,6 +60,6 @@ export type MemberWithRelations = z.infer<typeof memberWithRelationsSchema>;
 export const newUserSchema = z.object({
   username: z.string().min(3).max(40).regex(/^[a-zA-Z0-9ñÑ._-]+$/, "Letters, numbers, dot, dash, underscore only"),
   full_name: z.string().min(1),
-  role: z.enum(["admin", "viewer"]),
+  role: z.enum(["admin", "encoder", "viewer"]),
   password: z.string().min(6, "Password must be at least 6 characters").optional()
 });

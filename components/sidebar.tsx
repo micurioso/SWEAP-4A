@@ -19,7 +19,7 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/theme-toggle";
 
-type Item = { href: string; label: string; icon: React.ComponentType<{ className?: string }>; admin?: boolean };
+type Item = { href: string; label: string; icon: React.ComponentType<{ className?: string }>; admin?: boolean; editor?: boolean };
 
 const TOP_ITEMS: Item[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -29,7 +29,7 @@ const TOP_ITEMS: Item[] = [
 const BOTTOM_ITEMS: Item[] = [
   { href: "/admin/data-management", label: "Data Management", icon: Database, admin: true },
   { href: "/admin/users",  label: "Users",     icon: UserCog,   admin: true },
-  { href: "/admin/forms",  label: "Manage Forms", icon: FileText, admin: true },
+  { href: "/admin/forms",  label: "Manage Forms", icon: FileText, editor: true },
   { href: "/admin/audit",  label: "Audit log", icon: ScrollText, admin: true }
 ];
 
@@ -37,12 +37,13 @@ type Form = { id: string; name: string };
 
 export default function Sidebar({
   role, name, username
-}: { role: "admin" | "viewer"; name: string; username: string }) {
+}: { role: "admin" | "encoder" | "viewer"; name: string; username: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [formsOpen, setFormsOpen] = useState(false);
   const [forms, setForms] = useState<Form[]>([]);
   const isAdmin = role === "admin";
+  const isEditor = role === "admin" || role === "encoder";
 
   useEffect(() => {
     let cancelled = false;
@@ -62,8 +63,13 @@ export default function Sidebar({
     window.location.href = "/login";
   }
 
-  const visibleTop = TOP_ITEMS.filter((i) => !i.admin || isAdmin);
-  const visibleBottom = BOTTOM_ITEMS.filter((i) => !i.admin || isAdmin);
+  function canSee(i: Item) {
+    if (i.admin) return isAdmin;
+    if (i.editor) return isEditor;
+    return true;
+  }
+  const visibleTop = TOP_ITEMS.filter(canSee);
+  const visibleBottom = BOTTOM_ITEMS.filter(canSee);
 
   function renderLink({ href, label, icon: Icon }: Item) {
     const active = pathname === href || pathname.startsWith(href + "/");

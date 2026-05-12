@@ -15,7 +15,7 @@ function normalize(s?: string | null): Status {
   return s && s.trim().toLowerCase() === "deceased" ? "Deceased" : "Active";
 }
 
-export default function DependentsTable({ employeeNumber, dependents, isAdmin }: { employeeNumber: string; dependents: Dependent[]; isAdmin: boolean }) {
+export default function DependentsTable({ employeeNumber, dependents, canEdit }: { employeeNumber: string; dependents: Dependent[]; canEdit: boolean }) {
   const initial: Record<number, Status> = {};
   for (const d of dependents) initial[d.slot] = normalize(d.status);
   const [statuses, setStatuses] = useState<Record<number, Status>>(initial);
@@ -64,7 +64,7 @@ export default function DependentsTable({ employeeNumber, dependents, isAdmin }:
                 <td className="px-3 py-2">{d?.name || <span className="text-slate-300">—</span>}</td>
                 <td className="px-3 py-2">{d?.relationship || "—"}</td>
                 <td className="px-3 py-2">
-                  {isAdmin ? (
+                  {canEdit ? (
                     <select
                       value={status}
                       onChange={(e) => update(slot, e.target.value as Status)}

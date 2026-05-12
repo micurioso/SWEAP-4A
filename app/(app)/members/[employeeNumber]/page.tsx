@@ -6,7 +6,7 @@ export default async function MemberProfile({ params }: { params: { employeeNumb
   const employeeNumber = decodeURIComponent(params.employeeNumber);
   const supabase = createClient();
   const { profile } = await getSessionAndProfile();
-  const isAdmin = profile?.role === "admin";
+  const canEdit = profile?.role === "admin" || profile?.role === "encoder";
 
   const [{ data: member }, { data: dependents }, { data: claimants }] = await Promise.all([
     supabase.from("sweap_members").select("*").eq("employee_number", employeeNumber).maybeSingle(),
@@ -21,7 +21,7 @@ export default async function MemberProfile({ params }: { params: { employeeNumb
       member={member as any}
       dependents={(dependents || []) as any}
       claimants={(claimants || []) as any}
-      isAdmin={isAdmin}
+      canEdit={canEdit}
     />
   );
 }

@@ -2,12 +2,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+type Role = "admin" | "encoder" | "viewer";
+
 type Profile = {
   id: string;
   email: string;
   username: string | null;
   full_name: string | null;
-  role: "admin" | "viewer";
+  role: Role;
   is_active: boolean;
   created_at: string;
   last_sign_in_at: string | null;
@@ -45,7 +47,7 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
   const [users, setUsers] = useState<Profile[]>(initial);
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
-  const [role, setRole] = useState<"admin" | "viewer">("viewer");
+  const [role, setRole] = useState<Role>("viewer");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -204,6 +206,7 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
                 <td className="px-4 py-2">
                   <select value={u.role} onChange={e => update(u.id, { role: e.target.value as any })} className="rounded border border-slate-300 px-2 py-1 text-xs">
                     <option value="viewer">viewer</option>
+                    <option value="encoder">encoder</option>
                     <option value="admin">admin</option>
                   </select>
                 </td>
@@ -337,6 +340,7 @@ export default function UsersManager({ initial }: { initial: Profile[] }) {
               className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="viewer">Viewer</option>
+              <option value="encoder">Encoder</option>
               <option value="admin">Admin</option>
             </select>
           </div>

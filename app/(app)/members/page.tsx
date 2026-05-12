@@ -4,7 +4,7 @@ import { createClient, getSessionAndProfile } from "@/lib/supabase/server";
 export default async function MembersListPage({ searchParams }: { searchParams: { q?: string; page?: string } }) {
   const supabase = createClient();
   const { profile } = await getSessionAndProfile();
-  const isAdmin = profile?.role === "admin";
+  const isEditor = profile?.role === "admin" || profile?.role === "encoder";
 
   const page = Math.max(1, parseInt(searchParams.page || "1", 10) || 1);
   const pageSize = 25;
@@ -12,7 +12,7 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
   const to = from + pageSize - 1;
 
   const hasQuery = !!searchParams.q;
-  const showTable = isAdmin || hasQuery;
+  const showTable = isEditor || hasQuery;
 
   let data: any[] | null = null;
   let count = 0;

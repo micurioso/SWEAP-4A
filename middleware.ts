@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 const ADMIN_PREFIXES = ["/admin"];
-const ADMIN_SUFFIXES = ["/edit", "/new"];
+const MEMBER_EDITOR_PREFIXES = ["/admin/forms"];
+const MEMBER_EDITOR_SUFFIXES = ["/edit", "/new"];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -46,17 +47,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Admin gate
-  const needsAdmin =
-    ADMIN_PREFIXES.some(p => pathname.startsWith(p)) ||
-    ADMIN_SUFFIXES.some(s => pathname.endsWith(s));
-  if (user && needsAdmin) {
+  // Admin / encoder gate
+  const isEditorPrefix = MEMBER_EDITOR_PREFIXES.some(p => pathname.startsWith(p));
+  const needsAdmin = !isEditorPrefix && ADMIN_PREFIXES.some(p => pathname.startsWith(p));
+  const needsMemberEditor = isEditorPrefix || MEMBER_EDITOR_SUFFIXES.some(s => pathname.endsWith(s));
+  if (user && (needsAdmin || needsMemberEditor)) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role, is_active")
       .eq("id", user.id)
       .single();
-    if (!profile || !profile.is_active || profile.role !== "admin") {
+    const isAdmin = !!profile && profile.is_active && profile.role === "admin";
+    const isEditor = !!profile && profile.is_active && (profile.role === "admin" || profile.role === "encoder");
+    const allowed = needsAdmin ? isAdmin : isEditor;
+    if (!allowed) {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       url.searchParams.set("error", "forbidden");

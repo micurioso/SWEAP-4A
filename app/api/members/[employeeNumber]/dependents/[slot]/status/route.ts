@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireAdmin } from "@/lib/auth-guard";
+import { requireMemberEditor } from "@/lib/auth-guard";
 import { createClient } from "@/lib/supabase/server";
 
 const bodySchema = z.object({
@@ -11,7 +11,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: { employeeNumber: string; slot: string } }
 ) {
-  const guard = await requireAdmin();
+  const guard = await requireMemberEditor();
   if (!guard.ok) return guard.response;
 
   const body = await req.json().catch(() => null);

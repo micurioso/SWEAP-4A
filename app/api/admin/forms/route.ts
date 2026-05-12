@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth-guard";
+import { requireMemberEditor } from "@/lib/auth-guard";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const BUCKET = "sweap-forms";
 
 export async function GET() {
-  const guard = await requireAdmin();
+  const guard = await requireMemberEditor();
   if (!guard.ok) return guard.response;
   const supabase = createAdminClient();
   const { data, error } = await supabase
@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const guard = await requireAdmin();
+  const guard = await requireMemberEditor();
   if (!guard.ok) return guard.response;
 
   const form = await req.formData().catch(() => null);

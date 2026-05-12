@@ -43,19 +43,24 @@ The login page accepts whatever the user types. If it contains `@` it's used dir
 Public sign-up is disabled in Supabase. All accounts are admin-managed.
 
 ### Authorization — defense in depth
+Three roles: `admin`, `encoder`, `viewer` (Postgres `user_role` enum, defined in `0001_init.sql`, extended in `0006_encoder_role.sql`).
+- `admin` — full access including all four `/admin/*` pages (Data Management, Users, Manage Forms, Audit).
+- `encoder` — can read members, write to member tables (create / edit profile, toggle Employee + Dependent status), and **manage SWEAP forms** (upload/delete PDFs at `/admin/forms`). Blocked from Data Management, Users, and Audit.
+- `viewer` — read-only; the Members list is search-only (no enumeration).
+
 Every write path is gated **twice**:
 
-1. **`middleware.ts`** — checks the session on every request, redirects unauthenticated users to `/login`, and blocks `/admin/*` and any path ending in `/edit` or `/new` for non-admins. Admin-only features (Import, Export, Danger Zone, Users, Forms, Audit) all live under `/admin/*` and are therefore covered by the single `/admin` prefix.
-2. **Postgres RLS** in `supabase/migrations/0001_init.sql` — policies use the `is_admin()` SQL helper to reject any `INSERT/UPDATE/DELETE` to `sweap_members`, `member_dependents`, `member_claimants`, `profiles` from non-admin sessions, even if middleware were bypassed.
+1. **`middleware.ts`** — checks the session on every request, redirects unauthenticated users to `/login`. The admin gate is split three ways: `/admin/forms` and any path ending in `/edit` or `/new` require `role IN ('admin','encoder')`; every other `/admin/*` path requires `role = 'admin'`.
+2. **Postgres RLS** — `sweap_members`, `member_dependents`, `member_claimants` use the `public.is_member_editor()` SQL helper (admin or encoder). `profiles` and `audit_log` keep their `public.is_admin()` gate so encoders cannot change roles or read audit history. `sweap_forms` writes go through the service-role client server-side, so its RLS still names `is_admin()` for defense in depth but practical access is controlled by `requireMemberEditor()` in the API.
 
-API route handlers under `app/api/**` additionally call `requireAdmin()` from `lib/auth-guard.ts` before doing anything.
+API route handlers under `app/api/**` call `requireAdmin()` (for `/api/admin/users/**`, `/api/admin/erase-members`, `/api/admin/clear-audit`, `/api/import`, `/api/export`) or `requireMemberEditor()` (for member-status PATCH routes and `/api/admin/forms/**`) from `lib/auth-guard.ts` before doing anything.
 
 The service-role client (`lib/supabase/admin.ts`) is **only** used inside server-side route handlers and the seed script. Importing it from a client component will leak the key.
 
 ### Data model — preserved positional slots
-The Google Form has up to 4 declared **dependents** (A.1–A.4, 6 columns each: name/relationship/status/amount_claimed/voucher/claimant) and up to 4 declared **claimants** (B.1–B.4, 2 columns each).
+Up to 4 declared **dependents** (A.1–A.4, 3 columns each: name/relationship/status) and up to 4 declared **claimants** (B.1–B.4, 2 columns each: name/relationship).
 
-These are normalized into `member_dependents` and `member_claimants` tables with a `slot smallint (1..4)` column and a `UNIQUE (employee_number, slot)` constraint, so re-imports overwrite the same slot rather than creating duplicates. Whenever rendering a profile, querying by `slot` preserves the original A.1/A.2/A.3/A.4 ordering exactly as the form intended.
+These are normalized into `member_dependents` and `member_claimants` tables with a `slot smallint (1..4)` column and a `UNIQUE (employee_number, slot)` constraint, so re-imports overwrite the same slot rather than creating duplicates. Whenever rendering a profile, querying by `slot` preserves the A.1/A.2/A.3/A.4 ordering. (`member_dependents` also has legacy `amount_claimed`, `check_voucher_number`, `claimant_name` columns that hold data carried over from the original Google Form imports; these are no longer collected by the public registration form or surfaced in the import template / export.)
 
 ### Validation rules
 - **`employee_number`** must contain at least one digit (`/\d/`). This rejects rows where a name accidentally landed in the Emp # column without breaking codes like `Apr-51` or `04-12096`. Enforced in three places: `lib/csv.ts` (CSV import skip), `lib/schemas.ts` Zod (server-side `/api/import` and `/api/members`), and `components/member-form.tsx` (HTML `pattern=".*\d.*"`). Uniqueness is enforced by the Postgres PK.
@@ -63,13 +68,15 @@ These are normalized into `member_dependents` and `member_claimants` tables with
 - **CSV encoding** is auto-detected: `decodeFile()` in `components/import-section.tsx` and `scripts/seed.ts` decode UTF-8 strictly first, then fall back to Windows-1252 if that throws. Excel-saved CSVs default to cp1252 and would otherwise show `�` for `ñ`/`Ñ`.
 
 ### CSV ↔ DB mapping is positional, not by header name
-`lib/csv.ts` is the **single source of truth** for the mapping between the 57-column Google Forms CSV and the database schema. It's used by:
+`lib/csv.ts` is the **single source of truth** for the 45-column CSV layout shared by both the import template and the export. The order matches the public registration form at `/register` exactly so an exported CSV roundtrips through import without column reshuffling. It's consumed by:
 
-- The Import tab inside `/admin/data-management` (PapaParse → dry-run preview → POST to `/api/import`)
-- `/api/export` (joins members + child rows → reconstructs the row layout via `memberToRow` → SheetJS XLSX)
+- The Import tab inside `/admin/data-management` (PapaParse → dry-run preview → POST to `/api/import`) and the "Download template" button
+- `/api/export` (joins members + child rows → `memberToExportRow` (aliased to `memberToRow`) → CSV)
 - `scripts/seed.ts` (one-time bulk load of `data.csv`)
 
-Headers like "Relationship" and "Claimant" repeat across the four dependent/claimant blocks, so `rowToMember`/`memberToRow` work **by column index** (`IDX` constants in `lib/csv.ts`), not by header lookup. Any change to the source form's column order requires updating those indexes.
+`EXPORT_HEADERS`/`memberToExportRow` are kept as re-exports of `CSV_HEADERS`/`memberToRow` so older imports keep compiling, but they refer to the same constant/function.
+
+Headers like "Relationship to dependent A.1" make every column unique now, but `rowToMember`/`memberToRow` still work **by column index** (`IDX` constants in `lib/csv.ts`). Any column reorder requires updating those indexes.
 
 ### Import pipeline (lib/import.ts + components/import-section.tsx)
 The import is **chunked client-side and bulk-batched server-side** to handle ~2k-row CSVs in seconds rather than minutes.

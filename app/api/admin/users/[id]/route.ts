@@ -4,7 +4,7 @@ import { requireAdmin } from "@/lib/auth-guard";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const patchSchema = z.object({
-  role: z.enum(["admin", "viewer"]).optional(),
+  role: z.enum(["admin", "encoder", "viewer"]).optional(),
   is_active: z.boolean().optional(),
   full_name: z.string().optional()
 });

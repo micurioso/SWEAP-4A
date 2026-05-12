@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth-guard";
+import { requireMemberEditor } from "@/lib/auth-guard";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const BUCKET = "sweap-forms";
 
 export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  const guard = await requireAdmin();
+  const guard = await requireMemberEditor();
   if (!guard.ok) return guard.response;
 
   const supabase = createAdminClient();

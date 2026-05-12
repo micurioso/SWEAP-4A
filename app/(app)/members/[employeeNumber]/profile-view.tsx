@@ -63,12 +63,12 @@ export default function ProfileView({
   member,
   dependents,
   claimants,
-  isAdmin
+  canEdit
 }: {
   member: Member;
   dependents: Dependent[];
   claimants: Claimant[];
-  isAdmin: boolean;
+  canEdit: boolean;
 }) {
   const initialStatus: EmployeeStatus =
     member.employee_status === "separated" || member.employee_status === "deceased"
@@ -112,7 +112,7 @@ export default function ProfileView({
           <Link href="/members" className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-100">
             Back
           </Link>
-          {isAdmin && !frozen && (
+          {canEdit && !frozen && (
             <Link
               href={`/members/${encodeURIComponent(member.employee_number)}/edit`}
               className="rounded-md bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
@@ -130,7 +130,7 @@ export default function ProfileView({
             <div className="grid grid-cols-3 gap-2 py-1.5 text-sm">
               <dt className="text-slate-500">Employee Status</dt>
               <dd className="col-span-2 text-slate-800">
-                {isAdmin ? (
+                {canEdit ? (
                   <select
                     value={status}
                     disabled={saving}
@@ -181,7 +181,7 @@ export default function ProfileView({
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Dependents</h2>
-          <DependentsTable employeeNumber={member.employee_number} dependents={dependents} isAdmin={isAdmin} />
+          <DependentsTable employeeNumber={member.employee_number} dependents={dependents} canEdit={canEdit} />
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-2">
