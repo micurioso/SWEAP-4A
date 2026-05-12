@@ -1,48 +1,55 @@
 import { parseBoolean, parseDate } from "./utils";
 import type { MemberWithRelations } from "./schemas";
 
-// Header keys for the import template. Timestamp is omitted intentionally.
+// CSV column layout — single source of truth for both the import template
+// and the export. Order matches the public registration form at /register.
 export const CSV_HEADERS = [
-  "Email Address",
-  "Name of Staff",
-  "Employee Number",
-  "Permanent Address",
+  "Email address",
+  "Last name, First name Middle name",
+  "Employee ID number (ARTA ID number)",
   "Current Address",
+  "Permanent Address",
   "Contact Number",
   "Birthdate",
   "Sex",
-  "Civil Status [Married ]",
-  "Religion [Catholic ]",
+  "Civil Status",
+  "Religion",
   "Sector",
   "IP Affiliation",
-  "Chapter Base [Row 1]",
+  "Chapter Base",
   "Division",
   "Position (Please do not abbreviate)",
-  "Status of employment",
-  "With Physical Inlife Card?",
-  "If Yes, Physical Inlife ID number (See Inlife Card)",
-  "If No Physical Inlife Card, Please provide reason",
+  "Status of Employment",
+  "Employee Status",
+  "With Physical HMO card",
+  "Name of HMO",
+  "Policy / Card number of HMO",
   "Have you claimed burial assistance from previous years?",
-  // Dependents A.1 - A.4
-  "A.1. Name of Declared Dependent (no.1)", "Relationship", "Dependent Status", "Amount claimed ", "Check/voucher number", "Claimant",
-  "A.2. Name of Declared Dependent (no.2)", "Relationship", "Dependent Status", "Amount claimed ", "Check/voucher number", "Claimant",
-  "A.3. Name of Declared Dependent (no.3)", "Relationship", "Dependent Status", "Amount claimed ", "Check/voucher number", "Claimant",
-  "A.4. Name of Declared Dependent (no.4)", "Relationship", "Dependent Status", "Amount claimed ", "Check/voucher number", "Claimant",
-  // Claimants B.1 - B.4
-  "B.1. Name of Declared Claimant (no.1)", "Relationship",
-  "B.2. Name of Declared Claimant (no.2)", "Relationship",
-  "B.3. Name of Declared Claimant (no.3)", "Relationship",
-  "B.4. Name of Declared Claimant (no.4)", "Relationship",
-  "Name of contact person", "Contact number/s", "Relationship",
+  // Dependents A.1 - A.4 (name, relationship, status)
+  "A.1. Name of Declared Dependent", "Relationship to dependent A.1", "Dependent Status A.1",
+  "A.2. Name of Declared Dependent", "Relationship to dependent A.2", "Dependent Status A.2",
+  "A.3. Name of Declared Dependent", "Relationship to dependent A.3", "Dependent Status A.3",
+  "A.4. Name of Declared Dependent", "Relationship to dependent A.4", "Dependent Status A.4",
+  // Claimants B.1 - B.4 (name, relationship)
+  "B.1. Name of Declared Claimant", "Relationship to Claimant B.1",
+  "B.2. Name of Declared Claimant", "Relationship to Claimant B.2",
+  "B.3. Name of Declared Claimant", "Relationship to Claimant B.3",
+  "B.4. Name of Declared Claimant", "Relationship to Claimant B.4",
+  "Emergency Contact: Name of Contact Person",
+  "Emergency Contact: Contact Number",
+  "Emergency Contact: Relationship to staff",
   "Consent Notice"
 ] as const;
+
+// Kept as named re-exports for callers that import the export-specific symbols.
+export const EXPORT_HEADERS = CSV_HEADERS;
 
 const IDX = {
   email: 0,
   name: 1,
   empNo: 2,
-  permAddr: 3,
-  currAddr: 4,
+  currAddr: 3,
+  permAddr: 4,
   contact: 5,
   birthdate: 6,
   sex: 7,
@@ -53,25 +60,23 @@ const IDX = {
   chapter: 12,
   division: 13,
   position: 14,
-  empStatus: 15,
-  hasInlife: 16,
-  inlifeId: 17,
-  noInlifeReason: 18,
-  claimedBurial: 19,
-  dep1: 20, dep2: 26, dep3: 32, dep4: 38,
-  cla1: 44, cla2: 46, cla3: 48, cla4: 50,
-  emName: 52, emPhone: 53, emRel: 54,
-  consent: 55
+  statusOfEmployment: 15,
+  employeeStatus: 16,
+  hasHmo: 17,
+  hmoName: 18,
+  hmoPolicy: 19,
+  claimedBurial: 20,
+  dep1: 21, dep2: 24, dep3: 27, dep4: 30,
+  cla1: 33, cla2: 35, cla3: 37, cla4: 39,
+  emName: 41, emPhone: 42, emRel: 43,
+  consent: 44
 } as const;
 
 function depBlock(row: string[], start: number) {
   return {
     name: row[start] || null,
     relationship: row[start + 1] || null,
-    status: row[start + 2] || null,
-    amount_claimed: row[start + 3] || null,
-    check_voucher_number: row[start + 4] || null,
-    claimant_name: row[start + 5] || null
+    status: row[start + 2] || null
   };
 }
 
@@ -80,6 +85,11 @@ function claBlock(row: string[], start: number) {
     name: row[start] || null,
     relationship: row[start + 1] || null
   };
+}
+
+function parseEmployeeStatus(v: string | undefined): "active" | "separated" | "deceased" {
+  const norm = (v || "").trim().toLowerCase();
+  return norm === "separated" || norm === "deceased" ? norm : "active";
 }
 
 export function rowToMember(row: string[]): MemberWithRelations | null {
@@ -112,10 +122,11 @@ export function rowToMember(row: string[]): MemberWithRelations | null {
     chapter_base: row[IDX.chapter] || null,
     division: row[IDX.division] || null,
     position: row[IDX.position] || null,
-    status_of_employment: row[IDX.empStatus] || null,
-    has_physical_inlife_card: parseBoolean(row[IDX.hasInlife]),
-    inlife_id_number: row[IDX.inlifeId] || null,
-    no_inlife_card_reason: row[IDX.noInlifeReason] || null,
+    status_of_employment: row[IDX.statusOfEmployment] || null,
+    employee_status: parseEmployeeStatus(row[IDX.employeeStatus]),
+    has_physical_inlife_card: parseBoolean(row[IDX.hasHmo]),
+    hmo_name: row[IDX.hmoName] || null,
+    inlife_id_number: row[IDX.hmoPolicy] || null,
     claimed_burial_assistance: parseBoolean(row[IDX.claimedBurial]),
     emergency_contact_name: row[IDX.emName] || null,
     emergency_contact_number: row[IDX.emPhone] || null,
@@ -127,83 +138,13 @@ export function rowToMember(row: string[]): MemberWithRelations | null {
   };
 }
 
-export const EXPORT_HEADERS = [
-  "Email Address",
-  "Name of Staff",
-  "Employee Number",
-  "Permanent Address",
-  "Current Address",
-  "Contact Number",
-  "Birthdate",
-  "Sex",
-  "Civil Status",
-  "Religion",
-  "Sector",
-  "IP Affiliation",
-  "Chapter Base",
-  "Division",
-  "Position",
-  "Status of employment",
-  "Employee Status",
-  "Name of HMO",
-  "A.1. Name of Declared Dependent (no.1)", "Relationship", "Dependent Status",
-  "A.2. Name of Declared Dependent (no.2)", "Relationship", "Dependent Status",
-  "A.3. Name of Declared Dependent (no.3)", "Relationship", "Dependent Status",
-  "A.4. Name of Declared Dependent (no.4)", "Relationship", "Dependent Status",
-  "B.1. Name of Declared Claimant (no.1)", "Relationship",
-  "B.2. Name of Declared Claimant (no.2)", "Relationship",
-  "B.3. Name of Declared Claimant (no.3)", "Relationship",
-  "B.4. Name of Declared Claimant (no.4)", "Relationship",
-  "Name of contact person", "Contact number/s", "Relationship",
-  "Consent Notice"
-] as const;
-
-export function memberToExportRow(m: MemberWithRelations): (string | null)[] {
-  const row: (string | null)[] = new Array(EXPORT_HEADERS.length).fill("");
-  let i = 0;
-  row[i++] = m.email_address ?? "";
-  row[i++] = m.full_name;
-  row[i++] = m.employee_number;
-  row[i++] = m.permanent_address ?? "";
-  row[i++] = m.current_address ?? "";
-  row[i++] = m.contact_number ?? "";
-  row[i++] = m.birthdate ?? "";
-  row[i++] = m.sex ?? "";
-  row[i++] = m.civil_status ?? "";
-  row[i++] = m.religion ?? "";
-  row[i++] = m.sector ?? "";
-  row[i++] = m.ip_affiliation ?? "";
-  row[i++] = m.chapter_base ?? "";
-  row[i++] = m.division ?? "";
-  row[i++] = m.position ?? "";
-  row[i++] = m.status_of_employment ?? "";
-  row[i++] = m.employee_status ?? "active";
-  row[i++] = m.hmo_name ?? "";
-  for (let s = 1; s <= 4; s++) {
-    const d = m.dependents.find(x => x.slot === s);
-    row[i++] = d?.name ?? "";
-    row[i++] = d?.relationship ?? "";
-    row[i++] = d?.status ?? "";
-  }
-  for (let s = 1; s <= 4; s++) {
-    const c = m.claimants.find(x => x.slot === s);
-    row[i++] = c?.name ?? "";
-    row[i++] = c?.relationship ?? "";
-  }
-  row[i++] = m.emergency_contact_name ?? "";
-  row[i++] = m.emergency_contact_number ?? "";
-  row[i++] = m.emergency_contact_relationship ?? "";
-  row[i++] = m.consent_text ?? (m.consent_signed ? "Yes" : "");
-  return row;
-}
-
 export function memberToRow(m: MemberWithRelations): (string | null)[] {
   const row: (string | null)[] = new Array(CSV_HEADERS.length).fill("");
   row[IDX.email] = m.email_address ?? "";
   row[IDX.name] = m.full_name;
   row[IDX.empNo] = m.employee_number;
-  row[IDX.permAddr] = m.permanent_address ?? "";
   row[IDX.currAddr] = m.current_address ?? "";
+  row[IDX.permAddr] = m.permanent_address ?? "";
   row[IDX.contact] = m.contact_number ?? "";
   row[IDX.birthdate] = m.birthdate ?? "";
   row[IDX.sex] = m.sex ?? "";
@@ -214,10 +155,11 @@ export function memberToRow(m: MemberWithRelations): (string | null)[] {
   row[IDX.chapter] = m.chapter_base ?? "";
   row[IDX.division] = m.division ?? "";
   row[IDX.position] = m.position ?? "";
-  row[IDX.empStatus] = m.status_of_employment ?? "";
-  row[IDX.hasInlife] = m.has_physical_inlife_card == null ? "" : m.has_physical_inlife_card ? "Yes" : "No";
-  row[IDX.inlifeId] = m.inlife_id_number ?? "";
-  row[IDX.noInlifeReason] = m.no_inlife_card_reason ?? "";
+  row[IDX.statusOfEmployment] = m.status_of_employment ?? "";
+  row[IDX.employeeStatus] = m.employee_status ?? "active";
+  row[IDX.hasHmo] = m.has_physical_inlife_card == null ? "" : m.has_physical_inlife_card ? "Yes" : "No";
+  row[IDX.hmoName] = m.hmo_name ?? "";
+  row[IDX.hmoPolicy] = m.inlife_id_number ?? "";
   row[IDX.claimedBurial] = m.claimed_burial_assistance == null ? "" : m.claimed_burial_assistance ? "Yes" : "No";
 
   const depStarts = [IDX.dep1, IDX.dep2, IDX.dep3, IDX.dep4];
@@ -227,9 +169,6 @@ export function memberToRow(m: MemberWithRelations): (string | null)[] {
     row[s]     = d?.name ?? "";
     row[s + 1] = d?.relationship ?? "";
     row[s + 2] = d?.status ?? "";
-    row[s + 3] = d?.amount_claimed ?? "";
-    row[s + 4] = d?.check_voucher_number ?? "";
-    row[s + 5] = d?.claimant_name ?? "";
   }
   const claStarts = [IDX.cla1, IDX.cla2, IDX.cla3, IDX.cla4];
   for (let i = 0; i < 4; i++) {
@@ -244,3 +183,6 @@ export function memberToRow(m: MemberWithRelations): (string | null)[] {
   row[IDX.consent] = m.consent_text ?? (m.consent_signed ? "Yes" : "");
   return row;
 }
+
+// Alias for the export route. Same 45-column layout as the import template.
+export const memberToExportRow = memberToRow;
