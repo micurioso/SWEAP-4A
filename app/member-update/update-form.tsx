@@ -32,7 +32,7 @@ const FIELDS: { key: keyof Member; label: string }[] = [
   { key: "full_name",                       label: "Full Name" },
   { key: "email_address",                   label: "Email Address" },
   { key: "contact_number",                  label: "Contact Number" },
-  { key: "birthdate",                       label: "Birthdate" },
+  { key: "birthdate",                       label: "Birthdate (MM/DD/YYYY)" },
   { key: "sex",                             label: "Sex" },
   { key: "civil_status",                    label: "Civil Status" },
   { key: "religion",                        label: "Religion" },
@@ -50,6 +50,18 @@ const FIELDS: { key: keyof Member; label: string }[] = [
 ];
 
 const EMPTY_CLAIMANT_TO: ClaimantTo = { name: "", relationship: "" };
+
+// Format a stored date (usually "YYYY-MM-DD") as MM/DD/YYYY without timezone shifts.
+function formatBirthdate(s?: string | null): string {
+  if (!s) return "";
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+  if (m) return `${m[2]}/${m[3]}/${m[1]}`;
+  const d = new Date(s);
+  if (isNaN(d.getTime())) return s;
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${mm}/${dd}/${d.getFullYear()}`;
+}
 
 async function toBase64(url: string): Promise<string | null> {
   try {
@@ -153,9 +165,10 @@ export default function UpdateForm() {
       const mainRows = FIELDS.map(({ key, label }, i) => {
         const fill = i % 2 === 0 ? "#f8fafc" : "#ffffff";
         const toFill = i % 2 === 0 ? "#eff6ff" : "#f0f9ff";
+        const fromText = key === "birthdate" ? formatBirthdate(member.birthdate) : ((member[key] as string | null) ?? "");
         return [
           { text: label, fontSize: F, fillColor: fill, color: "#374151" },
-          { text: (member[key] as string | null) ?? "", fontSize: F, color: "#374151", fillColor: fill },
+          { text: fromText, fontSize: F, color: "#374151", fillColor: fill },
           { text: toValues[key] ?? "", fontSize: F, color: "#1d4ed8", fillColor: toFill },
         ];
       });
@@ -381,23 +394,27 @@ export default function UpdateForm() {
                   </tr>
                 </thead>
                 <tbody>
-                  {FIELDS.map(({ key, label }, i) => (
-                    <tr key={key} className={i % 2 === 0 ? "bg-slate-50" : "bg-white"}>
-                      <td className="px-3 py-1.5 font-medium text-slate-600">{label}</td>
-                      <td className="px-3 py-1.5 text-slate-700">
-                        {member[key] ?? <span className="text-slate-300">—</span>}
-                      </td>
-                      <td className="px-3 py-1">
-                        <input
-                          type="text"
-                          value={toValues[key] ?? ""}
-                          onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
-                          placeholder="No change"
-                          className="w-full rounded border border-slate-200 bg-blue-50 px-2 py-1 text-sm text-blue-800 placeholder:text-slate-300 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
-                        />
-                      </td>
-                    </tr>
-                  ))}
+                  {FIELDS.map(({ key, label }, i) => {
+                    const isBirthdate = key === "birthdate";
+                    const fromValue = isBirthdate ? formatBirthdate(member.birthdate) : member[key];
+                    return (
+                      <tr key={key} className={i % 2 === 0 ? "bg-slate-50" : "bg-white"}>
+                        <td className="px-3 py-1.5 font-medium text-slate-600">{label}</td>
+                        <td className="px-3 py-1.5 text-slate-700">
+                          {fromValue || <span className="text-slate-300">—</span>}
+                        </td>
+                        <td className="px-3 py-1">
+                          <input
+                            type="text"
+                            value={toValues[key] ?? ""}
+                            onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
+                            placeholder="No change"
+                            className="w-full rounded border border-slate-200 bg-blue-50 px-2 py-1 text-sm text-blue-800 placeholder:text-slate-300 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -412,7 +429,7 @@ export default function UpdateForm() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-emerald-800 text-white">
+                  <tr className="bg-brand-600 text-white">
                     <th className="w-[10%] px-3 py-2 text-left font-medium">Slot</th>
                     <th className="w-[38%] px-3 py-2 text-left font-medium">Name</th>
                     <th className="w-[28%] px-3 py-2 text-left font-medium">Relationship</th>
@@ -423,7 +440,7 @@ export default function UpdateForm() {
                   {[1, 2, 3, 4].map((slot) => {
                     const d = dependents.find((x) => x.slot === slot);
                     return (
-                      <tr key={slot} className={slot % 2 === 1 ? "bg-emerald-50" : "bg-white"}>
+                      <tr key={slot} className={slot % 2 === 1 ? "bg-slate-50" : "bg-white"}>
                         <td className="px-3 py-1.5 font-mono text-xs text-slate-500">A.{slot}</td>
                         <td className="px-3 py-1.5 text-slate-700">{d?.name ?? <span className="text-slate-300">—</span>}</td>
                         <td className="px-3 py-1.5 text-slate-600">{d?.relationship ?? <span className="text-slate-300">—</span>}</td>
@@ -445,12 +462,12 @@ export default function UpdateForm() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-violet-700 text-white">
+                  <tr className="bg-brand-600 text-white">
                     <th className="w-[6%] px-3 py-2 text-left font-medium" rowSpan={2}>Slot</th>
                     <th className="px-3 py-2 text-center font-medium" colSpan={2}>FROM (Current)</th>
                     <th className="px-3 py-2 text-center font-medium" colSpan={2}>TO (Updated)</th>
                   </tr>
-                  <tr className="bg-violet-600 text-white">
+                  <tr className="bg-brand-500 text-white">
                     <th className="w-[22%] px-3 py-1.5 text-left font-medium text-xs">Name</th>
                     <th className="w-[20%] px-3 py-1.5 text-left font-medium text-xs">Relationship</th>
                     <th className="w-[26%] px-3 py-1.5 text-left font-medium text-xs">Name</th>
@@ -462,7 +479,7 @@ export default function UpdateForm() {
                     const c = claimants.find((x) => x.slot === slot);
                     const to = claimantTo[slot] ?? EMPTY_CLAIMANT_TO;
                     return (
-                      <tr key={slot} className={slot % 2 === 1 ? "bg-violet-50" : "bg-white"}>
+                      <tr key={slot} className={slot % 2 === 1 ? "bg-slate-50" : "bg-white"}>
                         <td className="px-3 py-1.5 font-mono text-xs text-slate-500">B.{slot}</td>
                         <td className="px-3 py-1.5 text-slate-700">{c?.name ?? <span className="text-slate-300">—</span>}</td>
                         <td className="px-3 py-1.5 text-slate-600">{c?.relationship ?? <span className="text-slate-300">—</span>}</td>
@@ -472,7 +489,7 @@ export default function UpdateForm() {
                             value={to.name}
                             onChange={(e) => setClaimantField(slot, "name", e.target.value)}
                             placeholder="No change"
-                            className="w-full rounded border border-slate-200 bg-violet-50 px-2 py-1 text-sm text-violet-800 placeholder:text-slate-300 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400"
+                            className="w-full rounded border border-slate-200 bg-blue-50 px-2 py-1 text-sm text-blue-800 placeholder:text-slate-300 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
                           />
                         </td>
                         <td className="px-3 py-1">
@@ -481,7 +498,7 @@ export default function UpdateForm() {
                             value={to.relationship}
                             onChange={(e) => setClaimantField(slot, "relationship", e.target.value)}
                             placeholder="No change"
-                            className="w-full rounded border border-slate-200 bg-violet-50 px-2 py-1 text-sm text-violet-800 placeholder:text-slate-300 focus:border-violet-400 focus:outline-none focus:ring-1 focus:ring-violet-400"
+                            className="w-full rounded border border-slate-200 bg-blue-50 px-2 py-1 text-sm text-blue-800 placeholder:text-slate-300 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
                           />
                         </td>
                       </tr>
