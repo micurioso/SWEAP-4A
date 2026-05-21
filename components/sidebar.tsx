@@ -115,6 +115,13 @@ export default function Sidebar({
           >
             Member Registration
           </a>
+          <Link
+            href="/member-update"
+            onClick={() => setOpen(false)}
+            className="rounded-md px-2 py-1 text-sm font-medium text-brand-600 hover:bg-slate-100 hover:text-brand-700"
+          >
+            Member Update Form
+          </Link>
           {forms.length === 0 ? (
             <span className="px-2 py-1 text-xs text-slate-400">No uploaded forms yet</span>
           ) : (
@@ -140,10 +147,6 @@ export default function Sidebar({
     <>
       {/* Mobile top bar */}
       <div className="fixed inset-x-0 top-0 z-30 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
-        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-brand-700">
-          <img src="/sweap-logo.png" alt="SWEAP" className="h-8 w-8 rounded-full object-contain" />
-          <span>SWEAP CALABARZON</span>
-        </Link>
         <button
           onClick={() => setOpen(true)}
           aria-label="Open menu"
@@ -151,6 +154,10 @@ export default function Sidebar({
         >
           <Menu className="h-5 w-5" />
         </button>
+        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-brand-700">
+          <img src="/sweap-logo.png" alt="SWEAP" className="h-8 w-8 rounded-full object-contain" />
+          <span>SWEAP CALABARZON</span>
+        </Link>
       </div>
       {/* Spacer to offset the mobile top bar */}
       <div className="h-14 lg:hidden" />
