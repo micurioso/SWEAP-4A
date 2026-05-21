@@ -32,7 +32,7 @@ const FIELDS: { key: keyof Member; label: string }[] = [
   { key: "full_name",                       label: "Full Name" },
   { key: "email_address",                   label: "Email Address" },
   { key: "contact_number",                  label: "Contact Number" },
-  { key: "birthdate",                       label: "Birthdate (MM/DD/YYYY)" },
+  { key: "birthdate",                       label: "Birthdate (e.g. May 16, 2023)" },
   { key: "sex",                             label: "Sex" },
   { key: "civil_status",                    label: "Civil Status" },
   { key: "religion",                        label: "Religion" },
@@ -51,16 +51,22 @@ const FIELDS: { key: keyof Member; label: string }[] = [
 
 const EMPTY_CLAIMANT_TO: ClaimantTo = { name: "", relationship: "" };
 
-// Format a stored date (usually "YYYY-MM-DD") as MM/DD/YYYY without timezone shifts.
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+// Format a stored date (usually "YYYY-MM-DD") as "Month D, YYYY" without timezone shifts.
 function formatBirthdate(s?: string | null): string {
   if (!s) return "";
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
-  if (m) return `${m[2]}/${m[3]}/${m[1]}`;
+  if (m) {
+    const month = MONTHS[Number(m[2]) - 1];
+    if (month) return `${month} ${Number(m[3])}, ${m[1]}`;
+  }
   const d = new Date(s);
   if (isNaN(d.getTime())) return s;
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  return `${mm}/${dd}/${d.getFullYear()}`;
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
 async function toBase64(url: string): Promise<string | null> {
