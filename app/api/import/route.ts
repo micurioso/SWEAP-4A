@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth-guard";
-import { createClient } from "@/lib/supabase/server";
+import { recordAudits } from "@/lib/audit";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { memberWithRelationsSchema } from "@/lib/schemas";
 import { importMembers } from "@/lib/import";
@@ -26,10 +26,7 @@ export async function POST(req: Request) {
   const result = await importMembers(supabase as any, parsed.data.rows, parsed.data.mode || "skip-existing");
 
   // Audit the import as a single row
-  const userClient = createClient();
-  await userClient.from("audit_log").insert({
-    actor_id: guard.user.id,
-    actor_email: guard.profile.email,
+  await recordAudits(supabase, guard, [{
     action: "import",
     target_table: "sweap_members",
     target_id: null,
@@ -40,7 +37,7 @@ export async function POST(req: Request) {
       skipped: result.skipped,
       errors: result.errors.length
     }
-  } as any);
+  }]);
 
   return NextResponse.json(result);
 }

@@ -129,11 +129,17 @@ export default function UpdateForm() {
     if (!member) return;
     setGenerating(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const pdfMake: any = ((await import("pdfmake/build/pdfmake")) as any).default ?? (await import("pdfmake/build/pdfmake"));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const pdfFonts: any = ((await import("pdfmake/build/vfs_fonts")) as any).default ?? (await import("pdfmake/build/vfs_fonts"));
-      pdfMake.vfs = pdfFonts?.pdfMake?.vfs ?? pdfFonts?.vfs ?? {};
+      const [pdfMakeModule, pdfFontsModule]: any[] = await Promise.all([
+        import("pdfmake/build/pdfmake"),
+        import("pdfmake/build/vfs_fonts")
+      ]);
+      const pdfMake: any = pdfMakeModule.default ?? pdfMakeModule;
+      const fontVfs: any = pdfFontsModule.default ?? pdfFontsModule;
+      if (typeof pdfMake.addVirtualFileSystem === "function") {
+        pdfMake.addVirtualFileSystem(fontVfs);
+      } else {
+        pdfMake.vfs = fontVfs;
+      }
 
       const logoBase64 = await toBase64("/sweap-logo.png");
       const today = new Date().toLocaleDateString("en-PH", { year: "numeric", month: "long", day: "numeric" });

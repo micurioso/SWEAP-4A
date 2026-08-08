@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { ImageCaptcha } from "@/components/image-captcha";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -12,6 +12,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [captchaReset, setCaptchaReset] = useState(0);
 
   // The login screen is always light. Drop dark mode while it's shown and
   // restore the user's theme when navigating away (e.g. to the dashboard).
@@ -28,31 +29,35 @@ export default function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const supabase = createClient();
-    const id = identifier.trim().toLowerCase();
-    let email = id;
-    if (!id.includes("@")) {
-      const r = await fetch("/api/auth/resolve-username", {
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+
+    try {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ username: id })
+        body: JSON.stringify({
+          identifier,
+          password,
+          captchaToken: formData.get("captcha_token"),
+          captchaAnswer: formData.get("captcha_answer")
+        })
       });
-      if (r.ok) {
-        email = (await r.json()).email;
-      } else {
-        setError("Username not found");
-        setLoading(false);
+
+      const result = (await response.json().catch(() => null)) as { error?: string } | null;
+      if (!response.ok) {
+        setError(result?.error ?? "Unable to sign in. Please try again.");
+        setCaptchaReset(value => value + 1);
         return;
       }
+
+      router.replace(next);
+      router.refresh();
+    } catch {
+      setError("Unable to sign in. Please try again.");
+      setCaptchaReset(value => value + 1);
+    } finally {
+      setLoading(false);
     }
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) {
-      setError(error.message);
-      return;
-    }
-    router.replace(next);
-    router.refresh();
   }
 
   return (
@@ -86,7 +91,7 @@ export default function LoginForm() {
           <h1 className="text-2xl font-bold" style={{ color: "#0000CD" }}>SWEAP CALABARZON</h1>
           <p className="mt-1 text-sm text-slate-500">DSWD FO IV-A · Member Database</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3">
           <div>
             <label className="mb-1 block text-sm font-medium text-slate-700">Username</label>
             <input
@@ -122,6 +127,7 @@ export default function LoginForm() {
               </button>
             </div>
           </div>
+          <ImageCaptcha key={captchaReset} />
           {error && <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
           <button
             type="submit" disabled={loading}

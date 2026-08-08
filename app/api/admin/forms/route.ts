@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireMemberEditor } from "@/lib/auth-guard";
+import { recordAudits } from "@/lib/audit";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const BUCKET = "sweap-forms";
@@ -50,6 +51,13 @@ export async function POST(req: Request) {
     await supabase.storage.from(BUCKET).remove([storage_path]);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  await recordAudits(supabase, guard, [{
+    action: "insert",
+    target_table: "sweap_forms",
+    target_id: data.id,
+    diff: data
+  }]);
 
   return NextResponse.json({ form: data });
 }

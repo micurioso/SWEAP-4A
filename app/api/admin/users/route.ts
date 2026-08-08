@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
+import { recordAudits } from "@/lib/audit";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { newUserSchema } from "@/lib/schemas";
 
@@ -52,6 +53,18 @@ export async function POST(req: Request) {
     .from("profiles")
     .update({ role: parsed.data.role, full_name: parsed.data.full_name, username })
     .eq("id", data.user.id);
+
+  await recordAudits(supabase, guard, [{
+    action: "insert",
+    target_table: "profiles",
+    target_id: data.user.id,
+    diff: {
+      username,
+      full_name: parsed.data.full_name,
+      role: parsed.data.role,
+      is_active: true
+    }
+  }]);
 
   return NextResponse.json({
     id: data.user.id,

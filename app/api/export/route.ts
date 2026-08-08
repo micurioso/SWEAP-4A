@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
+import { recordAudits } from "@/lib/audit";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { EXPORT_HEADERS, memberToExportRow } from "@/lib/csv";
 import type { MemberWithRelations } from "@/lib/schemas";
@@ -45,14 +47,12 @@ export async function GET(req: Request) {
   const csv = "﻿" + rows.map(r => r.map(csvEscape).join(",")).join("\r\n");
 
   // Audit the export
-  await supabase.from("audit_log").insert({
-    actor_id: guard.user.id,
-    actor_email: guard.profile.email,
+  await recordAudits(createAdminClient(), guard, [{
     action: "export",
     target_table: "sweap_members",
     target_id: null,
     diff: { rows: (data || []).length, chapter, division }
-  } as any);
+  }]);
 
   return new NextResponse(csv, {
     headers: {

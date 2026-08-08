@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth-guard";
+import { recordAudits } from "@/lib/audit";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const bodySchema = z.object({
@@ -20,5 +21,14 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const supabase = createAdminClient();
   const { error } = await supabase.auth.admin.updateUserById(params.id, { password: parsed.data.password });
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  await recordAudits(supabase, guard, [{
+    action: "update",
+    target_table: "auth.users",
+    target_id: params.id,
+    diff: {
+      before: { password: "Protected" },
+      after: { password: "Reset by administrator" }
+    }
+  }]);
   return NextResponse.json({ ok: true });
 }
