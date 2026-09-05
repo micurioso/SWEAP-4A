@@ -28,6 +28,7 @@ export async function middleware(request: NextRequest) {
 
   const isPublic =
     pathname === "/login" ||
+    pathname === "/member-registration" ||
     pathname === "/register" ||
     pathname === "/api/register" ||
     pathname === "/api/register/check" ||

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import ThemeToggle from "@/components/theme-toggle";
 
 const CONSENT_TEXT =
   "I hereby consent to the collection and use of my personal information by DSWD FO IV-A SWEAP CALABARZON for purposes related to member benefits, burial assistance, and other lawful SWEAP activities, in accordance with the Data Privacy Act of 2012 (RA 10173).";
@@ -256,8 +257,12 @@ export default function RegistrationForm() {
 
   if (done) {
     return (
-      <div className="min-h-screen bg-slate-50 px-4 py-10">
-        <div className="mx-auto max-w-2xl rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="min-h-screen bg-slate-50 px-3 py-4 sm:px-4 sm:py-8">
+        <div className="mx-auto max-w-2xl">
+          <div className="mb-3 flex justify-end sm:mb-4">
+            <ThemeToggle />
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/sweap-logo.png" alt="SWEAP CALABARZON" className="mx-auto mb-4 h-16 w-16 rounded-full object-contain" />
           <h1 className="text-center text-2xl font-bold text-emerald-700">Registration submitted</h1>
@@ -269,29 +274,31 @@ export default function RegistrationForm() {
           <Link href="/login" className="mt-6 inline-block rounded-md bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">
             Go to sign in
           </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10">
+    <div className="min-h-screen bg-slate-50 px-3 py-4 sm:px-4 sm:py-8">
       <div className="mx-auto max-w-3xl">
-        <header className="mb-6 flex items-center justify-center gap-4">
+        <header className="mb-4 flex items-center gap-2.5 sm:mb-6 sm:justify-center sm:gap-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/sweap-logo.png" alt="SWEAP CALABARZON" className="h-20 w-20 shrink-0 rounded-full object-contain" />
-          <div>
-            <h1 className="text-2xl font-bold text-brand-700">SWEAP CALABARZON Member Registration</h1>
-            <p className="mt-1 text-sm text-slate-500">DSWD FO IV-A · Fields marked with <span className="text-red-500">*</span> are required.</p>
+          <img src="/sweap-logo.png" alt="SWEAP CALABARZON" className="h-12 w-12 shrink-0 rounded-full object-contain sm:h-20 sm:w-20" />
+          <div className="min-w-0 flex-1 sm:flex-none">
+            <h1 className="text-lg font-bold leading-tight text-brand-700 sm:text-2xl">SWEAP CALABARZON Member Registration</h1>
+            <p className="mt-0.5 text-xs leading-5 text-slate-500 sm:mt-1 sm:text-sm">DSWD FO IV-A · Fields marked with <span className="text-red-500">*</span> are required.</p>
           </div>
+          <ThemeToggle />
         </header>
 
-        <form onSubmit={onSubmit} className="space-y-5">
+        <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5">
           {error && (
             <div className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>
           )}
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Personal</h2>
             <div className="grid gap-3 md:grid-cols-2">
               <label className="text-sm md:col-span-2">Employee ID number (ARTA ID number) <span className="text-red-500">*</span>
@@ -353,7 +360,7 @@ export default function RegistrationForm() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Employment</h2>
             <div className="grid gap-3 md:grid-cols-2">
               <label className="text-sm">Chapter Base <span className="text-red-500">*</span>
@@ -380,7 +387,7 @@ export default function RegistrationForm() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">HMO & Burial Assistance</h2>
             <div className="grid gap-3 md:grid-cols-2">
               <label className="text-sm">With Physical HMO card <span className="text-red-500">*</span>
@@ -406,7 +413,7 @@ export default function RegistrationForm() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Dependents (up to 4)</h2>
               {dependents.length < 4 && (
@@ -435,7 +442,7 @@ export default function RegistrationForm() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Claimants (up to 4)</h2>
               {claimants.length < 4 && (
@@ -460,7 +467,7 @@ export default function RegistrationForm() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">In case of Emergency (contact persons)</h2>
             <div className="grid gap-3 md:grid-cols-3">
               <label className="text-sm">Name of Contact Person <span className="text-red-500">*</span>
@@ -475,7 +482,7 @@ export default function RegistrationForm() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5">
+          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">Consent</h2>
             <p className="rounded-md bg-slate-50 p-3 text-sm text-slate-700">{CONSENT_TEXT}</p>
             <label className="mt-3 flex items-start gap-2 text-sm">

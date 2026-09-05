@@ -239,7 +239,7 @@ export default function Sidebar({
           {formsOpen && (
             <div className={cn("ml-7 flex flex-col gap-1 border-l border-slate-200 pl-2", collapsed && "sm:hidden")}>
               <a
-                href="/register"
+                href="/member-registration"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-md px-2 py-1.5 text-sm font-medium text-brand-600 hover:bg-slate-100 hover:text-brand-700"

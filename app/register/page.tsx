@@ -1,10 +1,5 @@
-import RegistrationForm from "./registration-form";
-
-export const metadata = {
-  title: "Register · SWEAP CALABARZON",
-  description: "DSWD FO IV-A SWEAP CALABARZON member registration"
-};
+import { redirect } from "next/navigation";
 
 export default function RegisterPage() {
-  return <RegistrationForm />;
+  redirect("/member-registration");
 }

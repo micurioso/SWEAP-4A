@@ -27,12 +27,14 @@ type Member = {
 type Dependent = { slot: number; name?: string | null; relationship?: string | null; status?: string | null };
 type Claimant = { slot: number; name?: string | null; relationship?: string | null };
 type ClaimantTo = { name: string; relationship: string };
+type FullNamePartKey = "full_name_last" | "full_name_first" | "full_name_middle";
+type EmergencyNamePartKey = "emergency_name_last" | "emergency_name_first" | "emergency_name_middle";
 
 const FIELDS: { key: keyof Member; label: string }[] = [
   { key: "full_name",                       label: "Full Name" },
   { key: "email_address",                   label: "Email Address" },
   { key: "contact_number",                  label: "Contact Number" },
-  { key: "birthdate",                       label: "Birthdate (e.g. May 16, 2023)" },
+  { key: "birthdate",                       label: "Birthdate" },
   { key: "sex",                             label: "Sex" },
   { key: "civil_status",                    label: "Civil Status" },
   { key: "religion",                        label: "Religion" },
@@ -43,7 +45,7 @@ const FIELDS: { key: keyof Member; label: string }[] = [
   { key: "chapter_base",                    label: "Chapter Base" },
   { key: "division",                        label: "Division" },
   { key: "position",                        label: "Position" },
-  { key: "status_of_employment",            label: "Status of Employment" },
+  { key: "status_of_employment",            label: "Employment Status" },
   { key: "emergency_contact_name",          label: "Emergency Contact Name" },
   { key: "emergency_contact_number",        label: "Emergency Contact Number" },
   { key: "emergency_contact_relationship",  label: "Emergency Contact Relationship" },
@@ -55,6 +57,98 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
+
+const UPDATE_OPTIONS: Partial<Record<keyof Member, readonly string[]>> = {
+  sex: ["Male", "Female", "Prefer not to say"],
+  civil_status: ["Single", "Married", "Cohabiting", "Separated", "Widowed"],
+  chapter_base: [
+    "Field Office (RPMO)",
+    "Cavite",
+    "Laguna",
+    "Batangas",
+    "Rizal",
+    "Quezon",
+    "Bahay Tuluyan ng mga Bata",
+    "Regional Haven for womens and girls",
+    "Haven for the Elderly",
+    "National Training School for Boys",
+  ],
+  division: [
+    "Human Resource Management Development Division",
+    "Office of the Regional Director",
+    "Policy and Plans Division",
+    "Protective Services Division",
+    "Promotive Services Division",
+    "Administrative Division",
+    "Financial Management Division",
+    "Disaster Response and Management Division",
+    "Pantawid Pamilyang Pilipino Program Management Office",
+    "Innovations Division",
+  ],
+  status_of_employment: [
+    "Casual",
+    "Contract of Service",
+    "Contractual",
+    "Job Order",
+    "Permanent",
+  ],
+};
+
+
+const updateControlClass =
+  "w-full rounded border border-slate-200 bg-blue-50 px-2 py-1 text-sm text-blue-800 placeholder:text-slate-300 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400";
+
+const FULL_NAME_PARTS: { key: FullNamePartKey; label: string; placeholder: string }[] = [
+  { key: "full_name_last", label: "Last Name", placeholder: "Last name" },
+  { key: "full_name_first", label: "First Name", placeholder: "First name" },
+  { key: "full_name_middle", label: "Middle Name", placeholder: "Middle name" },
+];
+
+const EMERGENCY_NAME_PARTS: { key: EmergencyNamePartKey; label: string; placeholder: string }[] = [
+  { key: "emergency_name_last", label: "Last Name", placeholder: "Last name" },
+  { key: "emergency_name_first", label: "First Name", placeholder: "First name" },
+  { key: "emergency_name_middle", label: "Middle Name", placeholder: "Middle name" },
+];
+
+function setFullNamePart(
+  values: Record<string, string>,
+  key: FullNamePartKey,
+  value: string,
+): Record<string, string> {
+  const next = { ...values, [key]: value };
+  const lastName = next.full_name_last?.trim() ?? "";
+  const givenNames = [next.full_name_first, next.full_name_middle]
+    .map((part) => part?.trim() ?? "")
+    .filter(Boolean)
+    .join(" ");
+
+  return {
+    ...next,
+    full_name: lastName && givenNames
+      ? `${lastName}, ${givenNames}`
+      : [lastName, givenNames].filter(Boolean).join(" "),
+  };
+}
+
+function setEmergencyNamePart(
+  values: Record<string, string>,
+  key: EmergencyNamePartKey,
+  value: string,
+): Record<string, string> {
+  const next = { ...values, [key]: value };
+  const lastName = next.emergency_name_last?.trim() ?? "";
+  const givenNames = [next.emergency_name_first, next.emergency_name_middle]
+    .map((part) => part?.trim() ?? "")
+    .filter(Boolean)
+    .join(" ");
+
+  return {
+    ...next,
+    emergency_contact_name: lastName && givenNames
+      ? `${lastName}, ${givenNames}`
+      : [lastName, givenNames].filter(Boolean).join(" "),
+  };
+}
 
 // Format a stored date (usually "YYYY-MM-DD") as "Month D, YYYY" without timezone shifts.
 function formatBirthdate(s?: string | null): string {
@@ -176,12 +270,17 @@ export default function UpdateForm() {
 
       const mainRows = FIELDS.map(({ key, label }, i) => {
         const fill = i % 2 === 0 ? "#f8fafc" : "#ffffff";
-        const toFill = i % 2 === 0 ? "#eff6ff" : "#f0f9ff";
         const fromText = key === "birthdate" ? formatBirthdate(member.birthdate) : ((member[key] as string | null) ?? "");
         return [
           { text: label, fontSize: F, fillColor: fill, color: "#374151" },
           { text: fromText, fontSize: F, color: "#374151", fillColor: fill },
-          { text: toValues[key] ?? "", fontSize: F, color: "#1d4ed8", fillColor: toFill },
+          {
+            text: key === "full_name" ? "Last name, First name, Middle name" : "",
+            fontSize: key === "full_name" ? 5.5 : F,
+            italics: key === "full_name",
+            color: key === "full_name" ? "#94a3b8" : "#1d4ed8",
+            fillColor: i % 2 === 0 ? "#eff6ff" : "#f0f9ff",
+          },
         ];
       });
 
@@ -200,14 +299,13 @@ export default function UpdateForm() {
       // ── Claimants (writing space for New Name/Rel) ──────────
       const claRows = [1, 2, 3, 4].map((slot) => {
         const c = claimants.find((x) => x.slot === slot);
-        const to = claimantTo[slot] ?? EMPTY_CLAIMANT_TO;
         const fill = slot % 2 === 1 ? "#faf5ff" : "#ffffff";
         return [
           { text: `B.${slot}`, fontSize: F, bold: true, fillColor: fill },
           { text: c?.name ?? "—", fontSize: F, fillColor: fill },
           { text: c?.relationship ?? "—", fontSize: F, fillColor: fill },
-          { text: to.name, fontSize: F, color: "#6d28d9", fillColor: fill },
-          { text: to.relationship, fontSize: F, color: "#6d28d9", fillColor: fill },
+          { text: "", fontSize: F, color: "#6d28d9", fillColor: fill },
+          { text: "", fontSize: F, color: "#6d28d9", fillColor: fill },
         ];
       });
 
@@ -383,7 +481,7 @@ export default function UpdateForm() {
                 <div className="font-mono text-xs text-slate-400">{member.employee_number}</div>
                 <h2 className="text-lg font-semibold text-slate-800">{member.full_name}</h2>
                 <p className="text-xs text-slate-500">
-                  Fill in only the fields that need to be updated. Leave blank to indicate no change.
+                  Choose or enter only the fields that need updating. The printable TO fields stay blank for handwriting.
                 </p>
               </div>
               <button
@@ -408,6 +506,7 @@ export default function UpdateForm() {
                 <tbody>
                   {FIELDS.map(({ key, label }, i) => {
                     const isBirthdate = key === "birthdate";
+                    const options = UPDATE_OPTIONS[key];
                     const fromValue = isBirthdate ? formatBirthdate(member.birthdate) : member[key];
                     return (
                       <tr key={key} className={i % 2 === 0 ? "bg-slate-50" : "bg-white"}>
@@ -416,13 +515,70 @@ export default function UpdateForm() {
                           {fromValue || <span className="text-slate-300">—</span>}
                         </td>
                         <td className="px-3 py-1">
-                          <input
-                            type="text"
-                            value={toValues[key] ?? ""}
-                            onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
-                            placeholder="No change"
-                            className="w-full rounded border border-slate-200 bg-blue-50 px-2 py-1 text-sm text-blue-800 placeholder:text-slate-300 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
-                          />
+                          {key === "full_name" ? (
+                            <div className="grid gap-1.5 xl:grid-cols-3">
+                              {FULL_NAME_PARTS.map((part) => (
+                                <label key={part.key} className="block">
+                                  <span className="mb-0.5 block text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                                    {part.label}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    value={toValues[part.key] ?? ""}
+                                    onChange={(e) => setToValues((values) => setFullNamePart(values, part.key, e.target.value))}
+                                    placeholder={part.placeholder}
+                                    className={updateControlClass}
+                                  />
+                                </label>
+                              ))}
+                            </div>
+                          ) : key === "emergency_contact_name" ? (
+                            <div className="grid gap-1.5 xl:grid-cols-3">
+                              {EMERGENCY_NAME_PARTS.map((part) => (
+                                <label key={part.key} className="block">
+                                  <span className="mb-0.5 block text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                                    {part.label}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    value={toValues[part.key] ?? ""}
+                                    onChange={(e) => setToValues((values) => setEmergencyNamePart(values, part.key, e.target.value))}
+                                    placeholder={part.placeholder}
+                                    className={updateControlClass}
+                                  />
+                                </label>
+                              ))}
+                            </div>
+                          ) : isBirthdate ? (
+                            <input
+                              type="date"
+                              aria-label={`Updated ${label}`}
+                              value={toValues[key] ?? ""}
+                              onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
+                              className={updateControlClass}
+                            />
+                          ) : options ? (
+                            <select
+                              aria-label={`Updated ${label}`}
+                              value={toValues[key] ?? ""}
+                              onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
+                              className={updateControlClass}
+                            >
+                              <option value="">{key === "division" ? "Select new division" : "No change"}</option>
+                              {options.map((option) => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type="text"
+                              aria-label={`Updated ${label}`}
+                              value={toValues[key] ?? ""}
+                              onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
+                              placeholder="No change"
+                              className={updateControlClass}
+                            />
+                          )}
                         </td>
                       </tr>
                     );
