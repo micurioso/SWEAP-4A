@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import ThemeToggle from "@/components/theme-toggle";
+import EmploymentStatusSelect from "@/components/employment-status-select";
 
 const CONSENT_TEXT =
   "I hereby consent to the collection and use of my personal information by DSWD FO IV-A SWEAP CALABARZON for purposes related to member benefits, burial assistance, and other lawful SWEAP activities, in accordance with the Data Privacy Act of 2012 (RA 10173).";
@@ -45,19 +45,10 @@ const DIVISION_OPTIONS = [
   "Protective Services Division"
 ] as const;
 
-const EMPLOYMENT_STATUS_OPTIONS = [
-  "Casual",
-  "Contractual",
-  "Job Order",
-  "COS/MOA",
-  "Permanent"
-] as const;
-
 type Dependent = {
   slot: number;
   name?: string;
   relationship?: string;
-  status?: "Active" | "Deceased";
 };
 
 type Claimant = {
@@ -68,7 +59,9 @@ type Claimant = {
 
 type FormState = {
   employee_number: string;
-  full_name: string;
+  last_name: string;
+  first_name: string;
+  middle_name: string;
   email_address: string;
   current_address: string;
   permanent_address: string;
@@ -95,7 +88,9 @@ type FormState = {
 
 const empty: FormState = {
   employee_number: "",
-  full_name: "",
+  last_name: "",
+  first_name: "",
+  middle_name: "",
   email_address: "",
   current_address: "",
   permanent_address: "",
@@ -130,8 +125,24 @@ export default function RegistrationForm() {
   const [empNoTaken, setEmpNoTaken] = useState(false);
   const [checkingEmpNo, setCheckingEmpNo] = useState(false);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const restoreDarkMode = root.classList.contains("dark");
+    root.classList.remove("dark");
+
+    return () => {
+      root.classList.toggle("dark", restoreDarkMode);
+    };
+  }, []);
+
   function set<K extends keyof FormState>(k: K, v: FormState[K]) {
     setF(prev => ({ ...prev, [k]: v }));
+  }
+
+  function fullName() {
+    const lastName = f.last_name.trim();
+    const givenNames = [f.first_name.trim(), f.middle_name.trim()].filter(Boolean).join(" ");
+    return lastName && givenNames ? `${lastName}, ${givenNames}` : lastName || givenNames;
   }
 
   async function checkEmployeeNumber() {
@@ -187,7 +198,7 @@ export default function RegistrationForm() {
 
     const payload = {
       employee_number: f.employee_number.trim(),
-      full_name: f.full_name.trim(),
+      full_name: fullName(),
       email_address: f.email_address.trim(),
       current_address: f.current_address.trim(),
       permanent_address: f.permanent_address.trim() || null,
@@ -227,7 +238,7 @@ export default function RegistrationForm() {
           slot: d.slot,
           name: d.name!.trim(),
           relationship: d.relationship?.trim() || null,
-          status: d.status || "Active"
+          status: "Active"
         })),
       claimants: claimants
         .filter(c => c.name && c.name.trim())
@@ -259,9 +270,6 @@ export default function RegistrationForm() {
     return (
       <div className="min-h-screen bg-slate-50 px-3 py-4 sm:px-4 sm:py-8">
         <div className="mx-auto max-w-2xl">
-          <div className="mb-3 flex justify-end sm:mb-4">
-            <ThemeToggle />
-          </div>
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/sweap-logo.png" alt="SWEAP CALABARZON" className="mx-auto mb-4 h-16 w-16 rounded-full object-contain" />
@@ -290,7 +298,6 @@ export default function RegistrationForm() {
             <h1 className="text-lg font-bold leading-tight text-brand-700 sm:text-2xl">SWEAP CALABARZON Member Registration</h1>
             <p className="mt-0.5 text-xs leading-5 text-slate-500 sm:mt-1 sm:text-sm">DSWD FO IV-A · Fields marked with <span className="text-red-500">*</span> are required.</p>
           </div>
-          <ThemeToggle />
         </header>
 
         <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5">
@@ -315,11 +322,19 @@ export default function RegistrationForm() {
                   </span>
                 )}
               </label>
+              <div className="grid gap-3 md:col-span-2 md:grid-cols-3">
+                <label className="text-sm">Last Name <span className="text-red-500">*</span>
+                  <input autoComplete="family-name" required className={input} value={f.last_name} onChange={e => set("last_name", e.target.value)} />
+                </label>
+                <label className="text-sm">First Name <span className="text-red-500">*</span>
+                  <input autoComplete="given-name" required className={input} value={f.first_name} onChange={e => set("first_name", e.target.value)} />
+                </label>
+                <label className="text-sm">Middle Name
+                  <input autoComplete="additional-name" className={input} value={f.middle_name} onChange={e => set("middle_name", e.target.value)} />
+                </label>
+              </div>
               <label className="text-sm md:col-span-2">Email address <span className="text-red-500">*</span>
-                <input type="email" required className={input} value={f.email_address} onChange={e => set("email_address", e.target.value)} />
-              </label>
-              <label className="text-sm md:col-span-2">Last name, First name Middle name <span className="text-red-500">*</span>
-                <input required className={input} value={f.full_name} onChange={e => set("full_name", e.target.value)} />
+                <input type="email" autoComplete="email" required className={input} value={f.email_address} onChange={e => set("email_address", e.target.value)} />
               </label>
               <label className="text-sm md:col-span-2">Current Address <span className="text-red-500">*</span>
                 <input required className={input} value={f.current_address} onChange={e => set("current_address", e.target.value)} />
@@ -378,11 +393,13 @@ export default function RegistrationForm() {
               <label className="text-sm md:col-span-2">Position (Please do not abbreviate) <span className="text-red-500">*</span>
                 <input required className={input} value={f.position} onChange={e => set("position", e.target.value)} />
               </label>
-              <label className="text-sm md:col-span-2">Status of Employment <span className="text-red-500">*</span>
-                <select required className={input} value={f.status_of_employment} onChange={e => set("status_of_employment", e.target.value)}>
-                  <option value="">—</option>
-                  {EMPLOYMENT_STATUS_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
-                </select>
+              <label className="text-sm md:col-span-2">Employment Status <span className="text-red-500">*</span>
+                <EmploymentStatusSelect
+                  required
+                  className={input}
+                  value={f.status_of_employment}
+                  onChange={e => set("status_of_employment", e.target.value)}
+                />
               </label>
             </div>
           </section>
@@ -415,7 +432,10 @@ export default function RegistrationForm() {
 
           <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Dependents (up to 4)</h2>
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Declared Dependents (up to 4)</h2>
+                <p className="mt-0.5 text-xs text-slate-400">New dependents are automatically registered as active.</p>
+              </div>
               {dependents.length < 4 && (
                 <button type="button" onClick={addDep} className="text-xs font-medium text-brand-600 hover:text-brand-700">+ Add dependent</button>
               )}
@@ -429,13 +449,9 @@ export default function RegistrationForm() {
                       <button type="button" onClick={() => removeDep(d.slot)} className="rounded-md bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700">Remove</button>
                     )}
                   </div>
-                  <div className="grid gap-2 md:grid-cols-3">
+                  <div className="grid gap-2 md:grid-cols-2">
                     <input className={input} placeholder="Name" value={d.name || ""} onChange={e => setDep(d.slot, "name", e.target.value)} />
                     <input className={input} placeholder="Relationship" value={d.relationship || ""} onChange={e => setDep(d.slot, "relationship", e.target.value)} />
-                    <select className={input} value={d.status || "Active"} onChange={e => setDep(d.slot, "status", e.target.value)}>
-                      <option value="Active">Active</option>
-                      <option value="Deceased">Deceased</option>
-                    </select>
                   </div>
                 </div>
               ))}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Search, FileDown, Loader2 } from "lucide-react";
+import EmploymentStatusSelect from "@/components/employment-status-select";
 
 type Member = {
   employee_number: string;
@@ -84,13 +85,6 @@ const UPDATE_OPTIONS: Partial<Record<keyof Member, readonly string[]>> = {
     "Disaster Response and Management Division",
     "Pantawid Pamilyang Pilipino Program Management Office",
     "Innovations Division",
-  ],
-  status_of_employment: [
-    "Casual",
-    "Contract of Service",
-    "Contractual",
-    "Job Order",
-    "Permanent",
   ],
 };
 
@@ -555,6 +549,14 @@ export default function UpdateForm() {
                               aria-label={`Updated ${label}`}
                               value={toValues[key] ?? ""}
                               onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
+                              className={updateControlClass}
+                            />
+                          ) : key === "status_of_employment" ? (
+                            <EmploymentStatusSelect
+                              aria-label={`Updated ${label}`}
+                              value={toValues[key] ?? ""}
+                              onChange={(e) => setToValues((v) => ({ ...v, [key]: e.target.value }))}
+                              emptyLabel="No change"
                               className={updateControlClass}
                             />
                           ) : options ? (

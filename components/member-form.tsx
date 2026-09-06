@@ -16,6 +16,7 @@ import {
   X
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import EmploymentStatusSelect from "@/components/employment-status-select";
 import type { MemberWithRelations } from "@/lib/schemas";
 
 const empty: MemberWithRelations = {
@@ -430,8 +431,13 @@ export default function MemberForm({ initial, mode, cancelHref }: Props) {
             <FormField label="Position" htmlFor="position">
               <input id="position" className={inputCls} value={member.position || ""} onChange={(event) => setField("position", event.target.value)} />
             </FormField>
-            <FormField label="Status of employment" htmlFor="employment-status">
-              <input id="employment-status" className={inputCls} value={member.status_of_employment || ""} onChange={(event) => setField("status_of_employment", event.target.value)} />
+            <FormField label="Employment status" htmlFor="employment-status">
+              <EmploymentStatusSelect
+                id="employment-status"
+                className={inputCls}
+                value={member.status_of_employment || ""}
+                onChange={(event) => setField("status_of_employment", event.target.value)}
+              />
             </FormField>
           </div>
         </FormSection>

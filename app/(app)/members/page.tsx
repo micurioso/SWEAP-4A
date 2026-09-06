@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Briefcase, Building2, ChevronLeft, ChevronRight, MapPin, Search, SlidersHorizontal, Users, X } from "lucide-react";
+import { DEFAULT_EMPLOYMENT_STATUS_OPTIONS } from "@/lib/employment-statuses";
 import { createClient, getSessionAndProfile } from "@/lib/supabase/server";
 
 type MemberSearchParams = {
@@ -15,7 +16,6 @@ type MemberSearchParams = {
 type FilterOptionRow = {
   division?: string | null;
   position?: string | null;
-  status_of_employment?: string | null;
 };
 
 const FILTER_FIELDS = [
@@ -53,11 +53,16 @@ function uniqueValues(rows: FilterOptionRow[], key: keyof FilterOptionRow) {
 async function loadFilterOptions(supabase: ReturnType<typeof createClient>) {
   const rows: FilterOptionRow[] = [];
   const batchSize = 1000;
+  const { data: statusRows, error: statusError } = await supabase
+    .from("employment_status_options")
+    .select("value")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
 
   for (let offset = 0; offset < 10000; offset += batchSize) {
     const { data, error } = await supabase
       .from("sweap_members")
-      .select("division, position, status_of_employment")
+      .select("division, position")
       .range(offset, offset + batchSize - 1);
 
     if (error) break;
@@ -70,7 +75,9 @@ async function loadFilterOptions(supabase: ReturnType<typeof createClient>) {
   return {
     divisions: uniqueValues(rows, "division"),
     positions: uniqueValues(rows, "position"),
-    employmentStatuses: uniqueValues(rows, "status_of_employment")
+    employmentStatuses: !statusError && statusRows?.length
+      ? statusRows.map((row) => row.value)
+      : DEFAULT_EMPLOYMENT_STATUS_OPTIONS.map((option) => option.value)
   };
 }
 
