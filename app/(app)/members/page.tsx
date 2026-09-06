@@ -12,6 +12,12 @@ type MemberSearchParams = {
   page?: string;
 };
 
+type FilterOptionRow = {
+  division?: string | null;
+  position?: string | null;
+  status_of_employment?: string | null;
+};
+
 const FILTER_FIELDS = [
   { name: "name", label: "Member name", placeholder: "e.g. Juan Dela Cruz" },
   { name: "chapter", label: "Chapter", placeholder: "Search chapter" },
@@ -22,6 +28,50 @@ const FILTER_FIELDS = [
 
 function cleanFilter(value?: string) {
   return value?.trim().slice(0, 160) ?? "";
+}
+
+function cleanNameFilter(value?: string) {
+  return cleanFilter(value)
+    .replace(/[^\p{L}\p{N}'-]+/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function uniqueValues(rows: FilterOptionRow[], key: keyof FilterOptionRow) {
+  const values = new Map<string, string>();
+
+  rows.forEach(row => {
+    const value = row[key]?.trim();
+    if (value && !values.has(value.toLocaleLowerCase())) {
+      values.set(value.toLocaleLowerCase(), value);
+    }
+  });
+
+  return Array.from(values.values()).sort((left, right) => left.localeCompare(right));
+}
+
+async function loadFilterOptions(supabase: ReturnType<typeof createClient>) {
+  const rows: FilterOptionRow[] = [];
+  const batchSize = 1000;
+
+  for (let offset = 0; offset < 10000; offset += batchSize) {
+    const { data, error } = await supabase
+      .from("sweap_members")
+      .select("division, position, status_of_employment")
+      .range(offset, offset + batchSize - 1);
+
+    if (error) break;
+
+    const batch = (data ?? []) as FilterOptionRow[];
+    rows.push(...batch);
+    if (batch.length < batchSize) break;
+  }
+
+  return {
+    divisions: uniqueValues(rows, "division"),
+    positions: uniqueValues(rows, "position"),
+    employmentStatuses: uniqueValues(rows, "status_of_employment")
+  };
 }
 
 function memberInitials(name?: string | null) {
@@ -50,11 +100,17 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
 
   const filters = {
     q: cleanFilter(searchParams.q),
-    name: cleanFilter(searchParams.name),
+    name: cleanNameFilter(searchParams.name),
     chapter: cleanFilter(searchParams.chapter),
     division: cleanFilter(searchParams.division),
     position: cleanFilter(searchParams.position),
     status: cleanFilter(searchParams.status)
+  };
+  const filterOptions = await loadFilterOptions(supabase);
+  const dropdownOptions: Record<string, string[]> = {
+    division: filterOptions.divisions,
+    position: filterOptions.positions,
+    status: filterOptions.employmentStatuses
   };
   const page = Math.max(1, parseInt(searchParams.page || "1", 10) || 1);
   const pageSize = 25;
@@ -79,11 +135,15 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
       .range(from, to);
 
     if (filters.q) query = query.ilike("employee_number", `%${filters.q}%`);
-    if (filters.name) query = query.ilike("full_name", `%${filters.name}%`);
+    if (filters.name) {
+      for (const token of filters.name.split(" ").filter(Boolean).slice(0, 8)) {
+        query = query.ilike("full_name", `%${token}%`);
+      }
+    }
     if (filters.chapter) query = query.ilike("chapter_base", `%${filters.chapter}%`);
-    if (filters.division) query = query.ilike("division", `%${filters.division}%`);
-    if (filters.position) query = query.ilike("position", `%${filters.position}%`);
-    if (filters.status) query = query.ilike("status_of_employment", `%${filters.status}%`);
+    if (filters.division) query = query.eq("division", filters.division);
+    if (filters.position) query = query.eq("position", filters.position);
+    if (filters.status) query = query.eq("status_of_employment", filters.status);
 
     const res = await query;
     data = res.data;
@@ -145,21 +205,41 @@ export default async function MembersListPage({ searchParams }: { searchParams: 
             </span>
           </summary>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-            {FILTER_FIELDS.map(field => (
-              <label key={field.name} htmlFor={`member-search-${field.name}`} className="block">
-                <span className="mb-1.5 block text-xs font-medium text-slate-600">{field.label}</span>
-                <input
-                  id={`member-search-${field.name}`}
-                  name={field.name}
-                  defaultValue={filters[field.name]}
-                  placeholder={field.placeholder}
-                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
-                />
-              </label>
-            ))}
+            {FILTER_FIELDS.map(field => {
+              const options = dropdownOptions[field.name] ?? [];
+              const isDropdown = options.length > 0;
+              const emptyLabel = field.name === "status"
+                ? "All employment statuses"
+                : `All ${field.name}s`;
+
+              return (
+                <label key={field.name} htmlFor={`member-search-${field.name}`} className="block">
+                  <span className="mb-1.5 block text-xs font-medium text-slate-600">{field.label}</span>
+                  {isDropdown ? (
+                    <select
+                      id={`member-search-${field.name}`}
+                      name={field.name}
+                      defaultValue={filters[field.name]}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                    >
+                      <option value="">{emptyLabel}</option>
+                      {options.map(option => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                  ) : (
+                    <input
+                      id={`member-search-${field.name}`}
+                      name={field.name}
+                      defaultValue={filters[field.name]}
+                      placeholder={field.placeholder}
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+                    />
+                  )}
+                </label>
+              );
+            })}
           </div>
           <p className="mt-2 text-xs text-slate-500">
-            Each field supports partial matches. Fill in multiple fields to narrow the results.
+            Name and chapter support partial matches. Use the dropdowns to narrow division, position, or employment status.
           </p>
         </details>
       </form>
