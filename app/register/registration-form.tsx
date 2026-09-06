@@ -369,8 +369,8 @@ export default function RegistrationForm() {
                   {SECTOR_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
                 </select>
               </label>
-              <label className="text-sm md:col-span-2">IP Affiliation <span className="text-red-500">*</span>
-                <input required className={input} value={f.ip_affiliation} onChange={e => set("ip_affiliation", e.target.value)} />
+              <label className="text-sm md:col-span-2">IP Affiliation
+                <input className={input} value={f.ip_affiliation} onChange={e => set("ip_affiliation", e.target.value)} />
               </label>
             </div>
           </section>
