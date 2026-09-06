@@ -11,6 +11,8 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   ScrollText,
   UserCog,
   Users,
@@ -119,8 +121,8 @@ export default function Sidebar({
           "flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
           collapsed && "sm:justify-center sm:px-0",
           active
-            ? "bg-brand-600 font-medium text-white shadow-sm"
-            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            ? "bg-white font-semibold text-brand-700 shadow-sm ring-1 ring-white/80"
+            : "text-blue-100 hover:bg-white/10 hover:text-white"
         )}
       >
         <Icon className="h-4 w-4 shrink-0" />
@@ -157,7 +159,7 @@ export default function Sidebar({
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="mr-3 hidden h-9 w-9 items-center justify-center rounded-md border border-slate-300 text-slate-600 transition-colors hover:bg-slate-100 sm:flex"
         >
-          <Menu className="h-4 w-4" />
+          {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
         </button>
 
         <div className="min-w-0">
@@ -185,23 +187,23 @@ export default function Sidebar({
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white shadow-xl transition-[transform,width] duration-200 sm:translate-x-0 sm:shadow-none",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-brand-800/70 bg-gradient-to-b from-brand-700 via-brand-700 to-slate-950 text-white shadow-xl transition-[transform,width] duration-200 sm:translate-x-0 sm:shadow-none",
           collapsed ? "sm:w-16" : "sm:w-56 lg:w-64",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className={cn("flex h-16 items-center justify-between border-b border-slate-200 px-5", collapsed && "sm:justify-center sm:px-2")}>
+        <div className={cn("flex h-16 items-center justify-between border-b border-white/10 px-5", collapsed && "sm:justify-center sm:px-2")}>
           <Link href="/dashboard" className="flex min-w-0 items-center gap-3">
-            <img src="/sweap-logo.png" alt="SWEAP" className="h-10 w-10 shrink-0 rounded-full object-contain" />
+            <img src="/sweap-logo.png" alt="SWEAP" className="h-10 w-10 shrink-0 rounded-full bg-white object-contain p-0.5 shadow-sm" />
             <div className={cn("min-w-0", collapsed && "sm:hidden")}>
-              <div className="truncate text-base font-bold text-brand-700">SWEAP</div>
-              <div className="text-[10px] uppercase tracking-wider text-slate-400">CALABARZON</div>
+              <div className="truncate text-base font-bold text-white">SWEAP</div>
+              <div className="text-[10px] uppercase tracking-wider text-blue-200">CALABARZON</div>
             </div>
           </Link>
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="rounded-md p-1 text-slate-400 hover:bg-slate-100 sm:hidden"
+            className="rounded-md p-1 text-blue-200 hover:bg-white/10 hover:text-white sm:hidden"
             aria-label="Close navigation"
           >
             <X className="h-5 w-5" />
@@ -225,7 +227,7 @@ export default function Sidebar({
             aria-label={collapsed ? "SWEAP Forms" : undefined}
             title={collapsed ? "SWEAP Forms" : undefined}
             className={cn(
-              "flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900",
+              "flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-sm text-blue-100 transition-colors hover:bg-white/10 hover:text-white",
               collapsed && "sm:justify-center sm:px-0"
             )}
           >
@@ -237,30 +239,30 @@ export default function Sidebar({
           </button>
 
           {formsOpen && (
-            <div className={cn("ml-7 flex flex-col gap-1 border-l border-slate-200 pl-2", collapsed && "sm:hidden")}>
+            <div className={cn("ml-7 flex flex-col gap-1 border-l border-white/15 pl-2", collapsed && "sm:hidden")}>
               <a
                 href="/member-registration"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-md px-2 py-1.5 text-sm font-medium text-brand-600 hover:bg-slate-100 hover:text-brand-700"
+                className="rounded-md px-2 py-1.5 text-sm font-medium text-blue-100 hover:bg-white/10 hover:text-white"
               >
                 Member Registration
               </a>
               <Link
                 href="/member-update"
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-1.5 text-sm font-medium text-brand-600 hover:bg-slate-100 hover:text-brand-700"
+                className="rounded-md px-2 py-1.5 text-sm font-medium text-blue-100 hover:bg-white/10 hover:text-white"
               >
                 Member Update Form
               </Link>
               {forms.length === 0 ? (
-                <span className="px-2 py-1 text-xs text-slate-400">No uploaded forms yet</span>
+                <span className="px-2 py-1 text-xs text-blue-300">No uploaded forms yet</span>
               ) : (
                 forms.map(form => (
                   <a
                     key={form.id}
                     href={`/api/forms/${form.id}/download`}
-                    className="rounded-md px-2 py-1.5 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    className="rounded-md px-2 py-1.5 text-sm text-blue-100 hover:bg-white/10 hover:text-white"
                   >
                     {form.name}
                   </a>
@@ -272,11 +274,11 @@ export default function Sidebar({
           {visibleBottom.map(renderLink)}
         </nav>
 
-        <div className={cn("border-t border-slate-200 px-3 py-3", collapsed && "sm:px-2")}>
+        <div className={cn("border-t border-white/10 px-3 py-3", collapsed && "sm:px-2")}>
           <div className={cn("mb-2 px-2", collapsed && "sm:hidden")}>
-            <div className="truncate text-sm font-medium text-slate-700">{name}</div>
-            <div className="truncate text-xs text-slate-400">@{username}</div>
-            <div className="mt-1 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-500">
+            <div className="truncate text-sm font-medium text-white">{name}</div>
+            <div className="truncate text-xs text-blue-200">@{username}</div>
+            <div className="mt-1 inline-flex rounded-full bg-white/10 px-2 py-0.5 text-[10px] uppercase tracking-wide text-blue-100 ring-1 ring-white/10">
               {role}
             </div>
           </div>
@@ -286,7 +288,7 @@ export default function Sidebar({
             aria-label="Sign out"
             title={collapsed ? "Sign out" : undefined}
             className={cn(
-              "flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900",
+              "flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-blue-100 transition-colors hover:bg-white/10 hover:text-white",
               collapsed && "sm:justify-center sm:px-0"
             )}
           >
